@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.safetynetalerts.models.FireStation;
 
-public interface FireStationService {
+public interface IFireStationService {
 
 	List<FireStation> getAllFireStations() throws IOException;
 

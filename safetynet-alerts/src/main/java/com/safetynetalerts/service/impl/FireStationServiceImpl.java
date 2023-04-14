@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.safetynetalerts.models.FireStation;
-import com.safetynetalerts.service.FireStationService;
+import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.utils.Utils;
 
 @Service
-public class FireStationServiceImpl implements FireStationService {
+public class FireStationServiceImpl implements IFireStationService {
 
 	@Autowired
 	private Utils utils;

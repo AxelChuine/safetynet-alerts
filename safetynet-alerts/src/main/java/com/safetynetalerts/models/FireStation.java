@@ -1,6 +1,7 @@
 package com.safetynetalerts.models;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,8 +33,8 @@ public class FireStation {
 		return stationNumber;
 	}
 
-	public Set<String> getAddresses() {
-		return addresses.stream().collect(Collectors.toSet());
+	public List<String> getAddresses() {
+		return addresses.stream().collect(Collectors.toList());
 	}
 
 	@Override

@@ -65,16 +65,10 @@ public class Utils {
 		});
 
 		List<FireStation> fireStations = firestationMap.values().stream().collect(Collectors.toList());
-		fireStations.forEach(firestation -> System.out.println("Firestation " + firestation.toString()));
-
-		for (FireStation fireStation : fireStations) {
-			if (fireStation.getAddresses().contains("489 Manchester St")) {
-				System.out.println("Firestation " + fireStation.getStationNumber() + " selected");
-				break;
-			}
-		}
 		return fireStations;
 	}
+
+	// FIXME: créer une méthode de lecture qui range les données dans les list.
 
 	public List<Person> getAllPersons() throws IOException {
 		this.file = Files.readAllBytes(new File(path).toPath());
@@ -109,9 +103,7 @@ public class Utils {
 		Any medicalAny = any.get("medicalrecords");
 		medicalAny.forEach(medicalRecord -> medicalRecords.add(new MedicalRecord.MedicalRecordBuilder()
 				.firstName(medicalRecord.get("firstName").toString()).lastName(medicalRecord.get("lastName").toString())
-				.birthDate(medicalRecord.get("birthdate").toString()).allergies(medicalRecord.get("allergies").asList()
-						.stream().map(allergies -> allergies.toString()).toList())
-				.medications(medicalRecord.get("medications").asList())));
+				.birthDate(medicalRecord.get("birthdate").toString()).allergies(null).medications(null).build()));
 		return medicalRecords;
 	}
 
