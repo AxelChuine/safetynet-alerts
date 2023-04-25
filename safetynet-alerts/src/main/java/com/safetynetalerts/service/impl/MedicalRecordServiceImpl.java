@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IMedicalRecordService;
-import com.safetynetalerts.service.IPersonService;
 import com.safetynetalerts.utils.Utils;
 
 @Service
@@ -23,9 +22,6 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 
 	@Autowired
 	private Utils utils;
-
-	@Autowired
-	private IPersonService personService;
 
 	@Override
 	public List<MedicalRecord> getAllMedicalRecords(List<Person> pPersons) throws IOException {
@@ -55,7 +51,7 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	}
 
 	@Override
-	public Map countAllPersons(List<Person> pPersons) {
+	public Map countAllPersons(List<Person> pPersons) throws IOException {
 		Map<String, Integer> persons = new HashMap<>();
 		Integer adults = 0;
 		Integer underaged = 0;
@@ -77,15 +73,16 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 		return persons;
 	}
 
-	public List<MedicalRecord> getMedicalRecordByFullName(String pFirstName, String pLastName) {
+	public List<MedicalRecord> getMedicalRecordByFullName(String pFirstName, String pLastName) throws IOException {
 		List<MedicalRecord> records = this.utils.getAllMedicalRecords();
 		List<MedicalRecord> recordsToReturn = new ArrayList<>();
-		Integer count = 0;
+		int count = 0;
 		while (count < records.size()) {
 			if (records.get(count).getFirstName().equals(pFirstName)
 					&& records.get(count).getLastName().equals(pLastName)) {
 				recordsToReturn.add(records.get(count));
 			}
+			count++;
 		}
 		return recordsToReturn;
 	}

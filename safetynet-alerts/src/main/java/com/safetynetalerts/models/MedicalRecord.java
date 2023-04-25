@@ -2,8 +2,6 @@ package com.safetynetalerts.models;
 
 import java.util.List;
 
-import com.jsoniter.any.Any;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,15 +13,15 @@ public class MedicalRecord {
 	private String firstName;
 	private String lastName;
 	private String birthDate;
-	private List<Any> allergies;
-	private List<Any> medications;
+	private List<String> allergies;
+	private List<String> medications;
 
 	public static class MedicalRecordBuilder {
 		private String firstName;
 		private String lastName;
 		private String birthDate;
-		private List<Any> allergies;
-		private List<Any> medications;
+		private List<String> allergies;
+		private List<String> medications;
 
 		public MedicalRecordBuilder() {
 
@@ -44,12 +42,12 @@ public class MedicalRecord {
 			return this;
 		}
 
-		public MedicalRecordBuilder allergies(List<Any> pAllergies) {
+		public MedicalRecordBuilder allergies(List<String> pAllergies) {
 			this.allergies = pAllergies;
 			return this;
 		}
 
-		public MedicalRecordBuilder medications(List<Any> pMedications) {
+		public MedicalRecordBuilder medications(List<String> pMedications) {
 			this.medications = pMedications;
 			return this;
 		}
@@ -60,8 +58,8 @@ public class MedicalRecord {
 
 	}
 
-	private MedicalRecord(String pFirstName, String pLastName, String pBirthDate, List<Any> pAllergies,
-			List<Any> pMedications) {
+	private MedicalRecord(String pFirstName, String pLastName, String pBirthDate, List<String> pAllergies,
+			List<String> pMedications) {
 		this.firstName = pFirstName;
 		this.lastName = pLastName;
 		this.birthDate = pBirthDate;

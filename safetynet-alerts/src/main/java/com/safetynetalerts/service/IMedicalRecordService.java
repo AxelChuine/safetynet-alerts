@@ -12,10 +12,10 @@ public interface IMedicalRecordService {
 
 	boolean isUnderaged(String birthDate);
 
-	Map<String, Integer> countAllPersons(List<Person> pPersons);
+	Map<String, Integer> countAllPersons(List<Person> pPersons) throws IOException;
 
 	List<Integer> getAgeOfPerson(String firstName, String lastName) throws IOException;
 
-	List<MedicalRecord> getMedicalRecordByFullName(String pFirstName, String pLastName);
+	List<MedicalRecord> getMedicalRecordByFullName(String pFirstName, String pLastName) throws IOException;
 
 }

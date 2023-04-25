@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
+import com.safetynetalerts.data.Data;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
@@ -98,13 +99,21 @@ public class Utils {
 	 * ))); return this.medicalRecords; }
 	 */
 
-	public List<MedicalRecord> getAllMedicalRecords() {
-		List<MedicalRecord> medicalRecords = new ArrayList<>();
-		Any medicalAny = any.get("medicalrecords");
-		medicalAny.forEach(medicalRecord -> medicalRecords.add(new MedicalRecord.MedicalRecordBuilder()
-				.firstName(medicalRecord.get("firstName").toString()).lastName(medicalRecord.get("lastName").toString())
-				.birthDate(medicalRecord.get("birthdate").toString()).allergies(null).medications(null).build()));
-		return medicalRecords;
+	// FIXME: Object mapper mapstruct
+	public List<MedicalRecord> getAllMedicalRecords() throws IOException {
+		return Data.getAllMedicalRecords();
+		/*
+		 * this.file = Files.readAllBytes(new File(path).toPath()); this.iter =
+		 * JsonIterator.parse(file); this.any = iter.readAny();
+		 * 
+		 * ArrayList<MedicalRecord> medicalRecords = new ArrayList<>(); Any medicalAny =
+		 * any.get("medicalrecords"); medicalAny.forEach(medicalRecord ->
+		 * medicalRecords.add(new MedicalRecord.MedicalRecordBuilder()
+		 * .firstName(medicalRecord.get("firstName").toString()).lastName(medicalRecord.
+		 * get("lastName").toString())
+		 * .birthDate(medicalRecord.get("birthdate").toString()).allergies(null).
+		 * medications(null).build())); return medicalRecords;
+		 */
 	}
 
 }

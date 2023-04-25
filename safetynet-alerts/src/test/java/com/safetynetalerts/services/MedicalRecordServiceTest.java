@@ -46,7 +46,7 @@ public class MedicalRecordServiceTest {
 	}
 
 	@Test
-	void getMedicalRecordByFullName() {
+	void getMedicalRecordByFullName() throws IOException {
 		List<MedicalRecord> medicalRecords = utils.getAllMedicalRecords();
 		List<MedicalRecord> expectedMedicalRecord = new ArrayList<>();
 		String vFirstName = "John";

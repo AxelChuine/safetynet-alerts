@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Component
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties
 public class FireStation {
 	private Set<String> addresses;
 	private String stationNumber;
