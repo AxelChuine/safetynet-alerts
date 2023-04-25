@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
-import com.safetynetalerts.data.Data;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
@@ -101,19 +100,31 @@ public class Utils {
 
 	// FIXME: Object mapper mapstruct
 	public List<MedicalRecord> getAllMedicalRecords() throws IOException {
-		return Data.getAllMedicalRecords();
-		/*
-		 * this.file = Files.readAllBytes(new File(path).toPath()); this.iter =
-		 * JsonIterator.parse(file); this.any = iter.readAny();
-		 * 
-		 * ArrayList<MedicalRecord> medicalRecords = new ArrayList<>(); Any medicalAny =
-		 * any.get("medicalrecords"); medicalAny.forEach(medicalRecord ->
-		 * medicalRecords.add(new MedicalRecord.MedicalRecordBuilder()
-		 * .firstName(medicalRecord.get("firstName").toString()).lastName(medicalRecord.
-		 * get("lastName").toString())
-		 * .birthDate(medicalRecord.get("birthdate").toString()).allergies(null).
-		 * medications(null).build())); return medicalRecords;
-		 */
+		// return Data.getAllMedicalRecords();
+		this.medicalRecords = new ArrayList<>();
+		this.file = Files.readAllBytes(new File(path).toPath());
+		this.iter = JsonIterator.parse(file);
+		this.any = iter.readAny();
+
+		Any medicalAny = any.get("medicalrecords");
+
+		for (Any medical : medicalAny) {
+			List<String> medications = new ArrayList<>();
+			if (medical.get("medications").size() > 0) {
+				medical.get("medications").forEach(m -> medications.add(m != null ? m.toString() : " "));
+			}
+			List<String> allergies = new ArrayList<>();
+			if (medical.get("allergies").size() > 0) {
+				medical.get("allergies").forEach(a -> allergies.add(a != null ? a.toString() : " "));
+			}
+			MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder()
+					.firstName(medical.get("firstName").toString()).lastName(medical.get("lastName").toString())
+					.birthDate(medical.get("birthdate").toString()).allergies(allergies).medications(medications)
+					.build();
+			this.medicalRecords.add(medicalRecord);
+		}
+		return this.medicalRecords;
+
 	}
 
 }

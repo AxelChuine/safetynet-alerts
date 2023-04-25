@@ -58,6 +58,19 @@ public class MedicalRecord {
 
 	}
 
+	/*
+	 * public static Class MedicalRecords { private List<MedicalRecord>
+	 * medicalReocrds;
+	 * 
+	 * public List<MedicalRecord> getMedicalRecords() { return getMedicalRecords();
+	 * }
+	 * 
+	 * public void setMedicalRecords(List<MedicalRecord> pMedicalRecords) {
+	 * medicalReocrds = pMedicalRecords; }
+	 * 
+	 * }
+	 */
+
 	private MedicalRecord(String pFirstName, String pLastName, String pBirthDate, List<String> pAllergies,
 			List<String> pMedications) {
 		this.firstName = pFirstName;
