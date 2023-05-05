@@ -1,5 +1,5 @@
 package com.safetynetalerts.dto;
 
-public class MedicalRecordDto {
+public class FloodDto {
 
 }
