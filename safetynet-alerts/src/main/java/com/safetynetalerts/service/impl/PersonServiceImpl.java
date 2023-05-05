@@ -3,12 +3,16 @@ package com.safetynetalerts.service.impl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.Person;
+import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonService;
 import com.safetynetalerts.utils.Utils;
 
@@ -20,6 +24,9 @@ public class PersonServiceImpl implements IPersonService {
 
 	@Autowired
 	private Utils utils;
+
+	@Autowired
+	private IMedicalRecordService medicalRecordService;
 
 	/**
 	 * 
@@ -90,6 +97,27 @@ public class PersonServiceImpl implements IPersonService {
 			count++;
 		}
 		return persons;
+	}
+
+	public List<Person> getPersonByAddress(String pAddress) throws IOException {
+		List<Person> personsByAddress = this.utils.getAllPersons();
+		personsByAddress = personsByAddress.stream().filter(p -> Objects.equals(p.address, pAddress))
+				.collect(Collectors.toList());
+		return personsByAddress;
+	}
+
+	@Override
+	public ChildAlertDto getChildByAddress(String pAddress) throws IOException {
+		ChildAlertDto childDto = new ChildAlertDto();
+		childDto.getChildren().addAll(this.getPersonByAddress(pAddress).stream().filter(p -> {
+			try {
+				return this.medicalRecordService.isUnderaged(p.firstName, p.lastName);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return false;
+		}).collect(Collectors.toList()));
+		return childDto;
 	}
 
 }

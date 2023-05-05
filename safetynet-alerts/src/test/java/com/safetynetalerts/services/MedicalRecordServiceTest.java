@@ -75,4 +75,22 @@ public class MedicalRecordServiceTest {
 		assertEquals(23, agesToCompare.get(0));
 	}
 
+	@Test
+	void getAllMedicalRecordsTest2() throws IOException {
+		List<MedicalRecord> medicalRecords = this.service.getAllMedicalRecords();
+		List<MedicalRecord> medicalRecordsToCompare = this.utils.getAllMedicalRecords();
+		assertEquals(medicalRecordsToCompare, medicalRecords);
+	}
+
+	@Test
+	void getMedicalRecordByUnderageTest() throws IOException {
+		MedicalRecord m = new MedicalRecord();
+		m.setFirstName("Jean");
+		m.setLastName("Dubois");
+		m.setBirthDate("05/05/2023");
+		when(this.service.getMedicalRecordByUnderage(m.getFirstName(), m.getLastName())).thenReturn(m);
+		MedicalRecord mToCompare = this.service.getMedicalRecordByUnderage(m.getFirstName(), m.getLastName());
+		assertEquals(mToCompare, m);
+	}
+
 }

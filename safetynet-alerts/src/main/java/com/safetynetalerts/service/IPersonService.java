@@ -3,6 +3,7 @@ package com.safetynetalerts.service;
 import java.io.IOException;
 import java.util.List;
 
+import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.models.Person;
 
 public interface IPersonService {
@@ -16,5 +17,7 @@ public interface IPersonService {
 	List<String> getPersonInformation(String pFirstName, String pLastName);
 
 	List<Person> getPersonByFullName(String pFirstName, String pLastName) throws IOException;
+
+	ChildAlertDto getChildByAddress(String pAddress) throws IOException;
 
 }

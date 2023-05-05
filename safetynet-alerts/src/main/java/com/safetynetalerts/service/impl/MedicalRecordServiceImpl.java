@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,6 +75,11 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 		return persons;
 	}
 
+	/**
+	 * @param pFirstName
+	 * @param pLastName
+	 * @return a list of medical records according to the parameters
+	 */
 	public List<MedicalRecord> getMedicalRecordByFullName(String pFirstName, String pLastName) throws IOException {
 		List<MedicalRecord> records = this.utils.getAllMedicalRecords();
 		List<MedicalRecord> recordsToReturn = new ArrayList<>();
@@ -87,6 +94,11 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 		return recordsToReturn;
 	}
 
+	/**
+	 * @param pFirstName
+	 * @param pLastName
+	 * @return a list of age of all the people called the same.
+	 */
 	@Override
 	public List<Integer> getAgeOfPerson(String firstName, String lastName) throws IOException {
 		List<Integer> ages = new ArrayList<>();
@@ -101,5 +113,43 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 			ages.add(age);
 		}
 		return ages;
+	}
+
+	/**
+	 * @param pFirstName
+	 * @param pLastName
+	 * @return true if the person is underaged
+	 */
+	@Override
+	public boolean isUnderaged(String pFirstName, String pLastName) throws IOException {
+		boolean isUnderaged = false;
+		MedicalRecord medicalRecord = this.getMedicalRecordByUnderage(pFirstName, pLastName);
+		if (this.isUnderaged(medicalRecord.getBirthDate())) {
+			isUnderaged = true;
+		}
+		return isUnderaged;
+	}
+
+	/**
+	 * @return a medical record of a person if underaged
+	 */
+	@Override
+	public MedicalRecord getMedicalRecordByUnderage(String pFirstName, String pLastName) throws IOException {
+		MedicalRecord medicalRecord = null;
+		Optional<MedicalRecord> medicalRecordOptional = this.getAllMedicalRecords().stream()
+				.filter(m -> Objects.equals(m.getFirstName(), pFirstName) && Objects.equals(m.getLastName(), pLastName))
+				.findFirst();
+		if (medicalRecordOptional.isPresent()) {
+			medicalRecord = medicalRecordOptional.get();
+		}
+		return medicalRecord;
+	}
+
+	/**
+	 * @return retrieve all medical records
+	 */
+	@Override
+	public List<MedicalRecord> getAllMedicalRecords() throws IOException {
+		return this.utils.getAllMedicalRecords();
 	}
 }

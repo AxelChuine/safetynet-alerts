@@ -18,4 +18,10 @@ public interface IMedicalRecordService {
 
 	List<MedicalRecord> getMedicalRecordByFullName(String pFirstName, String pLastName) throws IOException;
 
+	boolean isUnderaged(String pFirstName, String pLastName) throws IOException;
+
+	MedicalRecord getMedicalRecordByUnderage(String pFirstName, String pLastName) throws IOException;
+
+	List<MedicalRecord> getAllMedicalRecords() throws IOException;
+
 }
