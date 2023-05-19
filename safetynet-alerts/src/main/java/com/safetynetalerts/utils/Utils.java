@@ -1,5 +1,14 @@
 package com.safetynetalerts.utils;
 
+import com.jsoniter.JsonIterator;
+import com.jsoniter.any.Any;
+import com.safetynetalerts.models.FireStation;
+import com.safetynetalerts.models.MedicalRecord;
+import com.safetynetalerts.models.Person;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.stereotype.Service;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,29 +18,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Service;
-
-import com.jsoniter.JsonIterator;
-import com.jsoniter.any.Any;
-import com.safetynetalerts.models.FireStation;
-import com.safetynetalerts.models.MedicalRecord;
-import com.safetynetalerts.models.Person;
-
-import lombok.Getter;
-import lombok.Setter;
-
 @Getter
 @Setter
 @Service
 public class Utils {
 
-	private String path = "src/main/resources/data/data.json";
+	private String path = "safetynet-alerts/src/main/resources/data/data.json";
 
 	private byte[] file;
 
 	private JsonIterator iter;
 
-	private List<Person> persons;
+	private List<Person> persons = new ArrayList<>();
 
 	private Any any;
 
@@ -70,7 +68,7 @@ public class Utils {
 
 	// FIXME: créer une méthode de lecture qui range les données dans les list.
 
-	public List<Person> getAllPersons() throws IOException {
+	public List<Person> getAllPeople() throws IOException {
 		this.file = Files.readAllBytes(new File(path).toPath());
 		this.iter = JsonIterator.parse(file);
 		this.any = iter.readAny();

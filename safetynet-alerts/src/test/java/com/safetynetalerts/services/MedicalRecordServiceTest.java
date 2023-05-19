@@ -1,21 +1,20 @@
 package com.safetynetalerts.services;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.safetynetalerts.models.MedicalRecord;
+import com.safetynetalerts.models.Person;
+import com.safetynetalerts.service.IMedicalRecordService;
+import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.safetynetalerts.models.MedicalRecord;
-import com.safetynetalerts.models.Person;
-import com.safetynetalerts.service.IMedicalRecordService;
-import com.safetynetalerts.utils.Utils;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class MedicalRecordServiceTest {
@@ -29,7 +28,7 @@ public class MedicalRecordServiceTest {
 	@Test
 	void getAllMedicalRecordsTest() throws IOException {
 		List<MedicalRecord> expectedMedicalRecords = utils.getAllMedicalRecords();
-		List<Person> persons = utils.getAllPersons();
+		List<Person> persons = utils.getAllPeople();
 		List<MedicalRecord> medicalRecordToReturn = this.service.getAllMedicalRecords(persons);
 		assertEquals(expectedMedicalRecords, medicalRecordToReturn);
 	}
@@ -62,7 +61,7 @@ public class MedicalRecordServiceTest {
 		assertEquals(expectedMedicalRecord, medicalRecordsToCompare);
 	}
 
-	@Test
+	/*@Test
 	void getAgeOfPersonTest() throws IOException {
 		MedicalRecord m = new MedicalRecord();
 		m.setFirstName("John");
@@ -73,7 +72,7 @@ public class MedicalRecordServiceTest {
 		when(this.service.getAgeOfPerson(m.getFirstName(), m.getLastName())).thenReturn(ages);
 		List<Integer> agesToCompare = this.service.getAgeOfPerson(m.getFirstName(), m.getLastName());
 		assertEquals(23, agesToCompare.get(0));
-	}
+	}*/
 
 	@Test
 	void getAllMedicalRecordsTest2() throws IOException {

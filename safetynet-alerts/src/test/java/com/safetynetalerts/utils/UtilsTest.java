@@ -20,13 +20,13 @@ public class UtilsTest {
 
 	@Test
 	void getAllPersonsTest() throws IOException {
-		List<Person> persons = this.utils.getAllPersons();
+		List<Person> persons = this.utils.getAllPeople();
 		PersonBuilder p = new PersonBuilder();
 		p.firstName("Jean");
 		p.lastName("Dubois");
 		p.address("94 Allée des fourrés");
 		// (Object) persons.add(p);
-		when(this.utils.getAllPersons()).thenReturn(persons);
+		when(this.utils.getAllPeople()).thenReturn(persons);
 	}
 
 }

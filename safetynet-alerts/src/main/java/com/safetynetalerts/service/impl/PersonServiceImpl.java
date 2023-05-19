@@ -1,20 +1,20 @@
 package com.safetynetalerts.service.impl;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.safetynetalerts.dto.ChildAlertDto;
+import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonService;
 import com.safetynetalerts.utils.Utils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonServiceImpl implements IPersonService {
@@ -36,7 +36,7 @@ public class PersonServiceImpl implements IPersonService {
 	 */
 
 	public List<Person> getAllPersonsByFireStation(String stationNumber) throws IOException {
-		List<Person> persons = utils.getAllPersons();
+		List<Person> persons = utils.getAllPeople();
 		List<Person> personsByFirestation = new ArrayList<>();
 		List<FireStation> firestations = fireStationService.getFireStationsByStationNumber(stationNumber);
 		for (FireStation firestation : firestations) {
@@ -58,7 +58,7 @@ public class PersonServiceImpl implements IPersonService {
 
 	@Override
 	public List<Person> getAllPersonsByCity(String pCity) throws Exception {
-		List<Person> persons = this.utils.getAllPersons();
+		List<Person> persons = this.utils.getAllPeople();
 		List<Person> personsToReturn = new ArrayList<>();
 		for (Person p : persons) {
 			if (p.city.equals(pCity)) {
@@ -88,7 +88,7 @@ public class PersonServiceImpl implements IPersonService {
 
 	public List<Person> getPersonByFullName(String pFirstName, String pLastName) throws IOException {
 		Integer count = 0;
-		List<Person> persons = this.utils.getAllPersons();
+		List<Person> persons = this.utils.getAllPeople();
 		while (count < persons.size()) {
 			if (!(persons.get(count).getFirstName().equals(pFirstName)
 					&& persons.get(count).getLastName().equals(pLastName))) {
@@ -100,24 +100,51 @@ public class PersonServiceImpl implements IPersonService {
 	}
 
 	public List<Person> getPersonByAddress(String pAddress) throws IOException {
-		List<Person> personsByAddress = this.utils.getAllPersons();
+		List<Person> personsByAddress = this.utils.getAllPeople();
 		personsByAddress = personsByAddress.stream().filter(p -> Objects.equals(p.address, pAddress))
 				.collect(Collectors.toList());
 		return personsByAddress;
 	}
 
+	/**
+	 *
+	 * @param pAddress
+	 * @return
+	 * @throws IOException
+	 */
 	@Override
-	public ChildAlertDto getChildByAddress(String pAddress) throws IOException {
-		ChildAlertDto childDto = new ChildAlertDto();
-		childDto.getChildren().addAll(this.getPersonByAddress(pAddress).stream().filter(p -> {
-			try {
-				return this.medicalRecordService.isUnderaged(p.firstName, p.lastName);
-			} catch (IOException e) {
-				e.printStackTrace();
+	public List<ChildAlertDto> getChildByAddress(String pAddress) throws IOException {
+		List<ChildAlertDto> childrenAlertDto = new ArrayList<>();
+		List<Person> peopleByAddress = this.getPersonByAddress(pAddress);
+		for (Person p : peopleByAddress) {
+			if (this.medicalRecordService.isUnderaged(p.firstName, p.lastName)) {
+				ChildAlertDto childAlertDto = new ChildAlertDto();
+				childAlertDto.setFirstName(p.firstName);
+				childAlertDto.setLastName(p.lastName);
+				childAlertDto.setAge(this.medicalRecordService.getAgeOfPerson(p.firstName, p.lastName));
+				childAlertDto.setFamily(this.getFamilyMembers(peopleByAddress, p.lastName));
+				childrenAlertDto.add(childAlertDto);
 			}
-			return false;
-		}).collect(Collectors.toList()));
-		return childDto;
+		}
+		return childrenAlertDto;
+	}
+
+	public List<Person> getFamilyMembers(List<Person> pFamilyMember, String pLastName) {
+		List<Person> familyMember = new ArrayList<>();
+		familyMember = pFamilyMember.stream().filter(p -> Objects.equals(p.lastName, pLastName)).collect(Collectors.toList());
+		return familyMember;
+	}
+
+	@Override
+	public List<Person> getAllPersons() throws IOException {
+		return this.utils.getAllPeople();
+	}
+
+	@Override
+	public void addPerson(PersonDto pPerson) throws IOException {
+		this.utils.getPersons().add(new Person.PersonBuilder().firstName(pPerson.getFirstName()).
+				lastName(pPerson.getLastName()).address(pPerson.getAddress()).city(pPerson.getCity()).zip(pPerson.getZip())
+				.phone(pPerson.getPhone()).email(pPerson.getEmail()).build());
 	}
 
 }

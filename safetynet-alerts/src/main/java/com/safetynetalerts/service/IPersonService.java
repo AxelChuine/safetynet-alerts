@@ -1,10 +1,11 @@
 package com.safetynetalerts.service;
 
+import com.safetynetalerts.dto.ChildAlertDto;
+import com.safetynetalerts.dto.PersonDto;
+import com.safetynetalerts.models.Person;
+
 import java.io.IOException;
 import java.util.List;
-
-import com.safetynetalerts.dto.ChildAlertDto;
-import com.safetynetalerts.models.Person;
 
 public interface IPersonService {
 
@@ -18,6 +19,15 @@ public interface IPersonService {
 
 	List<Person> getPersonByFullName(String pFirstName, String pLastName) throws IOException;
 
-	ChildAlertDto getChildByAddress(String pAddress) throws IOException;
 
+	// FIXME: à tester
+	List<ChildAlertDto> getChildByAddress(String pAddress) throws IOException;
+
+
+	// FIXME: à tester
+	List<Person> getFamilyMembers(List<Person> pFamilyMember, String pLastName);
+
+	List<Person> getAllPersons() throws IOException;
+
+	void addPerson(PersonDto pPerson) throws IOException;
 }

@@ -95,24 +95,23 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	}
 
 	/**
-	 * @param pFirstName
-	 * @param pLastName
-	 * @return a list of age of all the people called the same.
+	 *
+	 * @param firstName
+	 * @param lastName
+	 * @return
+	 * @throws IOException
 	 */
 	@Override
-	public List<Integer> getAgeOfPerson(String firstName, String lastName) throws IOException {
-		List<Integer> ages = new ArrayList<>();
+	public Integer getAgeOfPerson(String firstName, String lastName) throws IOException {
+		Integer age = 0;
 		String v1 = "";
 		for (MedicalRecord m : this.getMedicalRecordByFullName(firstName, lastName)) {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 			LocalDate birthDate = LocalDate.parse(m.getBirthDate(), formatter);
 			LocalDate instant = LocalDate.now();
-			Period vAge = Period.between(birthDate, instant);
-			v1 = vAge.toString();
-			Integer age = Integer.parseInt(v1);
-			ages.add(age);
+			age = Period.between(birthDate, instant).getYears();
 		}
-		return ages;
+		return age;
 	}
 
 	/**

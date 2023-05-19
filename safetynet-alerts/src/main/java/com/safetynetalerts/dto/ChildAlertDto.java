@@ -1,6 +1,5 @@
 package com.safetynetalerts.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.safetynetalerts.models.Person;
@@ -16,19 +15,14 @@ import lombok.Setter;
 @Setter
 public class ChildAlertDto {
 	/**
-	 * @return a list of child or children living at an address
-	 * @return first name and last name of each child, his/her age
-	 * @return a list of the other member of the family
+	 * @return a list of ChildWithFamilyDto
 	 */
+	private String firstName;
 
-	List<Person> children = new ArrayList<>();
+	private String lastName;
 
-	String firstName;
+	private Integer age;
 
-	String lastName;
-
-	Integer age;
-
-	List<Person> family = new ArrayList<>();
+	private List<Person> family;
 
 }

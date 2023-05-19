@@ -14,7 +14,9 @@ public interface IMedicalRecordService {
 
 	Map<String, Integer> countAllPersons(List<Person> pPersons) throws IOException;
 
-	List<Integer> getAgeOfPerson(String firstName, String lastName) throws IOException;
+
+	// FIXME: méthode à tester de nouveau.
+	Integer getAgeOfPerson(String firstName, String lastName) throws IOException;
 
 	List<MedicalRecord> getMedicalRecordByFullName(String pFirstName, String pLastName) throws IOException;
 
