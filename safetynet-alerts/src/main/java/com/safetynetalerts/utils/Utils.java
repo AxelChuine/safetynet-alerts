@@ -66,37 +66,23 @@ public class Utils {
 		return fireStations;
 	}
 
-	// FIXME: créer une méthode de lecture qui range les données dans les list.
 
 	public List<Person> getAllPeople() throws IOException {
 		this.file = Files.readAllBytes(new File(path).toPath());
 		this.iter = JsonIterator.parse(file);
 		this.any = iter.readAny();
 
-		this.persons = new ArrayList<>();
 		this.personAny = any.get("persons");
-		this.personAny.forEach(a -> persons.add(new Person.PersonBuilder().firstName(a.get("firstName").toString())
+		this.personAny.forEach(a -> this.persons.add(new Person.PersonBuilder().firstName(a.get("firstName").toString())
 				.address(a.get("address").toString()).city(a.get("city").toString())
 				.lastName(a.get("lastName").toString()).phone(a.get("phone").toString()).zip(a.get("zip").toString())
 				.email(a.get("email").toString()).build()));
 
-		persons.forEach(
+		this.persons.forEach(
 				p -> p.firstName.concat(p.lastName).concat(p.address).concat(p.city).concat(p.phone).concat(p.zip));
-		return persons;
+		return this.persons;
 	}
 
-	/*
-	 * public List<MedicalRecord> getMedicalRecordByFullName(String firstName,
-	 * String LastName) throws IOException { // FIXME this.medicalRecords = new
-	 * ArrayList<>(); this.medicalAny = any.get("medicalrecords");
-	 * this.medicalAny.forEach(medicalRecord -> medicalRecords.add( new
-	 * MedicalRecord().getPerson().setFirstName(
-	 * medicalRecord.get("firstName")).toString().concat(medicalRecord.get(
-	 * "lastName").toString()) .concat(medicalRecord.get("birthdate").toString()
-	 * ))); return this.medicalRecords; }
-	 */
-
-	// FIXME: Object mapper mapstruct
 	public List<MedicalRecord> getAllMedicalRecords() throws IOException {
 		// return Data.getAllMedicalRecords();
 		this.medicalRecords = new ArrayList<>();

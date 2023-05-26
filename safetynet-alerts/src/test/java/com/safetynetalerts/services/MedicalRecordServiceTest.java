@@ -92,4 +92,8 @@ public class MedicalRecordServiceTest {
 		assertEquals(mToCompare, m);
 	}
 
+	void getAgeOfPersonTest() throws IOException {
+
+	}
+
 }

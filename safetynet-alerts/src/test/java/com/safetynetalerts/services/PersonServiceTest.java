@@ -1,5 +1,6 @@
 package com.safetynetalerts.services;
 
+import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
@@ -101,6 +102,15 @@ class PersonServiceTest {
 		List<Person> people = this.utils.getAllPeople();
 		List<Person> peopleToCompare = this.service.getAllPersons();
 		assertEquals(people, peopleToCompare);
+	}
+
+	@Test
+	void addPersonTest () throws IOException {
+		List<Person> people = this.utils.getPersons();
+		this.service.addPerson(new PersonDto("Jean", "Dubois", "13 allée Jean moulin", "Strasbourg", "67400","04-91-45-68-97", "test@gmail.com"));
+		List<Person> personsToCompare = this.service.getAllPersons();
+		people.add(new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("13 allée Jean moulin").city("Strasbourg").zip("67400").phone("04-91-45-68-97").email("test@gmail.com").build());
+		assertEquals(people, personsToCompare);
 	}
 
 }
