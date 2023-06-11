@@ -17,7 +17,7 @@ public interface IPersonService {
 
 	List<String> getPersonInformation(String pFirstName, String pLastName);
 
-	List<Person> getPersonByFullName(String pFirstName, String pLastName) throws IOException;
+	Person getPersonByFullName(String pFirstName, String pLastName) throws IOException;
 
 
 	// FIXME: à tester
@@ -30,4 +30,11 @@ public interface IPersonService {
 	List<Person> getAllPersons() throws IOException;
 
 	void addPerson(PersonDto pPerson) throws IOException;
+
+	void updatePerson(String pAddress, String pFirstName, String pLastName);
+
+	PersonDto convertToPersonDto(Person pPerson);
+
+	List<PersonDto> convertToListDto(List<Person> pPersons);
+
 }

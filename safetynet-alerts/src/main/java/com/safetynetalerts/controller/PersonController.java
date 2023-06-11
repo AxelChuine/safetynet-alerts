@@ -33,9 +33,22 @@ public class PersonController {
 		return this.personService.getAllPersons();
 	}
 
+	/**
+	 * this allows the user to create a new person
+	 * @param pPerson
+	 * @throws IOException
+	 */
 	@PostMapping("/person")
 	public void createPerson(@RequestBody PersonDto pPerson) throws IOException {
 		this.personService.addPerson(pPerson);
+	}
+
+	/**
+	 * this allows the user to modify a person
+	 */
+	@PutMapping("/person")
+	public void updatePerson(@RequestParam("address") String pAddress, @RequestParam("firstName") String pFirstName, @RequestParam("lastName") String pLastName) {
+		this.personService.updatePerson(pAddress, pFirstName, pLastName);
 	}
 
 

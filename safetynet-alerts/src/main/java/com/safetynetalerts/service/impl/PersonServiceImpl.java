@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,17 +87,15 @@ public class PersonServiceImpl implements IPersonService {
 		return null;
 	}
 
-	public List<Person> getPersonByFullName(String pFirstName, String pLastName) throws IOException {
+	public Person getPersonByFullName(String pFirstName, String pLastName) throws IOException {
 		Integer count = 0;
+		Person person = null;
 		List<Person> persons = this.utils.getAllPeople();
-		while (count < persons.size()) {
-			if (!(persons.get(count).getFirstName().equals(pFirstName)
-					&& persons.get(count).getLastName().equals(pLastName))) {
-				persons.remove(count);
-			}
-			count++;
+		Optional<Person> personOptional = persons.stream().filter(p -> Objects.equals(p.firstName, pFirstName) && Objects.equals(p.lastName, pLastName)).findFirst();
+		if (personOptional.isPresent()) {
+			//person = personOptional;
 		}
-		return persons;
+		return person;
 	}
 
 	public List<Person> getPersonByAddress(String pAddress) throws IOException {
@@ -147,4 +146,23 @@ public class PersonServiceImpl implements IPersonService {
 				.phone(pPerson.getPhone()).email(pPerson.getEmail()).build());
 	}
 
+	@Override
+	public void updatePerson(String pAddress, String pFirstName, String pLastName) {
+	}
+
+	@Override
+	public PersonDto convertToPersonDto(Person pPerson) {
+		PersonDto person = new PersonDto(pPerson.firstName, pPerson.lastName, pPerson.address, pPerson.city, pPerson.zip, pPerson.phone, pPerson.email);
+		return person;
+	}
+
+	@Override
+	public List<PersonDto> convertToListDto(List<Person> pPersons) {
+		List<PersonDto> persons = new ArrayList<>();
+		for (Person p : pPersons) {
+			PersonDto person = new PersonDto(p.firstName, p.lastName, p.address, p.city, p.zip, p.phone, p.email);
+			persons.add(person);
+		}
+		return persons;
+	}
 }
