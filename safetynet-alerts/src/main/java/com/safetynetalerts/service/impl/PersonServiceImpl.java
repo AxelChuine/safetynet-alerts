@@ -87,13 +87,13 @@ public class PersonServiceImpl implements IPersonService {
 		return null;
 	}
 
-	public Person getPersonByFullName(String pFirstName, String pLastName) throws IOException {
+	public Person getPersonByFullName(String pFirstName, String pLastName) {
 		Integer count = 0;
-		Person person = null;
-		List<Person> persons = this.utils.getAllPeople();
+		Person person = new Person.PersonBuilder().build();
+		List<Person> persons = this.utils.getPersons();
 		Optional<Person> personOptional = persons.stream().filter(p -> Objects.equals(p.firstName, pFirstName) && Objects.equals(p.lastName, pLastName)).findFirst();
 		if (personOptional.isPresent()) {
-			//person = personOptional;
+			person = personOptional.get();
 		}
 		return person;
 	}
@@ -147,7 +147,20 @@ public class PersonServiceImpl implements IPersonService {
 	}
 
 	@Override
-	public void updatePerson(String pAddress, String pFirstName, String pLastName) {
+	public void updatePerson(String pAddress, String pFirstName, String pLastName) throws IOException {
+		Person person = this.getPersonByFullName(pFirstName, pLastName);
+		Person modifiedPerson = new Person.PersonBuilder().firstName(person.firstName).lastName(person.lastName).address(pAddress).city(person.city).
+				zip(person.zip).phone(person.phone).email(person.email).build();
+		Integer index = 0;
+		if (this.utils.getPersons().stream().anyMatch(p -> Objects.equals(p.firstName, pFirstName) && Objects.equals(p.lastName, pLastName))) {
+			for (Person p : this.utils.getPersons()) {
+				if (Objects.equals(p.firstName, pFirstName) && Objects.equals(p.lastName, pLastName)) {
+					index = this.utils.getPersons().indexOf(p);
+				}
+			}
+			this.utils.getPersons().remove(this.utils.getPersons().get(index));
+			this.utils.getPersons().add(modifiedPerson);
+ 		}
 	}
 
 	@Override
@@ -165,4 +178,5 @@ public class PersonServiceImpl implements IPersonService {
 		}
 		return persons;
 	}
+
 }

@@ -47,7 +47,7 @@ public class PersonController {
 	 * this allows the user to modify a person
 	 */
 	@PutMapping("/person")
-	public void updatePerson(@RequestParam("address") String pAddress, @RequestParam("firstName") String pFirstName, @RequestParam("lastName") String pLastName) {
+	public void updatePerson(@RequestParam("address") String pAddress, @RequestParam("firstName") String pFirstName, @RequestParam("lastName") String pLastName) throws IOException {
 		this.personService.updatePerson(pAddress, pFirstName, pLastName);
 	}
 

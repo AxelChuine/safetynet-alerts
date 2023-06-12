@@ -31,7 +31,7 @@ public interface IPersonService {
 
 	void addPerson(PersonDto pPerson) throws IOException;
 
-	void updatePerson(String pAddress, String pFirstName, String pLastName);
+	void updatePerson(String pAddress, String pFirstName, String pLastName) throws IOException;
 
 	PersonDto convertToPersonDto(Person pPerson);
 

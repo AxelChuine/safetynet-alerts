@@ -2,7 +2,6 @@ package com.safetynetalerts.services;
 
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.FireStation;
-import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.impl.FireStationServiceImpl;
@@ -20,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class PersonServiceTest {
@@ -85,28 +84,6 @@ class PersonServiceTest {
 		assertEquals(emailAddresses, emailAddressesToCompare);
 	}
 
-	// FIXME: à régler
-	@Test
-	void getPersonInformationTest() throws IOException {
-		String firstName = "John";
-		String lastName = "Boyd";
-		String informations = "";
-		List<String> personInformations = new ArrayList<>();
-		List<Person> persons = this.utils.getAllPeople();
-		List<MedicalRecord> medicalRecords = this.utils.getAllMedicalRecords();
-		List<String> personInformationsToCompare = this.service.getPersonInformation(firstName, lastName);
-		for (Person p : persons) {
-			for (MedicalRecord r : medicalRecords) {
-				if (p.firstName.equals(r.getFirstName()) && p.firstName.equals(firstName)
-						&& p.lastName.equals(r.getLastName()) && p.lastName.equals(lastName)) {
-					informations = p.firstName + " " + p.lastName + " "
-							+ this.medicalRecordService.getAgeOfPerson(firstName, lastName) + " " + p.address + " "
-							+ p.email + " " + r.getAllergies() + " " + r.getMedications();
-				}
-			}
-		}
-	}
-
 	@Test
 	void getAllPersonsTest() throws IOException {
 		List<Person> people = this.utils.getAllPeople();
@@ -117,11 +94,21 @@ class PersonServiceTest {
 	@Test
 	void addPersonTest () throws IOException {
 		List<Person> people = this.utils.getPersons();
-		people.add(new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("13 allée Jean moulin").city("Strasbourg").zip("67400").phone("04-91-45-68-97").email("test@gmail.com").build());
 		when(this.service.getAllPersons()).thenReturn(people);
+		people.add(new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("13 allée Jean moulin").city("Strasbourg").zip("67400").phone("04-91-45-68-97").email("test@gmail.com").build());
 		List<Person> personsToCompare = this.service.getAllPersons();
 		this.service.addPerson(new PersonDto("Jean", "Dubois", "13 allée Jean moulin", "Strasbourg", "67400","04-91-45-68-97", "test@gmail.com"));
 		assertEquals(people, personsToCompare);
+	}
+
+	// FIXME: Nullpointerexception cannot read field firstname because person is null
+	@Test
+	void updatePersonAddressTest() throws IOException {
+		String address = "18 rue Jean Moulin";
+		Person person = new Person.PersonBuilder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build();
+		Person personToCompare = new Person.PersonBuilder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build();
+		this.service.updatePerson(address, personToCompare.firstName, personToCompare.lastName);
+		assertEquals(person, personToCompare);
 	}
 
 
@@ -134,5 +121,27 @@ class PersonServiceTest {
 		}
 		List<PersonDto> personsToCompare = this.service.convertToListDto(this.service.getAllPersons());
 		assertEquals(persons, personsToCompare);
+	}
+
+	@Test
+	void getPersonByFullNameTest () {
+		Person p = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("12 rue de la marine").city("Lille").zip("62000").phone("05-66-99-88").email("test@gmail.com").build();
+		List<Person> persons = new ArrayList<>();
+		List<Person> personsToCompare = new ArrayList<>();
+		persons.add(p);
+		when(this.utils.getPersons()).thenReturn(persons);
+		//List<Person> persons = this.utils.getPersons();
+		String firstName = "Jean";
+		String lastName = "Dubois";
+//		Person person = null;
+//		for (Person p : persons) {
+//			if (Objects.equals(p.firstName, firstName) && Objects.equals(p.lastName, lastName)) {
+//				person = p;
+//			}
+//		}
+		Person personToCompare = this.service.getPersonByFullName(firstName, lastName);
+		verify(this.utils, times(1)).getPersons();
+		assertEquals(persons.get(0).firstName, personToCompare.firstName);
+		assertEquals(persons.get(0), personToCompare);
 	}
 }

@@ -1,7 +1,6 @@
 package com.safetynetalerts.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -83,4 +82,8 @@ public class Person {
 		this.email = email;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		return this.firstName == ((Person) obj).firstName && this.lastName == ((Person) obj).lastName;
+	}
 }
