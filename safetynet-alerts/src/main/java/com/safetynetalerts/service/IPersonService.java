@@ -15,8 +15,6 @@ public interface IPersonService {
 
 	List<String> getAllEmailAddressesByCity(String pCity) throws Exception;
 
-	List<String> getPersonInformation(String pFirstName, String pLastName);
-
 	Person getPersonByFullName(String pFirstName, String pLastName) throws IOException;
 
 
@@ -37,4 +35,5 @@ public interface IPersonService {
 
 	List<PersonDto> convertToListDto(List<Person> pPersons);
 
+	void deletePerson(String firstName, String lastName);
 }

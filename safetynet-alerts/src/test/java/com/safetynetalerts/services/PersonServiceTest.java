@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -143,5 +144,24 @@ class PersonServiceTest {
 		verify(this.utils, times(1)).getPersons();
 		assertEquals(persons.get(0).firstName, personToCompare.firstName);
 		assertEquals(persons.get(0), personToCompare);
+	}
+
+	@Test
+	public void deletePersonTest () throws IOException {
+		List<Person> mockedPersons = new ArrayList<>();
+		Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("12 rue de la marine").city("Lille").zip("62000").phone("05-66-99-88").email("test@gmail.com").build();
+		mockedPersons.add(person);
+		Integer index = 0;
+		when(this.utils.getPersons()).thenReturn(mockedPersons);
+		List<Person> persons = this.utils.getPersons();
+		for (Person p : persons) {
+			if (Objects.equals(p.firstName, "Jean") && Objects.equals(p.lastName, "Dubois")) {
+				index = persons.indexOf(p);
+			}
+		}
+		persons.remove(persons.get(index));
+		List<Person> personsToCompare = this.service.getAllPersons();
+		this.service.deletePerson("Jean", "Dubois");
+		assertEquals(persons.size(), personsToCompare.size());
 	}
 }

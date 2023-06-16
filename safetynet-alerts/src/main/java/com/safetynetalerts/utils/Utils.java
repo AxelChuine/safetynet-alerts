@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -47,7 +46,9 @@ public class Utils {
 
 	private Any allergies;
 
-	public List<FireStation> getFireStations() throws IOException {
+	private List<FireStation> fireStations = new ArrayList<>();
+
+	public List<FireStation> getAllFirestations() throws IOException {
 		this.file = Files.readAllBytes(new File(path).toPath());
 		this.iter = JsonIterator.parse(file);
 		this.any = iter.readAny();
@@ -62,8 +63,8 @@ public class Utils {
 							: v.addAddress(anyStation.get("address").toString()));
 		});
 
-		List<FireStation> fireStations = firestationMap.values().stream().collect(Collectors.toList());
-		return fireStations;
+		this.fireStations = firestationMap.values().stream().toList();
+		return this.fireStations;
 	}
 
 

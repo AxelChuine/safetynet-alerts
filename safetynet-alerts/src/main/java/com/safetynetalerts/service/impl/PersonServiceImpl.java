@@ -37,7 +37,7 @@ public class PersonServiceImpl implements IPersonService {
 	 */
 
 	public List<Person> getAllPersonsByFireStation(String stationNumber) throws IOException {
-		List<Person> persons = utils.getAllPeople();
+		List<Person> persons = utils.getPersons();
 		List<Person> personsByFirestation = new ArrayList<>();
 		List<FireStation> firestations = fireStationService.getFireStationsByStationNumber(stationNumber);
 		for (FireStation firestation : firestations) {
@@ -48,11 +48,6 @@ public class PersonServiceImpl implements IPersonService {
 					}
 				}
 			}
-			/*
-			 * personsByFirestation .addAll(persons.stream().filter(person ->
-			 * person.getAddress().equals(firestation.getAddresses()))
-			 * .collect(Collectors.toList()));
-			 */
 		}
 		return personsByFirestation;
 	}
@@ -79,12 +74,6 @@ public class PersonServiceImpl implements IPersonService {
 			}
 		}
 		return emailAddresses;
-	}
-
-	@Override
-	public List<String> getPersonInformation(String pFirstName, String pLastName) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public Person getPersonByFullName(String pFirstName, String pLastName) {
@@ -177,6 +166,19 @@ public class PersonServiceImpl implements IPersonService {
 			persons.add(person);
 		}
 		return persons;
+	}
+
+	@Override
+	public void deletePerson(String firstName, String lastName) {
+		List<Person> persons = this.utils.getPersons();
+		Integer index = 0;
+		for (Person p : persons) {
+			if (Objects.equals(p.firstName, firstName) && Objects.equals(p.lastName, lastName)) {
+				index = persons.indexOf(p);
+			}
+		}
+		persons.remove(index);
+		this.utils.getPersons().addAll(persons);
 	}
 
 }
