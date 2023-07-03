@@ -54,4 +54,17 @@ public class FireStationServiceTest {
 		assertEquals(firestations.get(0).getStationNumber(), "17");
 	}
 
+	@Test
+	public void getPersonsAndMedicalRecordsByFirestationTest() {
+		// ARRANGE
+		List<String> stations = new ArrayList<>();
+		stations.add("2");
+		stations.add("3");
+		stations.add("4");
+
+		// ACT
+		this.service.getPersonsAndMedicalRecordsByFirestation(stations);
+		// ASSERT
+	}
+
 }
