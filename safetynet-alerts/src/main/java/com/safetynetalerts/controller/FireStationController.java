@@ -1,14 +1,15 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.dto.PhoneAlertDto;
+import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.dto.StationNumberDto;
-import com.safetynetalerts.models.Person;
+import com.safetynetalerts.models.FireStation;
+import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.impl.PersonServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,6 +25,9 @@ public class FireStationController {
 	@Autowired
 	private IMedicalRecordService medicalService;
 
+	@Autowired
+	private IFireStationService service;
+
 	@GetMapping("/firestation")
 	public StationNumberDto getFireStation(@RequestParam("stationNumber") String stationNumber) throws IOException {
 		StationNumberDto persons = new StationNumberDto();
@@ -38,11 +42,26 @@ public class FireStationController {
 	@GetMapping("/phone-alert")
 	public PhoneAlertDto getCellNumber(@RequestParam("stationNumber") String stationNumber) throws IOException {
 		PhoneAlertDto cellNumbers = new PhoneAlertDto();
-		List<Person> persons = this.personService.getAllPersonsByFireStation(stationNumber);
-		for (Person p : persons) {
-			cellNumbers.getCellNumbers().add(p.phone);
+		List<SimplePersonDto> persons = this.personService.getAllPersonsByFireStation(stationNumber);
+		for (SimplePersonDto p : persons) {
+			cellNumbers.getCellNumbers().add(p.getPhone());
 		}
 		return cellNumbers;
+	}
+
+	@GetMapping("/firestations")
+	public List<FireStation> getFirestations() throws IOException {
+		return this.service.getAllFireStations();
+	}
+
+	@PostMapping("/firestation")
+	public void createFirestation (@RequestBody FireStation pFirestation) {
+		this.service.createFirestation(pFirestation);
+	}
+
+	@GetMapping("/flood")
+	public List<PersonMedicalRecordDto> getAllPersonsAndMedicalRecordByFirestation(@RequestParam("stations") List<String> stations) {
+		return this.service.getPersonsAndMedicalRecordsByFirestation(stations);
 	}
 
 }

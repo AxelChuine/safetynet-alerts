@@ -51,5 +51,10 @@ public class PersonController {
 		this.personService.updatePerson(pAddress, pFirstName, pLastName);
 	}
 
+	@DeleteMapping("/person")
+	public void deletePerson(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
+		this.personService.deletePerson(firstName, lastName);
+	}
+
 
 }

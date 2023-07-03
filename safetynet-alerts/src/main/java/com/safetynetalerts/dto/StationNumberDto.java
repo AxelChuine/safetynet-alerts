@@ -1,6 +1,5 @@
 package com.safetynetalerts.dto;
 
-import com.safetynetalerts.models.Person;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class StationNumberDto {
 
-	private List<Person> persons = new ArrayList<>();
+	private List<SimplePersonDto> persons = new ArrayList<>();
 
 	private Integer underaged;
 

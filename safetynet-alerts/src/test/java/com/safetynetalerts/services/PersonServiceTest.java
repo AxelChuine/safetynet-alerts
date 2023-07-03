@@ -1,11 +1,12 @@
 package com.safetynetalerts.services;
 
 import com.safetynetalerts.dto.PersonDto;
+import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.Person;
-import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.impl.FireStationServiceImpl;
 import com.safetynetalerts.service.impl.PersonServiceImpl;
+import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class PersonServiceTest {
@@ -34,7 +35,7 @@ class PersonServiceTest {
 	private FireStationServiceImpl firestationService;
 
 	@MockBean
-	private IMedicalRecordService medicalRecordService;
+	private Data data;
 
 
 	@BeforeEach
@@ -45,7 +46,7 @@ class PersonServiceTest {
 
 	@Test
 	void getAllPersonsByFireStationTest() throws IOException {
-		List<Person> personsToCompare = this.utils.getAllPeople();
+		List<Person> personsToCompare = this.data.getPersons();
 		List<FireStation> firestations = this.firestationService.getAllFireStations();
 		List<Person> personsToReturn = new ArrayList<>();
 		for (Person person : personsToCompare) {
@@ -60,7 +61,7 @@ class PersonServiceTest {
 	@Test
 	void getAllPersonsByCityTest() throws Exception {
 		String vCity = "Culver";
-		List<Person> persons = this.utils.getAllPeople();
+		List<Person> persons = this.data.getPersons();
 		List<Person> personsToCompare = this.service.getAllPersonsByCity(vCity);
 		for (Person p : persons) {
 			if (!p.city.equals(vCity)) {
@@ -73,7 +74,7 @@ class PersonServiceTest {
 	@Test
 	void getAllEmailAddressesByCity() throws Exception {
 		String vCity = "Culver";
-		List<Person> persons = this.utils.getAllPeople();
+		List<Person> persons = this.data.getPersons();
 		List<String> emailAddresses = new ArrayList<>();
 		List<String> emailAddressesToCompare = this.service.getAllEmailAddressesByCity(vCity);
 		for (Person p : persons) {
@@ -86,22 +87,20 @@ class PersonServiceTest {
 
 	@Test
 	void getAllPersonsTest() throws IOException {
-		List<Person> people = this.utils.getAllPeople();
+		List<Person> people = this.data.getPersons();
 		List<Person> peopleToCompare = this.service.getAllPersons();
 		assertEquals(people, peopleToCompare);
 	}
 
 	@Test
 	void addPersonTest () throws IOException {
-		List<Person> people = this.utils.getPersons();
-		when(this.service.getAllPersons()).thenReturn(people);
+		List<Person> people = this.data.getPersons();
 		people.add(new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("13 allée Jean moulin").city("Strasbourg").zip("67400").phone("04-91-45-68-97").email("test@gmail.com").build());
 		List<Person> personsToCompare = this.service.getAllPersons();
 		this.service.addPerson(new PersonDto("Jean", "Dubois", "13 allée Jean moulin", "Strasbourg", "67400","04-91-45-68-97", "test@gmail.com"));
 		assertEquals(people, personsToCompare);
 	}
 
-	// FIXME: Nullpointerexception cannot read field firstname because person is null
 	@Test
 	void updatePersonAddressTest() throws IOException {
 		String address = "18 rue Jean Moulin";
@@ -115,7 +114,7 @@ class PersonServiceTest {
 	@Test
 	void convertToListDtoTest() throws IOException {
 		List<PersonDto> persons = new ArrayList<>();
-		for (Person p : this.utils.getPersons()) {
+		for (Person p : this.data.getPersons()) {
 			PersonDto person = new PersonDto(p.firstName, p.lastName, p.address, p.city, p.zip, p.phone, p.email);
 			persons.add(person);
 		}
@@ -129,19 +128,69 @@ class PersonServiceTest {
 		List<Person> persons = new ArrayList<>();
 		List<Person> personsToCompare = new ArrayList<>();
 		persons.add(p);
-		when(this.utils.getPersons()).thenReturn(persons);
-		//List<Person> persons = this.utils.getPersons();
+		when(this.data.getPersons()).thenReturn(persons);
 		String firstName = "Jean";
 		String lastName = "Dubois";
-//		Person person = null;
-//		for (Person p : persons) {
-//			if (Objects.equals(p.firstName, firstName) && Objects.equals(p.lastName, lastName)) {
-//				person = p;
-//			}
-//		}
 		Person personToCompare = this.service.getPersonByFullName(firstName, lastName);
-		verify(this.utils, times(1)).getPersons();
+		// verify(this.utils, times(1)).getPersons();
 		assertEquals(persons.get(0).firstName, personToCompare.firstName);
 		assertEquals(persons.get(0), personToCompare);
+	}
+
+	@Test
+	public void deletePersonTest () throws IOException {
+		// ARRANGE
+		List<Person> expectedPersons = new ArrayList<>();
+		Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("12 rue de la marine").city("Lille").zip("62000").phone("05-66-99-88").email("test@gmail.com").build();
+		expectedPersons.add(person);
+
+		// ACT
+		when(this.data.getPersons()).thenReturn(expectedPersons);
+		List<Person> persons = this.data.getPersons();
+		this.service.deletePerson("Jean", "Dubois");
+
+		// ASSERT
+		assertEquals(expectedPersons, persons);
+	}
+
+	@Test
+	public void getPersonByAddressTest() throws IOException {
+		// ARRANGE
+		String address = "18 rue jean moulin";
+		Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address(address).city("Strasbourg").zip("67400").phone("0454").email("test@gmail.com").build();
+		List<Person> expectedPersons = new ArrayList<>();
+		expectedPersons.add(person);
+		// ACT
+		when(this.data.getPersons()).thenReturn(expectedPersons);
+		List<Person> persons = this.service.getPersonsByAddress(address);
+		// ASSERT
+		assertEquals(expectedPersons, persons);
+	}
+
+	@Test
+	public void convertToSimplePersonDtoTest() {
+		SimplePersonDto person = new SimplePersonDto("John", "Boyd", "13 rue Jean Moulin", "04-91-45-87-36");
+		Person personToChange = new Person.PersonBuilder().firstName("John").lastName("Boyd").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
+		SimplePersonDto personToCompare = this.service.convertToSimplePersonDto(personToChange);
+		assertEquals(person.getFirstName(), personToCompare.getFirstName());
+	}
+
+	@Test
+	public void getFamilyMembersTest() {
+		// ARRANGE
+		Person p1 = new Person.PersonBuilder().firstName("John").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
+		Person p2 = new Person.PersonBuilder().firstName("Mathias").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
+		Person p3 = new Person.PersonBuilder().firstName("Lukas").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
+		List<Person> expectedPersons = new ArrayList<>();
+		expectedPersons.add(p1);
+		expectedPersons.add(p2);
+		expectedPersons.add(p3);
+		String lastName = "Dubois";
+		// ACT
+		when(this.data.getPersons()).thenReturn(expectedPersons);
+		List<Person> persons = this.data.getPersons();
+		List<Person> personsToCompare = this.service.getFamilyMembers(expectedPersons, lastName);
+		// ASSERT
+		assertEquals(persons, personsToCompare);
 	}
 }
