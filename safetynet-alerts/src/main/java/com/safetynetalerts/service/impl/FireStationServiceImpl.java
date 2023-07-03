@@ -1,6 +1,7 @@
 package com.safetynetalerts.service.impl;
 
 import com.safetynetalerts.dto.FireStationDto;
+import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.utils.Utils;
@@ -31,6 +32,11 @@ public class FireStationServiceImpl implements IFireStationService {
 
 	@Override
 	public FireStationDto convertToFireStationDto(FireStation pFirestation) {
+		return null;
+	}
+
+	@Override
+	public List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations) {
 		return null;
 	}
 

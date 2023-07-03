@@ -1,23 +1,18 @@
 package com.safetynetalerts.service.impl;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.utils.Utils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 public class MedicalRecordServiceImpl implements IMedicalRecordService {
@@ -52,16 +47,18 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 		return vRet;
 	}
 
+
 	@Override
-	public Map countAllPersons(List<Person> pPersons) throws IOException {
+	public Map countAllPersons(List<SimplePersonDto> pPersons) throws IOException {
 		Map<String, Integer> persons = new HashMap<>();
 		Integer adults = 0;
 		Integer underaged = 0;
+		List<Integer> index = new ArrayList<>();
 		List<MedicalRecord> m1 = this.utils.getAllMedicalRecords();
-		for (Person p : pPersons) {
+		for (SimplePersonDto p : pPersons) {
 			for (MedicalRecord m : m1) {
-				if (!(p.firstName.equals(m.getFirstName()) && p.lastName.equals(m.getLastName()))) {
-					m1.remove(m);
+				if (!(p.getFirstName().equals(m.getFirstName()) && p.getLastName().equals(m.getLastName()))) {
+					index.add(m1.indexOf(m));
 				}
 				if (!this.isUnderaged(m.getBirthDate())) {
 					adults++;
@@ -71,6 +68,9 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 					persons.put("mineurs", underaged);
 				}
 			}
+		}
+		for (Integer count : index) {
+			m1.remove(count);
 		}
 		return persons;
 	}

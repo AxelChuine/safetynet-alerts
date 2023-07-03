@@ -82,8 +82,4 @@ public class Person {
 		this.email = email;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		return this.firstName == ((Person) obj).firstName && this.lastName == ((Person) obj).lastName;
-	}
 }

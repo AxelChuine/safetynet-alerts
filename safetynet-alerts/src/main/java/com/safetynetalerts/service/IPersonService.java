@@ -2,6 +2,7 @@ package com.safetynetalerts.service;
 
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
+import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.Person;
 
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface IPersonService {
 
-	List<Person> getAllPersonsByFireStation(String stationNumber) throws IOException;
+	List<SimplePersonDto> getAllPersonsByFireStation(String stationNumber) throws IOException;
 
 	List<Person> getAllPersonsByCity(String pCity) throws Exception;
 
@@ -31,9 +32,11 @@ public interface IPersonService {
 
 	void updatePerson(String pAddress, String pFirstName, String pLastName) throws IOException;
 
-	PersonDto convertToPersonDto(Person pPerson);
-
 	List<PersonDto> convertToListDto(List<Person> pPersons);
 
 	void deletePerson(String firstName, String lastName);
+
+	SimplePersonDto convertToSimplePersonDto(Person personToChange);
+
+	PersonDto convertToPersonDto(Person pPerson);
 }

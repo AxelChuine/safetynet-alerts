@@ -1,12 +1,13 @@
 package com.safetynetalerts.service.impl;
 
+import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
+import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonService;
-import com.safetynetalerts.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,27 +25,26 @@ public class PersonServiceImpl implements IPersonService {
 	private FireStationServiceImpl fireStationService;
 
 	@Autowired
-	private Utils utils;
+	private Data data;
 
 	@Autowired
 	private IMedicalRecordService medicalRecordService;
 
 	/**
-	 * 
 	 * @param stationNumber
 	 * @return list of persons concerned by a firestation
 	 * @throws IOException
 	 */
 
-	public List<Person> getAllPersonsByFireStation(String stationNumber) throws IOException {
-		List<Person> persons = utils.getPersons();
-		List<Person> personsByFirestation = new ArrayList<>();
+	public List<SimplePersonDto> getAllPersonsByFireStation(String stationNumber) throws IOException {
+		List<Person> persons = data.getPersons();
+		List<SimplePersonDto> personsByFirestation = new ArrayList<>();
 		List<FireStation> firestations = fireStationService.getFireStationsByStationNumber(stationNumber);
 		for (FireStation firestation : firestations) {
 			for (Person person : persons) {
 				if (firestation.getAddresses().contains(person.getAddress())) {
 					if (!personsByFirestation.contains(person)) {
-						personsByFirestation.add(person);
+						personsByFirestation.add(this.convertToSimplePersonDto(person));
 					}
 				}
 			}
@@ -54,7 +54,7 @@ public class PersonServiceImpl implements IPersonService {
 
 	@Override
 	public List<Person> getAllPersonsByCity(String pCity) throws Exception {
-		List<Person> persons = this.utils.getAllPeople();
+		List<Person> persons = data.getPersons();
 		List<Person> personsToReturn = new ArrayList<>();
 		for (Person p : persons) {
 			if (p.city.equals(pCity)) {
@@ -79,7 +79,7 @@ public class PersonServiceImpl implements IPersonService {
 	public Person getPersonByFullName(String pFirstName, String pLastName) {
 		Integer count = 0;
 		Person person = new Person.PersonBuilder().build();
-		List<Person> persons = this.utils.getPersons();
+		List<Person> persons = data.getPersons();
 		Optional<Person> personOptional = persons.stream().filter(p -> Objects.equals(p.firstName, pFirstName) && Objects.equals(p.lastName, pLastName)).findFirst();
 		if (personOptional.isPresent()) {
 			person = personOptional.get();
@@ -87,8 +87,8 @@ public class PersonServiceImpl implements IPersonService {
 		return person;
 	}
 
-	public List<Person> getPersonByAddress(String pAddress) throws IOException {
-		List<Person> personsByAddress = this.utils.getAllPeople();
+	public List<Person> getPersonsByAddress(String pAddress) throws IOException {
+		List<Person> personsByAddress = data.getPersons();
 		personsByAddress = personsByAddress.stream().filter(p -> Objects.equals(p.address, pAddress))
 				.collect(Collectors.toList());
 		return personsByAddress;
@@ -103,7 +103,7 @@ public class PersonServiceImpl implements IPersonService {
 	@Override
 	public List<ChildAlertDto> getChildByAddress(String pAddress) throws IOException {
 		List<ChildAlertDto> childrenAlertDto = new ArrayList<>();
-		List<Person> peopleByAddress = this.getPersonByAddress(pAddress);
+		List<Person> peopleByAddress = this.getPersonsByAddress(pAddress);
 		for (Person p : peopleByAddress) {
 			if (this.medicalRecordService.isUnderaged(p.firstName, p.lastName)) {
 				ChildAlertDto childAlertDto = new ChildAlertDto();
@@ -124,31 +124,31 @@ public class PersonServiceImpl implements IPersonService {
 	}
 
 	@Override
-	public List<Person> getAllPersons() throws IOException {
-		return this.utils.getAllPeople();
+	public List<Person> getAllPersons() {
+		return data.getPersons();
 	}
 
 	@Override
-	public void addPerson(PersonDto pPerson) throws IOException {
-		this.utils.getPersons().add(new Person.PersonBuilder().firstName(pPerson.getFirstName()).
+	public void addPerson(PersonDto pPerson) {
+		data.getPersons().add(new Person.PersonBuilder().firstName(pPerson.getFirstName()).
 				lastName(pPerson.getLastName()).address(pPerson.getAddress()).city(pPerson.getCity()).zip(pPerson.getZip())
 				.phone(pPerson.getPhone()).email(pPerson.getEmail()).build());
 	}
 
 	@Override
-	public void updatePerson(String pAddress, String pFirstName, String pLastName) throws IOException {
+	public void updatePerson(String pAddress, String pFirstName, String pLastName) {
 		Person person = this.getPersonByFullName(pFirstName, pLastName);
 		Person modifiedPerson = new Person.PersonBuilder().firstName(person.firstName).lastName(person.lastName).address(pAddress).city(person.city).
 				zip(person.zip).phone(person.phone).email(person.email).build();
 		Integer index = 0;
-		if (this.utils.getPersons().stream().anyMatch(p -> Objects.equals(p.firstName, pFirstName) && Objects.equals(p.lastName, pLastName))) {
-			for (Person p : this.utils.getPersons()) {
+		if (data.getPersons().stream().anyMatch(p -> Objects.equals(p.firstName, pFirstName) && Objects.equals(p.lastName, pLastName))) {
+			for (Person p : data.getPersons()) {
 				if (Objects.equals(p.firstName, pFirstName) && Objects.equals(p.lastName, pLastName)) {
-					index = this.utils.getPersons().indexOf(p);
+					index = data.getPersons().indexOf(p);
 				}
 			}
-			this.utils.getPersons().remove(this.utils.getPersons().get(index));
-			this.utils.getPersons().add(modifiedPerson);
+			data.getPersons().remove(data.getPersons().get(index));
+			data.getPersons().add(modifiedPerson);
  		}
 	}
 
@@ -170,15 +170,21 @@ public class PersonServiceImpl implements IPersonService {
 
 	@Override
 	public void deletePerson(String firstName, String lastName) {
-		List<Person> persons = this.utils.getPersons();
-		Integer index = 0;
+		List<Person> persons = data.getPersons();
+		Person person = null;
 		for (Person p : persons) {
 			if (Objects.equals(p.firstName, firstName) && Objects.equals(p.lastName, lastName)) {
-				index = persons.indexOf(p);
+				person = p;
 			}
 		}
-		persons.remove(index);
-		this.utils.getPersons().addAll(persons);
+		persons.remove(person);
+		data.setPersons(persons);
+	}
+
+	@Override
+	public SimplePersonDto convertToSimplePersonDto(Person pPerson) {
+		SimplePersonDto person = new SimplePersonDto(pPerson.firstName, pPerson.lastName, pPerson.address, pPerson.phone);
+		return person;
 	}
 
 }

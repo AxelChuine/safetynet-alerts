@@ -1,9 +1,10 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.dto.PhoneAlertDto;
+import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.FireStation;
-import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.impl.PersonServiceImpl;
@@ -41,9 +42,9 @@ public class FireStationController {
 	@GetMapping("/phone-alert")
 	public PhoneAlertDto getCellNumber(@RequestParam("stationNumber") String stationNumber) throws IOException {
 		PhoneAlertDto cellNumbers = new PhoneAlertDto();
-		List<Person> persons = this.personService.getAllPersonsByFireStation(stationNumber);
-		for (Person p : persons) {
-			cellNumbers.getCellNumbers().add(p.phone);
+		List<SimplePersonDto> persons = this.personService.getAllPersonsByFireStation(stationNumber);
+		for (SimplePersonDto p : persons) {
+			cellNumbers.getCellNumbers().add(p.getPhone());
 		}
 		return cellNumbers;
 	}
@@ -56,6 +57,11 @@ public class FireStationController {
 	@PostMapping("/firestation")
 	public void createFirestation (@RequestBody FireStation pFirestation) {
 		this.service.createFirestation(pFirestation);
+	}
+
+	@GetMapping("/flood")
+	public List<PersonMedicalRecordDto> getAllPersonsAndMedicalRecordByFirestation(@RequestParam("stations") List<String> stations) {
+		return this.service.getPersonsAndMedicalRecordsByFirestation(stations);
 	}
 
 }
