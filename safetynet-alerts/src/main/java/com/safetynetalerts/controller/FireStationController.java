@@ -7,6 +7,7 @@ import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
+import com.safetynetalerts.service.IPersonFirestationService;
 import com.safetynetalerts.service.impl.PersonServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,10 +29,13 @@ public class FireStationController {
 	@Autowired
 	private IFireStationService service;
 
+	@Autowired
+	private IPersonFirestationService personFirestationService;
+
 	@GetMapping("/firestation")
 	public StationNumberDto getFireStation(@RequestParam("stationNumber") String stationNumber) throws IOException {
 		StationNumberDto persons = new StationNumberDto();
-		persons.getPersons().addAll(this.personService.getAllPersonsByFireStation(stationNumber));
+		persons.getPersons().addAll(this.personFirestationService.getAllPersonsByFireStation(stationNumber));
 		Map<String, Integer> numberOfPersonByAge = new HashMap<>();
 		numberOfPersonByAge = this.medicalService.countAllPersons(persons.getPersons());
 		persons.setAdult(numberOfPersonByAge.get("majeurs"));
@@ -42,7 +46,7 @@ public class FireStationController {
 	@GetMapping("/phone-alert")
 	public PhoneAlertDto getCellNumber(@RequestParam("stationNumber") String stationNumber) throws IOException {
 		PhoneAlertDto cellNumbers = new PhoneAlertDto();
-		List<SimplePersonDto> persons = this.personService.getAllPersonsByFireStation(stationNumber);
+		List<SimplePersonDto> persons = this.personFirestationService.getAllPersonsByFireStation(stationNumber);
 		for (SimplePersonDto p : persons) {
 			cellNumbers.getCellNumbers().add(p.getPhone());
 		}
@@ -59,7 +63,7 @@ public class FireStationController {
 		this.service.createFirestation(pFirestation);
 	}
 
-	@GetMapping("/flood")
+	@GetMapping("/flood/stations")
 	public List<PersonMedicalRecordDto> getAllPersonsAndMedicalRecordByFirestation(@RequestParam("stations") List<String> stations) {
 		return this.service.getPersonsAndMedicalRecordsByFirestation(stations);
 	}

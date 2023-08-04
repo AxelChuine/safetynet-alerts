@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface IPersonService {
 
-	List<SimplePersonDto> getAllPersonsByFireStation(String stationNumber) throws IOException;
 
 	List<Person> getAllPersonsByCity(String pCity) throws Exception;
 

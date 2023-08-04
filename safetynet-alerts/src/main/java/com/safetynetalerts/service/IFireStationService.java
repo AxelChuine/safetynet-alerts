@@ -1,8 +1,9 @@
 package com.safetynetalerts.service;
 
-import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.models.FireStation;
+import com.safetynetalerts.models.MedicalRecord;
+import com.safetynetalerts.models.Person;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,7 +14,9 @@ public interface IFireStationService {
 
 	void createFirestation(FireStation pFirestation);
 
-	FireStationDto convertToFireStationDto(FireStation pFirestation);
-
     List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations);
+
+	PersonMedicalRecordDto convertToPersonMedicalRecord(Person pPerson, MedicalRecord pMedicalRecord) throws IOException;
+
+	List<FireStation> getFireStationsByStationNumber(String stationNumber) throws IOException;
 }

@@ -1,10 +1,10 @@
 package com.safetynetalerts.models;
 
-import java.util.List;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -57,19 +57,6 @@ public class MedicalRecord {
 		}
 
 	}
-
-	/*
-	 * public static Class MedicalRecords { private List<MedicalRecord>
-	 * medicalReocrds;
-	 * 
-	 * public List<MedicalRecord> getMedicalRecords() { return getMedicalRecords();
-	 * }
-	 * 
-	 * public void setMedicalRecords(List<MedicalRecord> pMedicalRecords) {
-	 * medicalReocrds = pMedicalRecords; }
-	 * 
-	 * }
-	 */
 
 	private MedicalRecord(String pFirstName, String pLastName, String pBirthDate, List<String> pAllergies,
 			List<String> pMedications) {

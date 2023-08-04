@@ -1,13 +1,12 @@
 package com.safetynetalerts.service.impl;
 
-import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.dto.SimplePersonDto;
-import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonService;
+import com.safetynetalerts.utils.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,27 +29,6 @@ public class PersonServiceImpl implements IPersonService {
 	@Autowired
 	private IMedicalRecordService medicalRecordService;
 
-	/**
-	 * @param stationNumber
-	 * @return list of persons concerned by a firestation
-	 * @throws IOException
-	 */
-
-	public List<SimplePersonDto> getAllPersonsByFireStation(String stationNumber) throws IOException {
-		List<Person> persons = data.getPersons();
-		List<SimplePersonDto> personsByFirestation = new ArrayList<>();
-		List<FireStation> firestations = fireStationService.getFireStationsByStationNumber(stationNumber);
-		for (FireStation firestation : firestations) {
-			for (Person person : persons) {
-				if (firestation.getAddresses().contains(person.getAddress())) {
-					if (!personsByFirestation.contains(person)) {
-						personsByFirestation.add(this.convertToSimplePersonDto(person));
-					}
-				}
-			}
-		}
-		return personsByFirestation;
-	}
 
 	@Override
 	public List<Person> getAllPersonsByCity(String pCity) throws Exception {

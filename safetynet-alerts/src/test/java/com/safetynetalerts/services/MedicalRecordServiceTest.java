@@ -3,6 +3,7 @@ package com.safetynetalerts.services;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IMedicalRecordService;
+import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class MedicalRecordServiceTest {
+
+	@MockBean
+	private Data data;
 
 	@MockBean
 	private Utils utils;
@@ -87,13 +91,12 @@ public class MedicalRecordServiceTest {
 		m.setFirstName("Jean");
 		m.setLastName("Dubois");
 		m.setBirthDate("05/05/2023");
-		when(this.service.getMedicalRecordByUnderage(m.getFirstName(), m.getLastName())).thenReturn(m);
+		List<MedicalRecord> medicalRecords = new ArrayList<>();
+		medicalRecords.add(m);
+
+		when(this.data.getMedicalRecords()).thenReturn(medicalRecords);
 		MedicalRecord mToCompare = this.service.getMedicalRecordByUnderage(m.getFirstName(), m.getLastName());
-		assertEquals(mToCompare, m);
-	}
-
-	void getAgeOfPersonTest() throws IOException {
-
+		assertEquals(m, mToCompare);
 	}
 
 }
