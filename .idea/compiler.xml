@@ -10,9 +10,6 @@
         <module name="safetynet-alerts" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="safetynet-alerts" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

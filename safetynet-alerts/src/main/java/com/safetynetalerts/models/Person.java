@@ -22,10 +22,10 @@ public class Person {
 	public static class PersonBuilder {
 		private String firstName;
 		private String lastName;
-		private String phone;
-		private String zip;
 		private String address;
 		private String city;
+		private String zip;
+		private String phone;
 		private String email;
 
 		public PersonBuilder() {

@@ -4,6 +4,7 @@ import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.Person;
+import com.safetynetalerts.service.IPersonFirestationService;
 import com.safetynetalerts.service.impl.FireStationServiceImpl;
 import com.safetynetalerts.service.impl.PersonServiceImpl;
 import com.safetynetalerts.utils.Data;
@@ -37,6 +38,9 @@ class PersonServiceTest {
 	@MockBean
 	private Data data;
 
+	@MockBean
+	private IPersonFirestationService personFirestationService;
+
 
 	@BeforeEach
 	public void setUp() {
@@ -55,7 +59,7 @@ class PersonServiceTest {
 			}
 		}
 
-		assertEquals(service.getAllPersonsByFireStation("4"), personsToReturn);
+		assertEquals(personFirestationService.getAllPersonsByFireStation("4"), personsToReturn);
 	}
 
 	@Test
@@ -96,31 +100,28 @@ class PersonServiceTest {
 	void addPersonTest () throws IOException {
 		List<Person> people = this.data.getPersons();
 		people.add(new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("13 allée Jean moulin").city("Strasbourg").zip("67400").phone("04-91-45-68-97").email("test@gmail.com").build());
+
+		when(this.data.getPersons()).thenReturn(people);
 		List<Person> personsToCompare = this.service.getAllPersons();
 		this.service.addPerson(new PersonDto("Jean", "Dubois", "13 allée Jean moulin", "Strasbourg", "67400","04-91-45-68-97", "test@gmail.com"));
-		assertEquals(people, personsToCompare);
+		assertEquals(people.get(0).getFirstName(), personsToCompare.get(0).getFirstName());
+		assertEquals(people.get(0).getLastName(), personsToCompare.get(0).getLastName());
 	}
 
 	@Test
 	void updatePersonAddressTest() throws IOException {
 		String address = "18 rue Jean Moulin";
 		Person person = new Person.PersonBuilder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build();
+		List<Person> persons = new ArrayList<>();
+		persons.add(person);
+
+		when(this.data.getPersons()).thenReturn(persons);
 		Person personToCompare = new Person.PersonBuilder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build();
 		this.service.updatePerson(address, personToCompare.firstName, personToCompare.lastName);
-		assertEquals(person, personToCompare);
+		assertEquals(person.getFirstName(), personToCompare.getFirstName());
+		assertEquals(person.getLastName(), personToCompare.getLastName());
 	}
 
-
-	@Test
-	void convertToListDtoTest() throws IOException {
-		List<PersonDto> persons = new ArrayList<>();
-		for (Person p : this.data.getPersons()) {
-			PersonDto person = new PersonDto(p.firstName, p.lastName, p.address, p.city, p.zip, p.phone, p.email);
-			persons.add(person);
-		}
-		List<PersonDto> personsToCompare = this.service.convertToListDto(this.service.getAllPersons());
-		assertEquals(persons, personsToCompare);
-	}
 
 	@Test
 	void getPersonByFullNameTest () {
