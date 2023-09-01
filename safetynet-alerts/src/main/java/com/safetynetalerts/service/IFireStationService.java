@@ -1,6 +1,9 @@
 package com.safetynetalerts.service;
 
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
+import com.safetynetalerts.dto.PhoneAlertDto;
+import com.safetynetalerts.dto.SimplePersonDto;
+import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
@@ -12,6 +15,8 @@ public interface IFireStationService {
 
 	List<FireStation> getAllFireStations() throws IOException;
 
+	StationNumberDto getHeadCountByFirestation(String pStationNumber) throws IOException;
+
 	void createFirestation(FireStation pFirestation);
 
     List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations);
@@ -19,4 +24,10 @@ public interface IFireStationService {
 	PersonMedicalRecordDto convertToPersonMedicalRecord(Person pPerson, MedicalRecord pMedicalRecord) throws IOException;
 
 	List<FireStation> getFireStationsByStationNumber(String stationNumber) throws IOException;
+
+	SimplePersonDto createSimplePersonDto(Person pPerson);
+
+	StationNumberDto createStationNumberDto (List<Person> persons) throws IOException;
+
+
 }

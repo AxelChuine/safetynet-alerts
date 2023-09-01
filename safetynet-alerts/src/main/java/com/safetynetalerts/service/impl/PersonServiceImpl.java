@@ -1,5 +1,6 @@
 package com.safetynetalerts.service.impl;
 
+import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.dto.SimplePersonDto;
@@ -8,6 +9,7 @@ import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonService;
 import com.safetynetalerts.utils.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -114,20 +116,23 @@ public class PersonServiceImpl implements IPersonService {
 	}
 
 	@Override
-	public void updatePerson(String pAddress, String pFirstName, String pLastName) {
+	public void updatePerson(String pAddress, String pFirstName, String pLastName) throws Exception {
 		Person person = this.getPersonByFullName(pFirstName, pLastName);
+		if (Objects.isNull(person)) {
+			throw new ResourceNotFoundException(new String(pFirstName + " " + pLastName), HttpStatus.NOT_FOUND);
+		}
 		Person modifiedPerson = new Person.PersonBuilder().firstName(person.firstName).lastName(person.lastName).address(pAddress).city(person.city).
 				zip(person.zip).phone(person.phone).email(person.email).build();
 		Integer index = 0;
-		if (data.getPersons().stream().anyMatch(p -> Objects.equals(p.firstName, pFirstName) && Objects.equals(p.lastName, pLastName))) {
-			for (Person p : data.getPersons()) {
-				if (Objects.equals(p.firstName, pFirstName) && Objects.equals(p.lastName, pLastName)) {
-					index = data.getPersons().indexOf(p);
+			if (data.getPersons().stream().anyMatch(p -> Objects.equals(p.firstName, pFirstName) && Objects.equals(p.lastName, pLastName))) {
+				for (Person p : data.getPersons()) {
+					if (Objects.equals(p.firstName, pFirstName) && Objects.equals(p.lastName, pLastName)) {
+						index = data.getPersons().indexOf(p);
+					}
 				}
-			}
-			data.getPersons().remove(data.getPersons().get(index));
-			data.getPersons().add(modifiedPerson);
- 		}
+				this.data.getPersons().remove(data.getPersons().get(index));
+				data.getPersons().add(modifiedPerson);
+		}
 	}
 
 	@Override

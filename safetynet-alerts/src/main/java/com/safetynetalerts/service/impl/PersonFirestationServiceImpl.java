@@ -1,5 +1,6 @@
 package com.safetynetalerts.service.impl;
 
+import com.safetynetalerts.dto.PhoneAlertDto;
 import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.Person;
@@ -40,5 +41,16 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
             }
         }
         return personsByFirestation;
+    }
+
+    //FIXME: circular dependancy
+    @Override
+    public PhoneAlertDto getCellNumbers(String stationNumber) throws IOException {
+        PhoneAlertDto cellNumbers = new PhoneAlertDto();
+        List<SimplePersonDto> persons = this.getAllPersonsByFireStation(stationNumber);
+        for (SimplePersonDto p : persons) {
+            cellNumbers.getCellNumbers().add(p.getPhone());
+        }
+        return cellNumbers;
     }
 }

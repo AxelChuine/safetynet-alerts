@@ -48,6 +48,12 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	}
 
 
+	/**
+	 * @Author Axel
+	 * @param pPersons
+	 * @return a map counting the persons underaged and not.
+	 * @throws IOException
+	 */
 	@Override
 	public Map countAllPersons(List<SimplePersonDto> pPersons) throws IOException {
 		Map<String, Integer> persons = new HashMap<>();

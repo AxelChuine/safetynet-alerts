@@ -1,5 +1,6 @@
 package com.safetynetalerts.service;
 
+import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.dto.SimplePersonDto;
@@ -29,7 +30,7 @@ public interface IPersonService {
 
 	void addPerson(PersonDto pPerson) throws IOException;
 
-	void updatePerson(String pAddress, String pFirstName, String pLastName) throws IOException;
+	void updatePerson(String pAddress, String pFirstName, String pLastName) throws IOException, ResourceNotFoundException, Exception;
 
 	List<PersonDto> convertToListDto(List<Person> pPersons);
 

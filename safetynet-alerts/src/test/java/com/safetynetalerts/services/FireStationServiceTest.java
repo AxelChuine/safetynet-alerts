@@ -1,10 +1,13 @@
 package com.safetynetalerts.services;
 
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
+import com.safetynetalerts.dto.SimplePersonDto;
+import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
-import com.safetynetalerts.service.impl.FireStationServiceImpl;
+import com.safetynetalerts.service.IFireStationService;
+import com.safetynetalerts.service.IPersonFirestationService;
 import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.Test;
@@ -23,11 +26,15 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class FireStationServiceTest {
 
+	@MockBean
+	private IPersonFirestationService personFirestationService;
+
 	@Autowired
-	private FireStationServiceImpl service;
+	private IFireStationService service;
 
 	@MockBean
 	private Utils utils;
+
 	@MockBean
 	private Data data;
 
@@ -90,5 +97,70 @@ public class FireStationServiceTest {
 		assertEquals(personMedicalRecordDto.getLastName(), personToCompare.getLastName());
 
 	}
+
+	// FIXME: "Failed to load ApplicationContext
+	@Test
+	public void getHeadCountByFirestationTest () throws IOException {
+		StationNumberDto stationNumberDto = new StationNumberDto();
+		List<Person> persons = new ArrayList<>();
+		Person person = new Person.PersonBuilder().build();
+		persons.add(person);
+		SimplePersonDto simplePerson = this.service.createSimplePersonDto(person);
+		List<SimplePersonDto> simplePersons = new ArrayList<>();
+		simplePersons.add(simplePerson);
+		stationNumberDto.setPersons(simplePersons);
+
+
+		when(this.data.getPersons()).thenReturn(persons);
+		StationNumberDto stationNumberToCompare = this.service.getHeadCountByFirestation("4");
+
+		assertEquals(stationNumberDto.getAdult(), stationNumberToCompare.getAdult());
+		assertEquals(stationNumberDto.getUnderaged(), stationNumberToCompare.getUnderaged());
+	}
+
+	@Test
+	public void createSimplePersonDtoTest () throws IOException {
+		Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("47 rue du général de Gaulle").phone("04").build();
+		SimplePersonDto simplePerson = new SimplePersonDto(person.firstName, person.lastName, person.address, person.phone);
+		List<Person> persons = new ArrayList<>();
+		persons.add(person);
+
+		when(this.data.getPersons()).thenReturn(persons);
+		SimplePersonDto simplePersonToCompare = this.service.createSimplePersonDto(person);
+		assertEquals(simplePerson, simplePersonToCompare);
+	}
+
+	@Test
+	public void createStationNumberDtoTest () throws IOException {
+		List<Person> persons = new ArrayList<>();
+		Person person = new Person.PersonBuilder().build();
+		persons.add(person);
+		StationNumberDto stationNumberDto = new StationNumberDto();
+		SimplePersonDto simplePersonDto = this.service.createSimplePersonDto(person);
+		List<SimplePersonDto> simplePersons = new ArrayList<>();
+		simplePersons.add(simplePersonDto);
+		stationNumberDto.setPersons(simplePersons);
+
+		when(this.data.getPersons()).thenReturn(persons);
+		StationNumberDto stationNumberToCompare = this.service.createStationNumberDto(persons);
+		assertEquals(stationNumberDto.getAdult(), stationNumberToCompare.getAdult());
+		assertEquals(stationNumberDto.getUnderaged(), stationNumberToCompare.getUnderaged());
+		assertEquals(stationNumberDto.getPersons().get(0).getFirstName(), stationNumberToCompare.getPersons().get(0).getFirstName());
+	}
+
+	//FIXME: le service renvoie null.
+	/*@Test
+	public void getCellNumbersTest() throws IOException {
+		List<Person> persons = new ArrayList<>();
+		Person person = new Person.PersonBuilder().phone("04").build();
+		persons.add(person);
+		PhoneAlertDto cellNumbers = new PhoneAlertDto();
+		cellNumbers.getCellNumbers().add(person.phone);
+
+		when(this.data.getPersons()).thenReturn(persons);
+		PhoneAlertDto cellNumbersToCompare = this.personFirestationService.getCellNumbers("4");
+
+		assertEquals(cellNumbers, cellNumbersToCompare);
+	}*/
 
 }

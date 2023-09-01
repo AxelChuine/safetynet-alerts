@@ -17,7 +17,6 @@ public class FireStationDto {
 
     private String stationNumber;
 
-
     public List<String> getAddresses() {return addresses.stream().toList();}
 
 

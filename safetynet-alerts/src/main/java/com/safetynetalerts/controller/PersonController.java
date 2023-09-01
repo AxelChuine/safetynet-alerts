@@ -5,10 +5,13 @@ import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IPersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class PersonController {
@@ -17,43 +20,55 @@ public class PersonController {
 	private IPersonService personService;
 
 	@GetMapping("/communityEmail")
-	public List<String> getAllEmailAddresses(@RequestParam("city") String pCity) throws Exception {
+	public ResponseEntity<List<String>> getAllEmailAddresses(@RequestParam("city") String pCity) throws Exception {
 		List<String> emailAddresses = this.personService.getAllEmailAddressesByCity(pCity);
-		return emailAddresses;
+		return ResponseEntity.ok(emailAddresses);
 	}
 
 	@GetMapping("/childAlert")
-	public List<ChildAlertDto> getChildByAddress(@RequestParam("address") String address) throws IOException {
+	public ResponseEntity<List<ChildAlertDto>> getChildByAddress(@RequestParam("address") String address) throws IOException {
 		List<ChildAlertDto> childDto = this.personService.getChildByAddress(address);
-		return childDto;
+		return ResponseEntity.ok(childDto);
 	}
 
 	@GetMapping("/person")
-	public List<Person> getAllPersons() throws IOException {
-		return this.personService.getAllPersons();
+	public ResponseEntity<List<Person>> getAllPersons() throws IOException {
+		List<Person> persons = this.personService.getAllPersons();
+		return ResponseEntity.ok(persons);
 	}
 
 	/**
 	 * this allows the user to create a new person
+	 *
 	 * @param pPerson
+	 * @return
 	 * @throws IOException
 	 */
 	@PostMapping("/person")
-	public void createPerson(@RequestBody PersonDto pPerson) throws IOException {
+	public ResponseEntity createPerson(@RequestBody PersonDto pPerson) throws IOException {
 		this.personService.addPerson(pPerson);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 	/**
 	 * this allows the user to modify a person
 	 */
 	@PutMapping("/person")
-	public void updatePerson(@RequestParam("address") String pAddress, @RequestParam("firstName") String pFirstName, @RequestParam("lastName") String pLastName) throws IOException {
+	public ResponseEntity updatePerson(@RequestParam("address") String pAddress, @RequestParam("firstName") String pFirstName, @RequestParam("lastName") String pLastName) throws Exception {
 		this.personService.updatePerson(pAddress, pFirstName, pLastName);
+		if (Objects.isNull(this.personService.getPersonByFullName(pFirstName, pLastName))) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@DeleteMapping("/person")
-	public void deletePerson(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
+	public ResponseEntity deletePerson(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws IOException {
 		this.personService.deletePerson(firstName, lastName);
+		if (Objects.isNull(this.personService.getPersonByFullName(firstName, lastName))) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 

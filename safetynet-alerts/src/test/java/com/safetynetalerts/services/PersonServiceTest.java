@@ -109,7 +109,7 @@ class PersonServiceTest {
 	}
 
 	@Test
-	void updatePersonAddressTest() throws IOException {
+	void updatePersonAddressTest() throws Exception {
 		String address = "18 rue Jean Moulin";
 		Person person = new Person.PersonBuilder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build();
 		List<Person> persons = new ArrayList<>();

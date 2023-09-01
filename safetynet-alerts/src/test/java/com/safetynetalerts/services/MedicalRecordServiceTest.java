@@ -1,7 +1,6 @@
 package com.safetynetalerts.services;
 
 import com.safetynetalerts.models.MedicalRecord;
-import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.utils.Utils;
@@ -29,13 +28,6 @@ public class MedicalRecordServiceTest {
 	@Autowired
 	private IMedicalRecordService service;
 
-	@Test
-	void getAllMedicalRecordsTest() throws IOException {
-		List<MedicalRecord> expectedMedicalRecords = utils.getAllMedicalRecords();
-		List<Person> persons = utils.getAllPeople();
-		List<MedicalRecord> medicalRecordToReturn = this.service.getAllMedicalRecords(persons);
-		assertEquals(expectedMedicalRecords, medicalRecordToReturn);
-	}
 
 	@Test
 	void isUnderagedTest() {
@@ -79,10 +71,18 @@ public class MedicalRecordServiceTest {
 	}*/
 
 	@Test
-	void getAllMedicalRecordsTest2() throws IOException {
-		List<MedicalRecord> medicalRecords = this.service.getAllMedicalRecords();
-		List<MedicalRecord> medicalRecordsToCompare = this.utils.getAllMedicalRecords();
-		assertEquals(medicalRecordsToCompare, medicalRecords);
+	void getAllMedicalRecordsTest() throws IOException {
+		MedicalRecord medicalRecord = new MedicalRecord();
+		MedicalRecord medicalRecord2 = new MedicalRecord();
+		MedicalRecord medicalRecord3 = new MedicalRecord();
+		List<MedicalRecord> medicalRecords = new ArrayList<>();
+		medicalRecords.add(medicalRecord);
+		medicalRecords.add(medicalRecord2);
+		medicalRecords.add(medicalRecord3);
+
+		when(this.utils.getAllMedicalRecords()).thenReturn(medicalRecords);
+		List<MedicalRecord> medicalRecordsToCompare = this.service.getAllMedicalRecords();
+		assertEquals(medicalRecords, medicalRecordsToCompare);
 	}
 
 	@Test
@@ -94,9 +94,14 @@ public class MedicalRecordServiceTest {
 		List<MedicalRecord> medicalRecords = new ArrayList<>();
 		medicalRecords.add(m);
 
-		when(this.data.getMedicalRecords()).thenReturn(medicalRecords);
+		when(this.utils.getAllMedicalRecords()).thenReturn(medicalRecords);
 		MedicalRecord mToCompare = this.service.getMedicalRecordByUnderage(m.getFirstName(), m.getLastName());
 		assertEquals(m, mToCompare);
+	}
+
+	@Test
+	public void addMedicalRecordTest() {
+
 	}
 
 }
