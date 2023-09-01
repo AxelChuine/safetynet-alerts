@@ -2,7 +2,6 @@ package com.safetynetalerts.services;
 
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.service.IMedicalRecordService;
-import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,6 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class MedicalRecordServiceTest {
-
-	@MockBean
-	private Data data;
 
 	@MockBean
 	private Utils utils;
@@ -99,9 +95,5 @@ public class MedicalRecordServiceTest {
 		assertEquals(m, mToCompare);
 	}
 
-	@Test
-	public void addMedicalRecordTest() {
-
-	}
 
 }

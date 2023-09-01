@@ -4,6 +4,7 @@ import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IPersonService;
+import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -30,6 +31,9 @@ public class PersonControllerTest {
 
     @MockBean
     private IPersonService service;
+
+    @MockBean
+    private Utils utils;
 
     @BeforeEach
     public void setUp() {

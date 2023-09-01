@@ -2,9 +2,11 @@ package com.safetynetalerts.service.impl;
 
 import com.safetynetalerts.dto.PhoneAlertDto;
 import com.safetynetalerts.dto.SimplePersonDto;
+import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IFireStationService;
+import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonFirestationService;
 import com.safetynetalerts.service.IPersonService;
 import com.safetynetalerts.utils.Data;
@@ -14,14 +16,19 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PersonFirestationServiceImpl implements IPersonFirestationService {
 
     @Autowired
     private IFireStationService fireStationService;
+
     @Autowired
     private Data data;
+
+    @Autowired
+    private IMedicalRecordService medicalRecordService;
 
     @Autowired
     private IPersonService personService;
@@ -52,5 +59,13 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
             cellNumbers.getCellNumbers().add(p.getPhone());
         }
         return cellNumbers;
+    }
+
+    @Override
+    public StationNumberDto getHeadCountByFirestation(String pStationNumber) throws IOException {
+        List<SimplePersonDto> simplePersons = this.getAllPersonsByFireStation(pStationNumber);
+        Map<String, Integer> mapPersons = this.medicalRecordService.countAllPersons(simplePersons);
+        StationNumberDto stationNumber = new StationNumberDto(simplePersons, mapPersons.get("majeurs"), mapPersons.get("mineurs"));
+        return stationNumber;
     }
 }

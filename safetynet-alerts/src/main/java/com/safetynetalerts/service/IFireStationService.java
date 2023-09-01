@@ -1,7 +1,6 @@
 package com.safetynetalerts.service;
 
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
-import com.safetynetalerts.dto.PhoneAlertDto;
 import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.FireStation;
@@ -14,8 +13,6 @@ import java.util.List;
 public interface IFireStationService {
 
 	List<FireStation> getAllFireStations() throws IOException;
-
-	StationNumberDto getHeadCountByFirestation(String pStationNumber) throws IOException;
 
 	void createFirestation(FireStation pFirestation);
 

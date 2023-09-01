@@ -2,7 +2,6 @@ package com.safetynetalerts.service.impl;
 
 import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.MedicalRecord;
-import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +19,6 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	@Autowired
 	private Utils utils;
 
-	@Override
-	public List<MedicalRecord> getAllMedicalRecords(List<Person> pPersons) throws IOException {
-		List<MedicalRecord> medicalRecords = utils.getAllMedicalRecords();
-		List<MedicalRecord> medicalRecordsToReturn = new ArrayList<>();
-		for (Person p : pPersons) {
-			for (MedicalRecord m : medicalRecords) {
-				if (p.firstName.equals(m.getFirstName()) && p.lastName.equals(m.getLastName())) {
-					medicalRecordsToReturn.add(m);
-				}
-			}
-		}
-		return medicalRecordsToReturn;
-	}
 
 	@Override
 	public boolean isUnderaged(String pBirthDate) {

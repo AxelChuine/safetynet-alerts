@@ -30,7 +30,7 @@ public class FireStationController {
 
 	@GetMapping("/firestation")
 	public ResponseEntity<StationNumberDto> getHeadCountByFirestation(@RequestParam("stationNumber") String stationNumber) throws IOException {
-		StationNumberDto persons = this.service.getHeadCountByFirestation(stationNumber);
+		StationNumberDto persons = this.personFirestationService.getHeadCountByFirestation(stationNumber);
 		return ResponseEntity.ok(persons);
 	}
 

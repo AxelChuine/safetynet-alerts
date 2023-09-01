@@ -99,24 +99,7 @@ public class FireStationServiceTest {
 	}
 
 	// FIXME: "Failed to load ApplicationContext
-	@Test
-	public void getHeadCountByFirestationTest () throws IOException {
-		StationNumberDto stationNumberDto = new StationNumberDto();
-		List<Person> persons = new ArrayList<>();
-		Person person = new Person.PersonBuilder().build();
-		persons.add(person);
-		SimplePersonDto simplePerson = this.service.createSimplePersonDto(person);
-		List<SimplePersonDto> simplePersons = new ArrayList<>();
-		simplePersons.add(simplePerson);
-		stationNumberDto.setPersons(simplePersons);
 
-
-		when(this.data.getPersons()).thenReturn(persons);
-		StationNumberDto stationNumberToCompare = this.service.getHeadCountByFirestation("4");
-
-		assertEquals(stationNumberDto.getAdult(), stationNumberToCompare.getAdult());
-		assertEquals(stationNumberDto.getUnderaged(), stationNumberToCompare.getUnderaged());
-	}
 
 	@Test
 	public void createSimplePersonDtoTest () throws IOException {

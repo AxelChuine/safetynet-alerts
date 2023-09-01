@@ -23,9 +23,6 @@ import java.util.stream.Collectors;
 public class PersonServiceImpl implements IPersonService {
 
 	@Autowired
-	private FireStationServiceImpl fireStationService;
-
-	@Autowired
 	private Data data;
 
 	@Autowired

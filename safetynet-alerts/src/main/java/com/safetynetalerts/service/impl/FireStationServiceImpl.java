@@ -27,9 +27,6 @@ public class FireStationServiceImpl implements IFireStationService {
 	private Utils utils;
 
 	@Autowired
-	private IPersonFirestationService personFirestationService;
-
-	@Autowired
 	private IMedicalRecordService medicalRecordService;
 
 	List<FireStation> fireStations = new ArrayList<>();
@@ -37,14 +34,6 @@ public class FireStationServiceImpl implements IFireStationService {
 	public List<FireStation> getAllFireStations() throws IOException {
 		this.fireStations = this.utils.getAllFirestations();
 		return fireStations;
-	}
-
-	@Override
-	public StationNumberDto getHeadCountByFirestation(String pStationNumber) throws IOException {
-		List<SimplePersonDto> simplePersons = this.personFirestationService.getAllPersonsByFireStation(pStationNumber);
-		Map<String, Integer> mapPersons = this.medicalRecordService.countAllPersons(simplePersons);
-		StationNumberDto stationNumber = new StationNumberDto(simplePersons, mapPersons.get("majeurs"), mapPersons.get("mineurs"));
-		return stationNumber;
 	}
 
 	public void createFirestation(FireStation pFirestation) {

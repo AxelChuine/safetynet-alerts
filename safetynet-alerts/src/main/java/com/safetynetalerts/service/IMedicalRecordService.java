@@ -2,14 +2,12 @@ package com.safetynetalerts.service;
 
 import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.MedicalRecord;
-import com.safetynetalerts.models.Person;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 public interface IMedicalRecordService {
-	List<MedicalRecord> getAllMedicalRecords(List<Person> pPersons) throws IOException;
 
 	boolean isUnderaged(String birthDate);
 
