@@ -131,7 +131,7 @@ public class PersonControllerTest {
     }
 
     @Test
-    public void deletePersonTest() throws IOException {
+    public void deletePersonTest() throws Exception {
         String firstName = "Jean";
         String lastName = "Dubois";
         Person person = new Person.PersonBuilder().build();
@@ -142,7 +142,7 @@ public class PersonControllerTest {
     }
 
     @Test
-    public void deletePersonNotExistingTest () throws IOException {
+    public void deletePersonNotExistingTest () throws Exception {
         String firstName = "Jean";
         String lastName = "Duboid";
 

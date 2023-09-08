@@ -14,7 +14,7 @@ public class ManagerException {
      */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<String> handleException(ResourceNotFoundException e) {
-        return new ResponseEntity<>(e.getMessage() + e.getResources(), e.getStatus());
+        return new ResponseEntity<>(e.getMessage() + e.getMessage(), e.getStatus());
     }
 
     /**

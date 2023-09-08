@@ -1,12 +1,13 @@
 package com.safetynetalerts.services;
 
+import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IPersonFirestationService;
+import com.safetynetalerts.service.IPersonService;
 import com.safetynetalerts.service.impl.FireStationServiceImpl;
-import com.safetynetalerts.service.impl.PersonServiceImpl;
 import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.util.AssertionErrors.fail;
 
 @SpringBootTest
 class PersonServiceTest {
@@ -30,7 +32,7 @@ class PersonServiceTest {
 	private Utils utils;
 
 	@Autowired
-	private PersonServiceImpl service;
+	private IPersonService service;
 
 	@MockBean
 	private FireStationServiceImpl firestationService;
@@ -122,9 +124,28 @@ class PersonServiceTest {
 		assertEquals(person.getLastName(), personToCompare.getLastName());
 	}
 
+	@Test
+	void updatePersonAddressNotFoundTest() throws Exception {
+		String address = "18 rue Jean Moulin";
+		Person person = new Person.PersonBuilder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build();
+		List<Person> persons = new ArrayList<>();
+		persons.add(person);
+		String resource = "person"+ " " + person.firstName + " " + person.lastName;
+		ResourceNotFoundException resourceNotFoundException = new ResourceNotFoundException(resource);
+
+		when(this.service.getPersonByFullName(person.firstName, person.lastName)).thenReturn(null);
+		Person personToCompare = new Person.PersonBuilder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build();
+		try {
+			this.service.updatePerson(address, personToCompare.firstName, personToCompare.lastName);
+			fail("Should throw resource not found exception");
+		}catch(ResourceNotFoundException aExp){
+			assert(aExp.getMessage().contains(resource));
+		}
+	}
+
 
 	@Test
-	void getPersonByFullNameTest () {
+	void getPersonByFullNameTest () throws Exception {
 		Person p = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("12 rue de la marine").city("Lille").zip("62000").phone("05-66-99-88").email("test@gmail.com").build();
 		List<Person> persons = new ArrayList<>();
 		List<Person> personsToCompare = new ArrayList<>();

@@ -6,10 +6,8 @@ import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IMedicalRecordService;
-import com.safetynetalerts.service.IPersonService;
 import com.safetynetalerts.utils.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -20,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class PersonServiceImpl implements IPersonService {
+public class PersonServiceImpl implements com.safetynetalerts.service.IPersonService {
 
 	@Autowired
 	private Data data;
@@ -53,7 +51,7 @@ public class PersonServiceImpl implements IPersonService {
 		return emailAddresses;
 	}
 
-	public Person getPersonByFullName(String pFirstName, String pLastName) {
+	public Person getPersonByFullName(String pFirstName, String pLastName) throws Exception {
 		Integer count = 0;
 		Person person = new Person.PersonBuilder().build();
 		List<Person> persons = data.getPersons();
@@ -64,7 +62,7 @@ public class PersonServiceImpl implements IPersonService {
 		return person;
 	}
 
-	public List<Person> getPersonsByAddress(String pAddress) throws IOException {
+	public List<Person> getPersonsByAddress(String pAddress) {
 		List<Person> personsByAddress = data.getPersons();
 		personsByAddress = personsByAddress.stream().filter(p -> Objects.equals(p.address, pAddress))
 				.collect(Collectors.toList());
@@ -115,8 +113,9 @@ public class PersonServiceImpl implements IPersonService {
 	@Override
 	public void updatePerson(String pAddress, String pFirstName, String pLastName) throws Exception {
 		Person person = this.getPersonByFullName(pFirstName, pLastName);
-		if (Objects.isNull(person)) {
-			throw new ResourceNotFoundException(new String(pFirstName + " " + pLastName), HttpStatus.NOT_FOUND);
+		String resource = "person" + " " + person.firstName + " " + person.lastName;
+		if (Objects.isNull(person.firstName) || Objects.isNull(person.lastName)) {
+			throw new ResourceNotFoundException(resource);
 		}
 		Person modifiedPerson = new Person.PersonBuilder().firstName(person.firstName).lastName(person.lastName).address(pAddress).city(person.city).
 				zip(person.zip).phone(person.phone).email(person.email).build();

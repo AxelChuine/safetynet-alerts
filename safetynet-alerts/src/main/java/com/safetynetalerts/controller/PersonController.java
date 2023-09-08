@@ -63,7 +63,7 @@ public class PersonController {
 	}
 
 	@DeleteMapping("/person")
-	public ResponseEntity deletePerson(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws IOException {
+	public ResponseEntity deletePerson(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws Exception {
 		this.personService.deletePerson(firstName, lastName);
 		if (Objects.isNull(this.personService.getPersonByFullName(firstName, lastName))) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

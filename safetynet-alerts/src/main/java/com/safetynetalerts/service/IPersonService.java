@@ -16,7 +16,7 @@ public interface IPersonService {
 
 	List<String> getAllEmailAddressesByCity(String pCity) throws Exception;
 
-	Person getPersonByFullName(String pFirstName, String pLastName) throws IOException;
+	Person getPersonByFullName(String pFirstName, String pLastName) throws Exception;
 
 
 	// FIXME: à tester
@@ -39,4 +39,6 @@ public interface IPersonService {
 	SimplePersonDto convertToSimplePersonDto(Person personToChange);
 
 	PersonDto convertToPersonDto(Person pPerson);
+
+	List<Person> getPersonsByAddress(String address);
 }

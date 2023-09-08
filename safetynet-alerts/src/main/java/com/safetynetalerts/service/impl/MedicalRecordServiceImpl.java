@@ -143,4 +143,9 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	public List<MedicalRecord> getAllMedicalRecords() throws IOException {
 		return this.utils.getAllMedicalRecords();
 	}
+
+	@Override
+	public void updateMedicalRecord(MedicalRecord medicalRecord, String allergie) {
+
+	}
 }

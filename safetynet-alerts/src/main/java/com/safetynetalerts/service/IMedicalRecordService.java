@@ -25,4 +25,7 @@ public interface IMedicalRecordService {
 
 	List<MedicalRecord> getAllMedicalRecords() throws IOException;
 
+
+	void updateMedicalRecord (MedicalRecord medicalRecord, String allergie);
+
 }
