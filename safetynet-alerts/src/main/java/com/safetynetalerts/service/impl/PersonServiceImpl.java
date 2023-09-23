@@ -6,6 +6,7 @@ import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IMedicalRecordService;
+import com.safetynetalerts.service.IPersonService;
 import com.safetynetalerts.utils.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class PersonServiceImpl implements com.safetynetalerts.service.IPersonService {
+public class PersonServiceImpl implements IPersonService {
 
 	@Autowired
 	private Data data;
@@ -55,8 +56,8 @@ public class PersonServiceImpl implements com.safetynetalerts.service.IPersonSer
 		Integer count = 0;
 		Person person = new Person.PersonBuilder().build();
 		List<Person> persons = data.getPersons();
-		Optional<Person> personOptional = persons.stream().filter(p -> Objects.equals(p.firstName, pFirstName) && Objects.equals(p.lastName, pLastName)).findFirst();
-		if (personOptional.isPresent()) {
+		Optional<Person> personOptional = persons.stream().filter(p -> Objects.equals(p.getFirstName(), pFirstName) && Objects.equals(p.getLastName(), pLastName)).findFirst();
+		if (!Objects.isNull(personOptional) && personOptional.isPresent()) {
 			person = personOptional.get();
 		}
 		return person;
@@ -113,8 +114,8 @@ public class PersonServiceImpl implements com.safetynetalerts.service.IPersonSer
 	@Override
 	public void updatePerson(String pAddress, String pFirstName, String pLastName) throws Exception {
 		Person person = this.getPersonByFullName(pFirstName, pLastName);
-		String resource = "person" + " " + person.firstName + " " + person.lastName;
 		if (Objects.isNull(person.firstName) || Objects.isNull(person.lastName)) {
+			String resource = "person" + " " + pFirstName + " " + pLastName;
 			throw new ResourceNotFoundException(resource);
 		}
 		Person modifiedPerson = new Person.PersonBuilder().firstName(person.firstName).lastName(person.lastName).address(pAddress).city(person.city).
@@ -131,21 +132,6 @@ public class PersonServiceImpl implements com.safetynetalerts.service.IPersonSer
 		}
 	}
 
-	@Override
-	public PersonDto convertToPersonDto(Person pPerson) {
-		PersonDto person = new PersonDto(pPerson.firstName, pPerson.lastName, pPerson.address, pPerson.city, pPerson.zip, pPerson.phone, pPerson.email);
-		return person;
-	}
-
-	@Override
-	public List<PersonDto> convertToListDto(List<Person> pPersons) {
-		List<PersonDto> persons = new ArrayList<>();
-		for (Person p : pPersons) {
-			PersonDto person = new PersonDto(p.firstName, p.lastName, p.address, p.city, p.zip, p.phone, p.email);
-			persons.add(person);
-		}
-		return persons;
-	}
 
 	@Override
 	public void deletePerson(String firstName, String lastName) {
@@ -162,8 +148,16 @@ public class PersonServiceImpl implements com.safetynetalerts.service.IPersonSer
 
 	@Override
 	public SimplePersonDto convertToSimplePersonDto(Person pPerson) {
-		SimplePersonDto person = new SimplePersonDto(pPerson.firstName, pPerson.lastName, pPerson.address, pPerson.phone);
-		return person;
+        return new SimplePersonDto(pPerson.firstName, pPerson.lastName, pPerson.address, pPerson.phone);
+	}
+
+	@Override
+	public List<SimplePersonDto> convertToDtoList(List<Person> pPersons) {
+		List<SimplePersonDto> simplePersonDtos = new ArrayList<>();
+		for (Person p : pPersons) {
+			simplePersonDtos.add(this.convertToSimplePersonDto(p));
+		}
+		return simplePersonDtos;
 	}
 
 }

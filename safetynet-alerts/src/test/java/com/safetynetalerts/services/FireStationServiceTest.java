@@ -7,7 +7,7 @@ import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IFireStationService;
-import com.safetynetalerts.service.IPersonFirestationService;
+import com.safetynetalerts.service.IPersonService;
 import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.Test;
@@ -26,11 +26,11 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class FireStationServiceTest {
 
-	@MockBean
-	private IPersonFirestationService personFirestationService;
-
 	@Autowired
 	private IFireStationService service;
+
+	@MockBean
+	private IPersonService personService;
 
 	@MockBean
 	private Utils utils;
@@ -104,12 +104,12 @@ public class FireStationServiceTest {
 	@Test
 	public void createSimplePersonDtoTest () throws IOException {
 		Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("47 rue du général de Gaulle").phone("04").build();
-		SimplePersonDto simplePerson = new SimplePersonDto(person.firstName, person.lastName, person.address, person.phone);
+		com.safetynetalerts.dto.SimplePersonDto simplePerson = new com.safetynetalerts.dto.SimplePersonDto(person.firstName, person.lastName, person.address, person.phone);
 		List<Person> persons = new ArrayList<>();
 		persons.add(person);
 
 		when(this.data.getPersons()).thenReturn(persons);
-		SimplePersonDto simplePersonToCompare = this.service.createSimplePersonDto(person);
+		com.safetynetalerts.dto.SimplePersonDto simplePersonToCompare = this.service.createSimplePersonDto(person);
 		assertEquals(simplePerson, simplePersonToCompare);
 	}
 
@@ -122,7 +122,7 @@ public class FireStationServiceTest {
 		SimplePersonDto simplePersonDto = this.service.createSimplePersonDto(person);
 		List<SimplePersonDto> simplePersons = new ArrayList<>();
 		simplePersons.add(simplePersonDto);
-		stationNumberDto.setPersons(simplePersons);
+		//stationNumberDto.setPersons(this.personService.convertToSimplePersonDto(simplePersons));
 
 		when(this.data.getPersons()).thenReturn(persons);
 		StationNumberDto stationNumberToCompare = this.service.createStationNumberDto(persons);

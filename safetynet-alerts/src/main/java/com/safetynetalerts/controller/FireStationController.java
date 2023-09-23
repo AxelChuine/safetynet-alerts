@@ -55,8 +55,8 @@ public class FireStationController {
 	}
 
 	@GetMapping("/flood/stations")
-	public ResponseEntity<List<PersonMedicalRecordDto>> getAllPersonsAndMedicalRecordByFirestation(@RequestParam("stations") List<String> stations) {
-		return ResponseEntity.ok(this.service.getPersonsAndMedicalRecordsByFirestation(stations));
+	public ResponseEntity<List<PersonMedicalRecordDto>> getAllPersonsAndMedicalRecordByFirestation(@RequestParam("stations") List<String> stations) throws IOException {
+		return ResponseEntity.ok(this.personFirestationService.getPersonsAndMedicalRecordsByFirestation(stations));
 	}
 
 }

@@ -16,11 +16,11 @@ public interface IFireStationService {
 
 	void createFirestation(FireStation pFirestation);
 
-    List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations);
+
 
 	PersonMedicalRecordDto convertToPersonMedicalRecord(Person pPerson, MedicalRecord pMedicalRecord) throws IOException;
 
-	List<FireStation> getFireStationsByStationNumber(String stationNumber) throws IOException;
+	FireStation getFireStationsByStationNumber(String stationNumber) throws IOException;
 
 	SimplePersonDto createSimplePersonDto(Person pPerson);
 

@@ -2,8 +2,8 @@ package com.safetynetalerts.services;
 
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.PersonDto;
-import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.FireStation;
+import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IPersonFirestationService;
 import com.safetynetalerts.service.IPersonService;
@@ -131,15 +131,15 @@ class PersonServiceTest {
 		List<Person> persons = new ArrayList<>();
 		persons.add(person);
 		String resource = "person"+ " " + person.firstName + " " + person.lastName;
-		ResourceNotFoundException resourceNotFoundException = new ResourceNotFoundException(resource);
+		Person personToCompare = person;
 
-		when(this.service.getPersonByFullName(person.firstName, person.lastName)).thenReturn(null);
-		Person personToCompare = new Person.PersonBuilder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build();
+		/*when(this.service.getPersonByFullName(person.firstName, person.lastName)).thenReturn(null);*/
+		when(this.data.getPersons()).thenReturn(new ArrayList<>());
 		try {
 			this.service.updatePerson(address, personToCompare.firstName, personToCompare.lastName);
 			fail("Should throw resource not found exception");
-		}catch(ResourceNotFoundException aExp){
-			assert(aExp.getMessage().contains(resource));
+		}catch(ResourceNotFoundException resourceNotFoundException){
+			assert(resourceNotFoundException.getMessage().contains(resource));
 		}
 	}
 
@@ -193,7 +193,7 @@ class PersonServiceTest {
 	public void convertToSimplePersonDtoTest() {
 		SimplePersonDto person = new SimplePersonDto("John", "Boyd", "13 rue Jean Moulin", "04-91-45-87-36");
 		Person personToChange = new Person.PersonBuilder().firstName("John").lastName("Boyd").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
-		SimplePersonDto personToCompare = this.service.convertToSimplePersonDto(personToChange);
+		com.safetynetalerts.dto.SimplePersonDto personToCompare = this.service.convertToSimplePersonDto(personToChange);
 		assertEquals(person.getFirstName(), personToCompare.getFirstName());
 	}
 
@@ -214,5 +214,24 @@ class PersonServiceTest {
 		List<Person> personsToCompare = this.service.getFamilyMembers(expectedPersons, lastName);
 		// ASSERT
 		assertEquals(persons, personsToCompare);
+	}
+
+	@Test
+	public void convertToDtoListTest () {
+		List<Person> persons = new ArrayList<>();
+		Person p1 = new Person.PersonBuilder().build();
+		Person p2 = new Person.PersonBuilder().build();
+		Person p3 = new Person.PersonBuilder().build();
+		persons.add(p1);
+		persons.add(p2);
+		persons.add(p3);
+		List<SimplePersonDto> personsDto = new ArrayList<>();
+		List<SimplePersonDto> personsToCompare = new ArrayList<>();
+		for (Person person : persons) {
+			personsDto.add(this.service.convertToSimplePersonDto(person));
+		}
+
+		personsToCompare = this.service.convertToDtoList(persons);
+		assertEquals(personsDto, personsToCompare);
 	}
 }

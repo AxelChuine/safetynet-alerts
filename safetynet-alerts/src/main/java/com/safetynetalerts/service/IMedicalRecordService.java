@@ -1,7 +1,7 @@
 package com.safetynetalerts.service;
 
-import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.MedicalRecord;
+import com.safetynetalerts.models.Person;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,7 +11,7 @@ public interface IMedicalRecordService {
 
 	boolean isUnderaged(String birthDate);
 
-	Map<String, Integer> countAllPersons(List<SimplePersonDto> pPersons) throws IOException;
+	Map<String, Integer> countAllPersons(List<Person> pPersons) throws IOException;
 
 
 	// FIXME: méthode à tester de nouveau.

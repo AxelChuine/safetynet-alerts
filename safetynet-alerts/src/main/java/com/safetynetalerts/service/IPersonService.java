@@ -32,13 +32,12 @@ public interface IPersonService {
 
 	void updatePerson(String pAddress, String pFirstName, String pLastName) throws IOException, ResourceNotFoundException, Exception;
 
-	List<PersonDto> convertToListDto(List<Person> pPersons);
-
 	void deletePerson(String firstName, String lastName);
 
 	SimplePersonDto convertToSimplePersonDto(Person personToChange);
 
-	PersonDto convertToPersonDto(Person pPerson);
+	List<SimplePersonDto> convertToDtoList (List<Person> pPersons);
+
 
 	List<Person> getPersonsByAddress(String address);
 }

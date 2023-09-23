@@ -1,9 +1,10 @@
 package com.safetynetalerts.service.impl;
 
+import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.dto.PhoneAlertDto;
-import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.FireStation;
+import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
@@ -34,19 +35,18 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
     private IPersonService personService;
 
 
-    public List<SimplePersonDto> getAllPersonsByFireStation(String stationNumber) throws IOException {
-        List<Person> persons = data.getPersons();
-        List<SimplePersonDto> personsByFirestation = new ArrayList<>();
-        List<FireStation> firestations = fireStationService.getFireStationsByStationNumber(stationNumber);
-        for (FireStation firestation : firestations) {
+    public List<Person> getAllPersonsByFireStation(String stationNumber) throws IOException {
+    List<Person> persons = new ArrayList<>();
+        persons = data.getPersons();
+        List<Person> personsByFirestation = new ArrayList<>();
+        FireStation firestation = fireStationService.getFireStationsByStationNumber(stationNumber);
             for (Person person : persons) {
                 if (firestation.getAddresses().contains(person.getAddress())) {
                     if (!personsByFirestation.contains(person)) {
-                        personsByFirestation.add(this.personService.convertToSimplePersonDto(person));
+                        personsByFirestation.add(person);
                     }
                 }
             }
-        }
         return personsByFirestation;
     }
 
@@ -54,8 +54,8 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
     @Override
     public PhoneAlertDto getCellNumbers(String stationNumber) throws IOException {
         PhoneAlertDto cellNumbers = new PhoneAlertDto();
-        List<SimplePersonDto> persons = this.getAllPersonsByFireStation(stationNumber);
-        for (SimplePersonDto p : persons) {
+        List<Person> persons = this.getAllPersonsByFireStation(stationNumber);
+        for (Person p : persons) {
             cellNumbers.getCellNumbers().add(p.getPhone());
         }
         return cellNumbers;
@@ -63,9 +63,21 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
 
     @Override
     public StationNumberDto getHeadCountByFirestation(String pStationNumber) throws IOException {
-        List<SimplePersonDto> simplePersons = this.getAllPersonsByFireStation(pStationNumber);
-        Map<String, Integer> mapPersons = this.medicalRecordService.countAllPersons(simplePersons);
-        StationNumberDto stationNumber = new StationNumberDto(simplePersons, mapPersons.get("majeurs"), mapPersons.get("mineurs"));
-        return stationNumber;
+        List<Person> persons = this.getAllPersonsByFireStation(pStationNumber);
+        Map<String, Integer> mapPersons = this.medicalRecordService.countAllPersons(persons);
+        return new StationNumberDto(persons, mapPersons.get("majeurs"), mapPersons.get("mineurs"));
+    }
+
+    @Override
+    public List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations) throws IOException {
+        List<FireStation> firestations = this.fireStationService.getAllFireStations();
+        List<Person> persons = new ArrayList<>();
+        List<MedicalRecord> medicalRecords = new ArrayList<>();
+        List<PersonMedicalRecordDto> personMedicalRecordDtos = new ArrayList<>();
+        PersonMedicalRecordDto personMedicalRecordDto = new PersonMedicalRecordDto();
+        for (FireStation firestation : firestations) {
+            persons = this.getAllPersonsByFireStation(firestation.getStationNumber());
+        }
+        return null;
     }
 }
