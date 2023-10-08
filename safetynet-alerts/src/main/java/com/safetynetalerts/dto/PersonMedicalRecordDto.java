@@ -8,7 +8,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 public class PersonMedicalRecordDto {
 
     private String firstName;

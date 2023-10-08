@@ -1,6 +1,8 @@
 package com.safetynetalerts.services;
 
 
+import com.safetynetalerts.dto.PersonMedicalRecordDto;
+import com.safetynetalerts.dto.PhoneAlertDto;
 import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
@@ -44,10 +46,11 @@ public class PersonFirestationServiceTest {
     public void getHeadCountByFirestationTest () throws IOException {
         // mocking the firestationService side
         StationNumberDto stationNumberDto = new StationNumberDto();
+        String address = "94 rue jean moulin";
         List<Person> persons = new ArrayList<>();
-        Person p1 = new Person.PersonBuilder().build();
-        Person p2 = new Person.PersonBuilder().build();
-        Person p3 = new Person.PersonBuilder().build();
+        Person p1 = new Person.PersonBuilder().firstName("prenom1").lastName("nom1").address(address).build();
+        Person p2 = new Person.PersonBuilder().firstName("prenom2").lastName("nom2").address(address).build();
+        Person p3 = new Person.PersonBuilder().firstName("prenom3").lastName("nom3").address(address).build();
         persons.add(p1);
         persons.add(p2);
         persons.add(p3);
@@ -63,7 +66,7 @@ public class PersonFirestationServiceTest {
         //mocking a firestation
         FireStation fireStation = new FireStation();
         Set<String> addresses = new HashSet<>();
-        addresses.add("94 rue jean moulin");
+        addresses.add(address);
         fireStation.setStationNumber("4");
         fireStation.setAddresses(addresses);
 
@@ -79,12 +82,76 @@ public class PersonFirestationServiceTest {
 
         when(this.data.getPersons()).thenReturn(persons);
         when(this.fireStationService.getFireStationsByStationNumber("4")).thenReturn(fireStation);
-        when(this.medicalRecordService.getAllMedicalRecords()).thenReturn(medicalRecords);
         when(this.medicalRecordService.countAllPersons(persons)).thenReturn(mapPersons);
         StationNumberDto stationNumberToCompare = this.service.getHeadCountByFirestation("4");
 
         assertEquals(stationNumberDto.getPersons(), stationNumberToCompare.getPersons());
         assertEquals(stationNumberDto.getUnderaged(), stationNumberToCompare.getUnderaged());
         assertEquals(stationNumberDto.getPersons(), stationNumberToCompare.getPersons());
+    }
+
+    @Test
+    public void getCellNumbersTest() throws IOException {
+        List<Person> persons = new ArrayList<>();
+        String address = "75 champs élysée";
+        Set<String> addresses = new HashSet<>();
+        addresses.add(address);
+        Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address(address).phone("04").build();
+        persons.add(person);
+        PhoneAlertDto cellNumbers = new PhoneAlertDto();
+        cellNumbers.getCellNumbers().add(person.phone);
+        String stationNumber = "4";
+        FireStation fireStation = new FireStation(addresses, "4");
+
+        when(this.data.getPersons()).thenReturn(persons);
+        when(this.fireStationService.getFireStationsByStationNumber(stationNumber)).thenReturn(fireStation);
+        PhoneAlertDto cellNumbersToCompare = this.service.getCellNumbers("4");
+
+        assertEquals(cellNumbers.getCellNumbers(), cellNumbersToCompare.getCellNumbers());
+    }
+
+    // FIXME: test à régler
+    @Test
+    public void getPersonsAndMedicalRecordsByFirestationTest () throws IOException {
+        String address = "101 rue jean moulin";
+        List<String> medications = new ArrayList<>();
+        String medication = "paracétamol";
+        medications.add(medication);
+        String allergie = "lactose";
+        List<String> allergies = new ArrayList<>();
+        allergies.add(allergie);
+        List<PersonMedicalRecordDto> personMedicalRecordDtos = new ArrayList<>();
+        String firstName = "Jean";
+        String lastName = "Dubois";
+        PersonMedicalRecordDto personMedicalRecordDto = new PersonMedicalRecordDto(firstName, lastName, "04", 0, medications, allergies);
+        personMedicalRecordDtos.add(personMedicalRecordDto);
+
+        List<Person> persons = new ArrayList<>();
+        Person p1 = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address(address).phone("04").build();
+        persons.add(p1);
+        MedicalRecord m1 = new MedicalRecord.MedicalRecordBuilder().firstName("Jean").lastName("Dubois").medications(medications).allergies(allergies).birthDate("09/29/1998").build();
+
+        List<FireStation> firestations = new ArrayList<>();
+        String stationNumber = "4";
+        Set<String> addresses = new HashSet<>();
+        addresses.add(address);
+        FireStation firestation = new FireStation(addresses, stationNumber);
+        List<String> stations = new ArrayList<>();
+        stations.add(firestation.getStationNumber());
+        firestations.add(firestation);
+
+        String birthDate = "01/01/2001";
+        MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).allergies(allergies).medications(medications).build();
+
+
+        when(this.data.getFirestations()).thenReturn(firestations);
+        when(this.data.getPersons()).thenReturn(persons);
+        when(this.medicalRecordService.getMedicalRecordByFullName(firstName, lastName)).thenReturn(medicalRecord);
+        when(this.fireStationService.getFireStationsByStationNumber(stationNumber)).thenReturn(firestation);
+        List<PersonMedicalRecordDto> personMedicalRecordDtosToCompare = this.service.getPersonsAndMedicalRecordsByFirestation(stations);
+
+        assertEquals(personMedicalRecordDtos.get(0).getFirstName(), personMedicalRecordDtosToCompare.get(0).getFirstName());
+        assertEquals(personMedicalRecordDtos.get(0).getLastName(), personMedicalRecordDtosToCompare.get(0).getLastName());
+        assertEquals(personMedicalRecordDtos.get(0).getAge(), personMedicalRecordDtosToCompare.get(0).getAge());
     }
 }

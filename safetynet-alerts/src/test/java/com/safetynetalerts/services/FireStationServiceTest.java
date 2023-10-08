@@ -1,13 +1,12 @@
 package com.safetynetalerts.services;
 
+import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
-import com.safetynetalerts.dto.SimplePersonDto;
-import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IFireStationService;
-import com.safetynetalerts.service.IPersonService;
+import com.safetynetalerts.service.IPersonFirestationService;
 import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.Test;
@@ -19,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -30,7 +30,7 @@ public class FireStationServiceTest {
 	private IFireStationService service;
 
 	@MockBean
-	private IPersonService personService;
+	private IPersonFirestationService personFirestationService;
 
 	@MockBean
 	private Utils utils;
@@ -40,28 +40,42 @@ public class FireStationServiceTest {
 
 	@Test
 	public void getAllFireStationsTest() throws IOException {
+		String address = "1509 Culver St";
 		List<FireStation> expectedFireStations = new ArrayList<>();
 		FireStation f1 = new FireStation();
 		f1.setStationNumber("2");
-		f1.setAddresses(new HashSet<>());
-		f1.addAddress("1509 Culver St");
+		Set<String> addresses = new HashSet<>();
+		addresses.add(address);
+		f1.setAddresses(addresses);
 		expectedFireStations.add(f1);
-		when(utils.getAllFirestations()).thenReturn(expectedFireStations);
-		List<FireStation> stationsToCompare = this.service.getAllFireStations();
-		assertEquals(expectedFireStations, stationsToCompare);
+		List<FireStationDto> expectedFirestationsToCompare = new ArrayList<>();
+
+		for (FireStation firestation : expectedFireStations) {
+			FireStationDto fireStationDto = new FireStationDto(new HashSet<>(firestation.getAddresses()), firestation.getStationNumber());
+			expectedFirestationsToCompare.add(fireStationDto);
+		}
+
+		when(this.data.getFirestations()).thenReturn(expectedFireStations);
+		List<FireStationDto> stationsToCompare = this.service.getAllFireStations();
+		assertEquals(expectedFirestationsToCompare, stationsToCompare);
 	}
 
 	@Test
 	public void createFirestationTest() {
 		// GIVEN
-		FireStation firestation = new FireStation();
-		firestation.setStationNumber("17");
+		FireStationDto fireStationDto = new FireStationDto();
+		fireStationDto.setStationNumber("17");
+		Set<String> addresses = new HashSet<>();
+		String address = "17 rue Général de gaulle";
+		addresses.add(address);
+		fireStationDto.setAddresses(addresses);
+		FireStation fireStation = new FireStation(new HashSet<>(fireStationDto.getAddresses()), fireStationDto.getStationNumber());
 		List<FireStation> firestations = new ArrayList<>();
-		firestations.add(firestation);
+		firestations.add(fireStation);
 
 		// WHEN
 		when(this.data.getFirestations()).thenReturn(firestations);
-		this.service.createFirestation(firestation);
+		this.service.createFirestation(fireStationDto);
 		// THEN
 		assertEquals(firestations.get(0).getStationNumber(), "17");
 	}
@@ -98,9 +112,6 @@ public class FireStationServiceTest {
 
 	}
 
-	// FIXME: "Failed to load ApplicationContext
-
-
 	@Test
 	public void createSimplePersonDtoTest () throws IOException {
 		Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("47 rue du général de Gaulle").phone("04").build();
@@ -114,36 +125,19 @@ public class FireStationServiceTest {
 	}
 
 	@Test
-	public void createStationNumberDtoTest () throws IOException {
-		List<Person> persons = new ArrayList<>();
-		Person person = new Person.PersonBuilder().build();
-		persons.add(person);
-		StationNumberDto stationNumberDto = new StationNumberDto();
-		SimplePersonDto simplePersonDto = this.service.createSimplePersonDto(person);
-		List<SimplePersonDto> simplePersons = new ArrayList<>();
-		simplePersons.add(simplePersonDto);
-		//stationNumberDto.setPersons(this.personService.convertToSimplePersonDto(simplePersons));
+	public void getFireStationsByStationNumberTest () throws IOException {
+		String stationNumber = "4";
+		Set<String> addresses = new HashSet<>();
+		String address = "47 rue du puit";
+		addresses.add(address);
+		FireStation fireStation = new FireStation(addresses, stationNumber);
+		List<FireStation> firestations = new ArrayList<>();
+		firestations.add(fireStation);
 
-		when(this.data.getPersons()).thenReturn(persons);
-		StationNumberDto stationNumberToCompare = this.service.createStationNumberDto(persons);
-		assertEquals(stationNumberDto.getAdult(), stationNumberToCompare.getAdult());
-		assertEquals(stationNumberDto.getUnderaged(), stationNumberToCompare.getUnderaged());
-		assertEquals(stationNumberDto.getPersons().get(0).getFirstName(), stationNumberToCompare.getPersons().get(0).getFirstName());
+
+		when(this.data.getFirestations()).thenReturn(firestations);
+		FireStation fireStationToCompare = this.service.getFireStationsByStationNumber(stationNumber);
+
+		assertEquals(fireStation, fireStationToCompare);
 	}
-
-	//FIXME: le service renvoie null.
-	/*@Test
-	public void getCellNumbersTest() throws IOException {
-		List<Person> persons = new ArrayList<>();
-		Person person = new Person.PersonBuilder().phone("04").build();
-		persons.add(person);
-		PhoneAlertDto cellNumbers = new PhoneAlertDto();
-		cellNumbers.getCellNumbers().add(person.phone);
-
-		when(this.data.getPersons()).thenReturn(persons);
-		PhoneAlertDto cellNumbersToCompare = this.personFirestationService.getCellNumbers("4");
-
-		assertEquals(cellNumbers, cellNumbersToCompare);
-	}*/
-
 }

@@ -1,9 +1,9 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.dto.PhoneAlertDto;
 import com.safetynetalerts.dto.StationNumberDto;
-import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonFirestationService;
@@ -41,17 +41,17 @@ public class FireStationController {
 	}
 
 	@GetMapping("/firestations")
-	public ResponseEntity<List<FireStation>> getFirestations() throws IOException {
+	public ResponseEntity<List<FireStationDto>> getFirestations() throws IOException {
 		return ResponseEntity.ok(this.service.getAllFireStations());
 	}
 
 	@PostMapping("/firestation")
-	public ResponseEntity createFirestation (@RequestBody FireStation pFirestation) {
+	public ResponseEntity createFirestation (@RequestBody FireStationDto pFirestation) {
 		this.service.createFirestation(pFirestation);
 		if (Objects.isNull(pFirestation)) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 	@GetMapping("/flood/stations")

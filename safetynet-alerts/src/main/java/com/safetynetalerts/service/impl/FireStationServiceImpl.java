@@ -1,13 +1,14 @@
 package com.safetynetalerts.service.impl;
 
+import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.dto.SimplePersonDto;
-import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
+import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,17 +23,25 @@ public class FireStationServiceImpl implements IFireStationService {
 	private Utils utils;
 
 	@Autowired
+	private Data data;
+
+	@Autowired
 	private IMedicalRecordService medicalRecordService;
 
 	List<FireStation> fireStations = new ArrayList<>();
 
-	public List<FireStation> getAllFireStations() throws IOException {
-		this.fireStations = this.utils.getAllFirestations();
-		return fireStations;
+	public List<FireStationDto> getAllFireStations() throws IOException {
+		List<FireStationDto> fireStationDtos = new ArrayList<>();
+		for (FireStation fireStation : this.data.getFirestations()) {
+			FireStationDto fireStationDto = new FireStationDto(new HashSet<>(fireStation.getAddresses()), fireStation.getStationNumber());
+			fireStationDtos.add(fireStationDto);
+		}
+		return fireStationDtos;
 	}
 
-	public void createFirestation(FireStation pFirestation) {
-		this.fireStations.add(pFirestation);
+	public void createFirestation(FireStationDto pFirestation) {
+		FireStation fireStation = new FireStation(new HashSet<>(pFirestation.getAddresses()), pFirestation.getStationNumber());
+		this.data.getFirestations().add(fireStation);
 	}
 
 
@@ -62,10 +71,10 @@ public class FireStationServiceImpl implements IFireStationService {
 	@Override
 	public FireStation getFireStationsByStationNumber(String stationNumber) throws IOException {
 		FireStation fireStation = new FireStation();
-		Optional<FireStation> optionalFireStation = utils.getAllFirestations().stream()
-				.filter(firestation -> firestation.getStationNumber().equals(stationNumber))
+		Optional<FireStation> optionalFireStation = this.data.getFirestations().stream()
+				.filter(firestation -> Objects.equals(firestation.getStationNumber(), stationNumber))
 				.findFirst();
-		if (Objects.isNull(optionalFireStation) && optionalFireStation.isPresent())  {
+		if (optionalFireStation.isPresent())  {
 			fireStation = optionalFireStation.get();
 		}
 		return fireStation;
@@ -77,19 +86,6 @@ public class FireStationServiceImpl implements IFireStationService {
 		return simplePersonDto;
 	}
 
-	@Override
-	public StationNumberDto createStationNumberDto(List<Person> pPersons) throws IOException {
-        for (Person p : pPersons) {
-			Person person = new Person.PersonBuilder().firstName(p.firstName).lastName(p.lastName).address(p.address).city(p.city).zip(p.zip).phone(p.phone).email(p.email).build();
-			pPersons.add(person);
-		}
-		StationNumberDto stationNumberDto = new StationNumberDto();
-		stationNumberDto.setPersons(pPersons);
-		Map<String, Integer> mapPersons = this.medicalRecordService.countAllPersons(pPersons);
-		stationNumberDto.setAdult(mapPersons.get("majeurs"));
-		stationNumberDto.setUnderaged(mapPersons.get("mineurs"));
-		return stationNumberDto;
-	}
 
 
 

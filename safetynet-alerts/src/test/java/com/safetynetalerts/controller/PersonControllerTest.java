@@ -96,13 +96,9 @@ public class PersonControllerTest {
     }
 
 
-    // FIXME: problème de type: apparemment, la fonction ne prend que du personDto et je lui envoie une void.
     @Test
     public void createPersonTest() throws IOException {
         PersonDto personDto = new PersonDto("Jean", "Dubois", "47 rue du Jambon", "Lilles", "62400", "04", "test@gmail.com");
-        List<Person> persons = new ArrayList<>();
-        Person person = new Person.PersonBuilder().firstName(personDto.getFirstName()).lastName(personDto.getLastName()).address(personDto.getAddress()).city(personDto.getCity()).zip(personDto.getZip()).phone(personDto.getPhone()).email(personDto.getEmail()).build();
-
         ResponseEntity responsePerson = this.controller.createPerson(personDto);
         assertEquals(HttpStatus.CREATED, responsePerson.getStatusCode());
     }

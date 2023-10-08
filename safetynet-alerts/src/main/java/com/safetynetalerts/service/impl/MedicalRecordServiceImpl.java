@@ -1,10 +1,10 @@
 package com.safetynetalerts.service.impl;
 
-import com.safetynetalerts.dto.PersonDto;
-import com.safetynetalerts.dto.SimplePersonDto;
+import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IMedicalRecordService;
+import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +20,9 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 
 	@Autowired
 	private Utils utils;
+
+	@Autowired
+	private Data data;
 
 
 	@Override
@@ -48,23 +51,19 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 		Integer adults = 0;
 		Integer underaged = 0;
 		List<Integer> index = new ArrayList<>();
-		List<MedicalRecord> m1 = this.utils.getAllMedicalRecords();
+		List<MedicalRecord> m1 = this.data.getMedicalRecords();
 		for (Person p : pPersons) {
 			for (MedicalRecord m : m1) {
-				if (!(p.getFirstName().equals(m.getFirstName()) && p.getLastName().equals(m.getLastName()))) {
-					index.add(m1.indexOf(m));
-				}
-				if (!this.isUnderaged(m.getBirthDate())) {
-					adults++;
-					persons.put("majeurs", adults);
-				} else {
-					underaged++;
-					persons.put("mineurs", underaged);
+				if (p.getFirstName().equals(m.getFirstName()) && p.getLastName().equals(m.getLastName())) {
+					if (!this.isUnderaged(m.getBirthDate())) {
+						adults++;
+						persons.put("majeurs", adults);
+					} else {
+						underaged++;
+						persons.put("mineurs", underaged);
+					}
 				}
 			}
-		}
-		for (Integer count : index) {
-			m1.remove(count);
 		}
 		return persons;
 	}
@@ -74,18 +73,22 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	 * @param pLastName
 	 * @return a list of medical records according to the parameters
 	 */
-	public List<MedicalRecord> getMedicalRecordByFullName(String pFirstName, String pLastName) throws IOException {
-		List<MedicalRecord> records = this.utils.getAllMedicalRecords();
-		List<MedicalRecord> recordsToReturn = new ArrayList<>();
+	public MedicalRecord getMedicalRecordByFullName(String pFirstName, String pLastName) throws IOException {
+		List<MedicalRecord> records = this.data.getMedicalRecords();
+		MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().build();
 		int count = 0;
 		while (count < records.size()) {
 			if (records.get(count).getFirstName().equals(pFirstName)
 					&& records.get(count).getLastName().equals(pLastName)) {
-				recordsToReturn.add(records.get(count));
+				medicalRecord.setFirstName(records.get(count).getFirstName());
+				medicalRecord.setLastName(records.get(count).getLastName());
+				medicalRecord.setBirthDate(records.get(count).getBirthDate());
+				medicalRecord.setMedications(records.get(count).getMedications());
+				medicalRecord.setAllergies(records.get(count).getAllergies());
 			}
 			count++;
 		}
-		return recordsToReturn;
+		return medicalRecord;
 	}
 
 	/**
@@ -97,14 +100,10 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	 */
 	@Override
 	public Integer getAgeOfPerson(String firstName, String lastName) throws IOException {
-		Integer age = 0;
-		String v1 = "";
-		for (MedicalRecord m : this.getMedicalRecordByFullName(firstName, lastName)) {
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-			LocalDate birthDate = LocalDate.parse(m.getBirthDate(), formatter);
-			LocalDate instant = LocalDate.now();
-			age = Period.between(birthDate, instant).getYears();
-		}
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+		LocalDate birthDate = LocalDate.parse(this.getMedicalRecordByFullName(firstName, lastName).getBirthDate(), formatter);
+		LocalDate instant = LocalDate.now();
+		Integer age = Period.between(birthDate, instant).getYears();
 		return age;
 	}
 
@@ -129,7 +128,7 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	@Override
 	public MedicalRecord getMedicalRecordByUnderage(String pFirstName, String pLastName) throws IOException {
 		MedicalRecord medicalRecord = null;
-		Optional<MedicalRecord> medicalRecordOptional = this.getAllMedicalRecords().stream()
+		Optional<MedicalRecord> medicalRecordOptional = this.data.getMedicalRecords().stream()
 				.filter(m -> Objects.equals(m.getFirstName(), pFirstName) && Objects.equals(m.getLastName(), pLastName))
 				.findFirst();
 		if (medicalRecordOptional.isPresent()) {
@@ -142,12 +141,46 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	 * @return retrieve all medical records
 	 */
 	@Override
-	public List<MedicalRecord> getAllMedicalRecords() throws IOException {
-		return this.utils.getAllMedicalRecords();
+	public List<MedicalRecordDto> getAllMedicalRecords() throws IOException {
+		List<MedicalRecord> medicalRecords = this.data.getMedicalRecords();
+		List<MedicalRecordDto> medicalRecordDtos = new ArrayList<>();
+		for (MedicalRecord m : medicalRecords) {
+			MedicalRecordDto medicalRecordDto = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName(m.getFirstName()).lastName(m.getLastName()).birthDate(m.getBirthDate()).allergies(m.getAllergies()).medications(m.getMedications()).build();
+			medicalRecordDtos.add(medicalRecordDto);
+		}
+		return medicalRecordDtos;
 	}
 
 	@Override
-	public void updateMedicalRecord(MedicalRecord medicalRecord, String allergie) {
+	public void updateMedicalRecord(String firstName, String lastName, String allergie) throws IOException {
+		Integer index = 0;
+		Integer indexOfElement = 0;
+		for (MedicalRecord m  : this.data.getMedicalRecords()) {
+			if (Objects.equals(m.getFirstName(), firstName) && Objects.equals(m.getLastName(), lastName)) {
+				m.getAllergies().add(allergie);
+				indexOfElement = index;
+			}
+			index ++;
+		}
+		this.data.getMedicalRecords().get(indexOfElement).getAllergies().add(allergie);
+	}
 
+	@Override
+	public void createMedicalRecord(MedicalRecordDto pMedicalRecord) {
+		MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(pMedicalRecord.getFirstName()).lastName(pMedicalRecord.getLastName()).birthDate(pMedicalRecord.getBirthDate()).medications(pMedicalRecord.getMedications()).allergies(pMedicalRecord.getAllergies()).build();
+		this.data.getMedicalRecords().add(medicalRecord);
+	}
+
+	@Override
+	public void deleteMedicalRecordByFullName(String firstName, String lastName) {
+		Integer index = 0;
+		Integer indexOfElement = 0;
+		for (MedicalRecord medicalRecord : this.data.getMedicalRecords()) {
+			if (Objects.equals(medicalRecord.getFirstName(), firstName) && Objects.equals(medicalRecord.getLastName(), lastName)) {
+				indexOfElement = index;
+			}
+			index++;
+		}
+		this.data.getMedicalRecords().remove(indexOfElement);
 	}
 }

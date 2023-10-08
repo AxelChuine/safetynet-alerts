@@ -82,11 +82,7 @@ public class PersonServiceImpl implements IPersonService {
 		List<Person> peopleByAddress = this.getPersonsByAddress(pAddress);
 		for (Person p : peopleByAddress) {
 			if (this.medicalRecordService.isUnderaged(p.firstName, p.lastName)) {
-				ChildAlertDto childAlertDto = new ChildAlertDto();
-				childAlertDto.setFirstName(p.firstName);
-				childAlertDto.setLastName(p.lastName);
-				childAlertDto.setAge(this.medicalRecordService.getAgeOfPerson(p.firstName, p.lastName));
-				childAlertDto.setFamily(this.getFamilyMembers(peopleByAddress, p.lastName));
+				ChildAlertDto childAlertDto = new ChildAlertDto(p.firstName, p.lastName, this.medicalRecordService.getAgeOfPerson(p.firstName, p.lastName), this.getFamilyMembers(peopleByAddress, p.lastName));
 				childrenAlertDto.add(childAlertDto);
 			}
 		}

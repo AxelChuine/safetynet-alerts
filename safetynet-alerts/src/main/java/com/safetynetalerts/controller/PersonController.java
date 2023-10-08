@@ -31,7 +31,7 @@ public class PersonController {
 		return ResponseEntity.ok(childDto);
 	}
 
-	@GetMapping("/person")
+	@GetMapping("/persons")
 	public ResponseEntity<List<Person>> getAllPersons() throws IOException {
 		List<Person> persons = this.personService.getAllPersons();
 		return ResponseEntity.ok(persons);

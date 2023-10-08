@@ -37,20 +37,19 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
 
     public List<Person> getAllPersonsByFireStation(String stationNumber) throws IOException {
     List<Person> persons = new ArrayList<>();
-        persons = data.getPersons();
-        List<Person> personsByFirestation = new ArrayList<>();
-        FireStation firestation = fireStationService.getFireStationsByStationNumber(stationNumber);
-            for (Person person : persons) {
-                if (firestation.getAddresses().contains(person.getAddress())) {
-                    if (!personsByFirestation.contains(person)) {
+    persons = this.data.getPersons();
+    List<Person> personsByFirestation = new ArrayList<>();
+    FireStation firestation = fireStationService.getFireStationsByStationNumber(stationNumber);
+        for (Person person : persons) {
+            if (firestation.getAddresses().contains(person.getAddress())) {
+                if (!personsByFirestation.contains(person)) {
                         personsByFirestation.add(person);
-                    }
                 }
             }
+        }
         return personsByFirestation;
     }
 
-    //FIXME: circular dependancy
     @Override
     public PhoneAlertDto getCellNumbers(String stationNumber) throws IOException {
         PhoneAlertDto cellNumbers = new PhoneAlertDto();
@@ -65,19 +64,27 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
     public StationNumberDto getHeadCountByFirestation(String pStationNumber) throws IOException {
         List<Person> persons = this.getAllPersonsByFireStation(pStationNumber);
         Map<String, Integer> mapPersons = this.medicalRecordService.countAllPersons(persons);
-        return new StationNumberDto(persons, mapPersons.get("majeurs"), mapPersons.get("mineurs"));
+        return new StationNumberDto(persons, mapPersons.get("mineurs"), mapPersons.get("majeurs"));
     }
 
     @Override
     public List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations) throws IOException {
-        List<FireStation> firestations = this.fireStationService.getAllFireStations();
+        List<FireStation> firestations = this.data.getFirestations();
         List<Person> persons = new ArrayList<>();
         List<MedicalRecord> medicalRecords = new ArrayList<>();
         List<PersonMedicalRecordDto> personMedicalRecordDtos = new ArrayList<>();
-        PersonMedicalRecordDto personMedicalRecordDto = new PersonMedicalRecordDto();
         for (FireStation firestation : firestations) {
             persons = this.getAllPersonsByFireStation(firestation.getStationNumber());
         }
-        return null;
+        for (Person p : persons) {
+            medicalRecords.add(this.medicalRecordService.getMedicalRecordByFullName(p.firstName, p.lastName));
+        }
+        for (Person p : persons) {
+            for (MedicalRecord m : medicalRecords) {
+                PersonMedicalRecordDto personMedicalRecordDto = new PersonMedicalRecordDto(p.firstName, p.lastName, p.phone, this.medicalRecordService.getAgeOfPerson(p.firstName, p.lastName), m.getMedications(), m.getAllergies());
+                personMedicalRecordDtos.add(personMedicalRecordDto);
+            }
+        }
+        return personMedicalRecordDtos;
     }
 }
