@@ -34,9 +34,18 @@ public class FireStationTest {
     @Test
     public void addAddressTest () {
         FireStation fireStation1 = new FireStation();
+        Set<String> addressesToCompare = new HashSet<>();
+        fireStation1.setAddresses(addressesToCompare);
         fireStation1.addAddress(this.address);
 
         assertEquals(this.fireStation.getAddresses(), fireStation1.getAddresses());
+    }
+
+    @Test
+    public void hashCodeFireStationTest () {
+        FireStation fireStation1 = this.fireStation;
+
+        assertEquals(this.fireStation.hashCode(), fireStation1.hashCode());
     }
 
 

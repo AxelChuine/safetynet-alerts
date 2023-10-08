@@ -12,7 +12,6 @@ import java.util.Set;
 @Getter
 @Setter
 @JsonIgnoreProperties
-@ToString
 @EqualsAndHashCode
 public class FireStation {
 	private Set<String> addresses;
