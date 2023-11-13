@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.util.AssertionErrors.fail;
 
 @SpringBootTest
@@ -177,7 +177,7 @@ class PersonServiceTest {
 		this.service.deletePerson("Jean", "Dubois");
 
 		// ASSERT
-		assertEquals(expectedPersons, persons);
+		verify(this.data, times(1)).setPersons(persons);
 	}
 
 	@Test

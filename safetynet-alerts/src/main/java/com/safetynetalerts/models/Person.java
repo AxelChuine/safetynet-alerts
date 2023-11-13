@@ -82,4 +82,18 @@ public class Person {
 		this.email = email;
 	}
 
+	public boolean equals (Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Person person = (Person) obj;
+		return this.firstName.equals(person.firstName) && this.lastName.equals(person.lastName);
+	}
+
 }

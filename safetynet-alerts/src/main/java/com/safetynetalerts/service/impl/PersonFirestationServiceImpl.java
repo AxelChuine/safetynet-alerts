@@ -36,8 +36,7 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
 
 
     public List<Person> getAllPersonsByFireStation(String stationNumber) throws IOException {
-    List<Person> persons = new ArrayList<>();
-    persons = this.data.getPersons();
+    List<Person> persons = this.data.getPersons();
     List<Person> personsByFirestation = new ArrayList<>();
     FireStation firestation = fireStationService.getFireStationsByStationNumber(stationNumber);
         for (Person person : persons) {

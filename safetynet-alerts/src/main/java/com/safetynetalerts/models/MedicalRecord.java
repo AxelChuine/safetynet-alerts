@@ -1,5 +1,6 @@
 package com.safetynetalerts.models;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode
 public class MedicalRecord {
 	private String firstName;
 	private String lastName;
@@ -67,4 +69,18 @@ public class MedicalRecord {
 		this.medications = pMedications;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		MedicalRecord medicalRecord = (MedicalRecord) obj;
+		return this.lastName.equals(medicalRecord.lastName) && this.firstName.equals(medicalRecord.firstName);
+	}
 }
