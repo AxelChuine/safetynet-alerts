@@ -46,8 +46,11 @@ public class PersonServiceImpl implements IPersonService {
 		List<Person> persons = this.getAllPersonsByCity(pCity);
 		List<String> emailAddresses = new ArrayList<>();
 		for (Person p : persons) {
-			if (p.city.equals(pCity)) {
-				emailAddresses.add(p.email);
+			if (Objects.equals(p.city, pCity)) {
+				Optional<String> optionalEmail = emailAddresses.stream().filter(e -> Objects.equals(e, p.email)).findFirst();
+				if (!optionalEmail.isPresent()) {
+					emailAddresses.add(p.email);
+				}
 			}
 		}
 		return emailAddresses;
