@@ -1,6 +1,6 @@
 ../.idea/.name
 
 
-*.gz
+*.txt
 
-logs.txt
+*.gz
