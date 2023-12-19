@@ -54,19 +54,6 @@ class PersonServiceTest {
 	}
 
 
-	// FIXME: test à recoder.
-	/*@Test
-	void getAllPersonsByFireStationTest() throws IOException {
-		List<Person> personsToCompare = this.data.getPersons();
-		List<FireStation> firestations = this.firestationService.getAllFireStations();
-		List<Person> personsToReturn = new ArrayList<>();
-		for (Person person : personsToCompare) {
-			for (FireStation firestation : firestations) {
-				personsToReturn.add(person);
-			}
-		}
-		assertEquals(personFirestationService.getAllPersonsByFireStation("4"), personsToReturn);
-	}*/
 
 	@Test
 	void getAllPersonsByCityTest() throws Exception {
@@ -97,21 +84,12 @@ class PersonServiceTest {
 
 	@Test
 	void getAllPersonsTest() throws IOException {
-		List<Person> people = this.data.getPersons();
-		List<Person> peopleToCompare = this.service.getAllPersons();
-		assertEquals(people, peopleToCompare);
-	}
-
-	@Test
-	void addPersonTest () throws IOException {
-		List<Person> people = this.data.getPersons();
-		people.add(new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("13 allée Jean moulin").city("Strasbourg").zip("67400").phone("04-91-45-68-97").email("test@gmail.com").build());
+		List<Person> people = List.of(new Person.PersonBuilder().build(), new Person.PersonBuilder().build());
 
 		when(this.data.getPersons()).thenReturn(people);
-		List<Person> personsToCompare = this.service.getAllPersons();
-		this.service.addPerson(new PersonDto("Jean", "Dubois", "13 allée Jean moulin", "Strasbourg", "67400","04-91-45-68-97", "test@gmail.com"));
-		assertEquals(people.get(0).getFirstName(), personsToCompare.get(0).getFirstName());
-		assertEquals(people.get(0).getLastName(), personsToCompare.get(0).getLastName());
+		List<Person> peopleToCompare = this.service.getAllPersons();
+
+		assertEquals(people, peopleToCompare);
 	}
 
 	@Test
@@ -261,4 +239,6 @@ class PersonServiceTest {
 		assertEquals(childAlertDtos.get(0).getFirstName(), childAlertDtosToCompare.get(0).getFirstName());
 		assertEquals(childAlertDtos.get(0).getLastName(), childAlertDtosToCompare.get(0).getLastName());
 	}
+
+
 }

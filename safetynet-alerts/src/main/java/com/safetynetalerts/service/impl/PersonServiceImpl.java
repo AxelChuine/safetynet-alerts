@@ -11,6 +11,7 @@ import com.safetynetalerts.utils.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.event.ListDataEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,14 +98,14 @@ public class PersonServiceImpl implements IPersonService {
 
 	@Override
 	public List<Person> getAllPersons() {
-		return data.getPersons();
+		List<Person> persons = this.data.getPersons();
+		return persons;
 	}
 
 	@Override
 	public void addPerson(PersonDto pPerson) {
-		data.getPersons().add(new Person.PersonBuilder().firstName(pPerson.getFirstName()).
-				lastName(pPerson.getLastName()).address(pPerson.getAddress()).city(pPerson.getCity()).zip(pPerson.getZip())
-				.phone(pPerson.getPhone()).email(pPerson.getEmail()).build());
+		Person person = new Person.PersonBuilder().firstName(pPerson.getFirstName()).lastName(pPerson.getLastName()).address(pPerson.getAddress()).city(pPerson.getCity()).zip(pPerson.getZip()).phone(pPerson.getPhone()).email(pPerson.getEmail()).build();
+		this.data.getPersons().add(person);
 	}
 
 	@Override
