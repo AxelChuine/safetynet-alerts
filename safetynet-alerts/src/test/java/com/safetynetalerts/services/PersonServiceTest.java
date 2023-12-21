@@ -116,7 +116,6 @@ class PersonServiceTest {
 		String resource = "person"+ " " + person.firstName + " " + person.lastName;
 		Person personToCompare = person;
 
-		/*when(this.service.getPersonByFullName(person.firstName, person.lastName)).thenReturn(null);*/
 		when(this.data.getPersons()).thenReturn(new ArrayList<>());
 		try {
 			this.service.updatePerson(address, personToCompare.firstName, personToCompare.lastName);

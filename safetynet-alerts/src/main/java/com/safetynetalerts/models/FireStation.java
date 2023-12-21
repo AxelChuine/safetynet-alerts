@@ -9,8 +9,7 @@ import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @JsonIgnoreProperties
 @EqualsAndHashCode
 public class FireStation {
