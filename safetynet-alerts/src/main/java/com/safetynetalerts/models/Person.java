@@ -1,22 +1,18 @@
 package com.safetynetalerts.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Builder
-@Getter
-@Setter
+@Data
 @JsonIgnoreProperties
 public class Person {
 
 	public final String firstName;
 	public final String lastName;
-	public final String phone;
-	public final String zip;
 	public final String address;
 	public final String city;
+	public final String zip;
+	public final String phone;
 	public final String email;
 
 	public static class PersonBuilder {
@@ -28,57 +24,58 @@ public class Person {
 		private String phone;
 		private String email;
 
-		public PersonBuilder() {
+		public PersonBuilder () {
+
 		}
 
-		public PersonBuilder firstName(String firstName) {
-			this.firstName = firstName;
+		public PersonBuilder firstName (String pFirstName) {
+			this.firstName = pFirstName;
 			return this;
 		}
 
-		public PersonBuilder lastName(String lastName) {
-			this.lastName = lastName;
+		public PersonBuilder lastName (String pLastName) {
+			this.lastName = pLastName;
 			return this;
 		}
 
-		public PersonBuilder phone(String phone) {
-			this.phone = phone;
+		public PersonBuilder address (String pAddress) {
+			this.address = pAddress;
 			return this;
 		}
 
-		public PersonBuilder zip(String zip) {
-			this.zip = zip;
+		public PersonBuilder city (String pCity) {
+			this.city = pCity;
 			return this;
 		}
 
-		public PersonBuilder address(String address) {
-			this.address = address;
+		public PersonBuilder zip (String pZip) {
+			this.zip = pZip;
 			return this;
 		}
 
-		public PersonBuilder city(String city) {
-			this.city = city;
+		public PersonBuilder phone (String pPhone) {
+			this.phone = pPhone;
 			return this;
 		}
 
-		public PersonBuilder email(String email) {
-			this.email = email;
+		public PersonBuilder email (String pEmail) {
+			this.email = pEmail;
 			return this;
 		}
 
-		public Person build() {
-			return new Person(firstName, lastName, phone, zip, address, city, email);
+		public Person build () {
+			return new Person(firstName, lastName, address, city, zip, phone, email);
 		}
 	}
 
-	private Person(String firstName, String lastName, String phone, String zip, String address, String city,
-				   String email) {
+	private Person(String firstName, String lastName, String address, String city, String zip,
+			 String phone, String email) {
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.phone = phone;
-		this.zip = zip;
 		this.address = address;
 		this.city = city;
+		this.zip = zip;
+		this.phone = phone;
 		this.email = email;
 	}
 

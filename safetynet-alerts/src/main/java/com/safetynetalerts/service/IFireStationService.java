@@ -16,8 +16,6 @@ public interface IFireStationService {
 
 	void createFirestation(FireStationDto pFirestation);
 
-
-
 	PersonMedicalRecordDto convertToPersonMedicalRecord(Person pPerson, MedicalRecord pMedicalRecord) throws IOException;
 
 	FireStation getFireStationsByStationNumber(String stationNumber) throws IOException;

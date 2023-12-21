@@ -17,31 +17,5 @@ public class ManagerException {
         return new ResponseEntity<>(e.getMessage() + e.getMessage(), e.getStatus());
     }
 
-    /**
-     * Method managing the RessourceAlreadyExistException.
-     *
-     * @param e The exception
-     *//*
-        @ExceptionHandler(RessourceAlreadyExistException.class)
-        public ResponseEntity<String> handleException(RessourceAlreadyExistException e) {
-
-            logger.error("Error : ressource {} already exist", e.getRessource());
-
-            return new ResponseEntity<>(e.getMessage() + e.getRessource(), e.getHttpStatus());
-        }
-
-        *//**
-     * Method managing the InternalServerErrorException.
-     *
-     * @param e The exception
-     *//*
-        @ExceptionHandler(InternalServerErrorException.class)
-        public ResponseEntity<String> handleException(InternalServerErrorException e) {
-
-            logger.error("Error during the operation");
-
-            return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
-        }*/
-
 }
 
