@@ -14,6 +14,7 @@ import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -92,19 +94,20 @@ public class PersonFirestationServiceTest {
 
     @Test
     public void getCellNumbersTest() throws IOException {
+        PhoneAlertDto cellNumbers = new PhoneAlertDto();
+        String phone = "04";
+        cellNumbers.getCellNumbers().add(phone);
         List<Person> persons = new ArrayList<>();
-        String address = "75 champs élysée";
+        String address = "95 rue jean moulin";
+        Person person = new Person.PersonBuilder().address(address).phone(phone).build();
+        persons.add(person);
         Set<String> addresses = new HashSet<>();
         addresses.add(address);
-        Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address(address).phone("04").build();
-        persons.add(person);
-        PhoneAlertDto cellNumbers = new PhoneAlertDto();
-        cellNumbers.getCellNumbers().add(person.phone);
         String stationNumber = "4";
-        FireStation fireStation = new FireStation(addresses, "4");
+        FireStation fireStation = new FireStation(addresses, stationNumber);
 
+        when(this.fireStationService.getFireStationsByStationNumber("4")).thenReturn(fireStation);
         when(this.data.getPersons()).thenReturn(persons);
-        when(this.fireStationService.getFireStationsByStationNumber(stationNumber)).thenReturn(fireStation);
         PhoneAlertDto cellNumbersToCompare = this.service.getCellNumbers("4");
 
         assertEquals(cellNumbers.getCellNumbers(), cellNumbersToCompare.getCellNumbers());

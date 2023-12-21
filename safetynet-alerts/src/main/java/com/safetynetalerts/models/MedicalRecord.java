@@ -1,14 +1,10 @@
 package com.safetynetalerts.models;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode
 public class MedicalRecord {
@@ -25,43 +21,43 @@ public class MedicalRecord {
 		private List<String> allergies;
 		private List<String> medications;
 
-		public MedicalRecordBuilder() {
+		public MedicalRecordBuilder () {
 
 		}
 
-		public MedicalRecordBuilder firstName(String pFirstName) {
+		public MedicalRecordBuilder firstName (String pFirstName) {
 			this.firstName = pFirstName;
 			return this;
 		}
 
-		public MedicalRecordBuilder lastName(String pLastName) {
+		public MedicalRecordBuilder lastName (String pLastName) {
 			this.lastName = pLastName;
 			return this;
 		}
 
-		public MedicalRecordBuilder birthDate(String pBirthDate) {
+		public MedicalRecordBuilder birthDate (String pBirthDate) {
 			this.birthDate = pBirthDate;
 			return this;
 		}
 
-		public MedicalRecordBuilder allergies(List<String> pAllergies) {
+		public MedicalRecordBuilder allergies (List<String> pAllergies) {
 			this.allergies = pAllergies;
 			return this;
 		}
 
-		public MedicalRecordBuilder medications(List<String> pMedications) {
+		public MedicalRecordBuilder medications (List<String> pMedications) {
 			this.medications = pMedications;
 			return this;
 		}
 
-		public MedicalRecord build() {
+		public MedicalRecord build () {
 			return new MedicalRecord(firstName, lastName, birthDate, allergies, medications);
 		}
-
 	}
 
+
 	private MedicalRecord(String pFirstName, String pLastName, String pBirthDate, List<String> pAllergies,
-			List<String> pMedications) {
+						  List<String> pMedications) {
 		this.firstName = pFirstName;
 		this.lastName = pLastName;
 		this.birthDate = pBirthDate;
