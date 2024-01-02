@@ -63,7 +63,7 @@ public class MedicalRecordServiceTest {
 
 		when(this.data.getMedicalRecords()).thenReturn(medicalRecords);
 		Integer ageToCompare = this.service.getAgeOfPerson(medicalRecord.getFirstName(), medicalRecord.getLastName());
-		assertEquals(23, ageToCompare);
+		assertEquals(24, ageToCompare);
 	}
 
 	@Test

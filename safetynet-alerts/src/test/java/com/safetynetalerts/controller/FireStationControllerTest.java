@@ -1,6 +1,7 @@
 package com.safetynetalerts.controller;
 
 import com.safetynetalerts.dto.FireStationDto;
+import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
@@ -61,6 +62,7 @@ public class FireStationControllerTest {
         persons.add(p1);
         persons.add(p2);
         persons.add(p3);
+        StationNumberDto stationNumberDto = new StationNumberDto(persons, 4, 2);
 
         Map<String, Integer> mapPersons = new HashMap<>();
         mapPersons.put("mineurs", 4);
@@ -69,7 +71,10 @@ public class FireStationControllerTest {
 
         when(this.medicalRecordService.countAllPersons(persons)).thenReturn(mapPersons);
         when(this.personFirestationService.getAllPersonsByFireStation("4")).thenReturn(persons);
-        ResponseEntity responseHeadCount = this.controller.getHeadCountByFirestation("4");
+        when(this.personFirestationService.getHeadCountByFirestation("4")).thenReturn(stationNumberDto);
+        ResponseEntity<StationNumberDto> responseHeadCount = this.controller.getHeadCountByFirestation("4");
+
+
         assertEquals(HttpStatus.OK, responseHeadCount.getStatusCode());
     }
 
