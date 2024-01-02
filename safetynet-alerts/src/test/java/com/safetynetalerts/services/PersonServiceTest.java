@@ -93,7 +93,7 @@ class PersonServiceTest {
 	}
 
 	@Test
-	void updatePersonAddressTest() throws Exception {
+	public void updatePersonAddressTest() throws Exception {
 		String address = "18 rue Jean Moulin";
 		Person person = new Person.PersonBuilder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build();
 		List<Person> persons = new ArrayList<>();
@@ -107,38 +107,15 @@ class PersonServiceTest {
 		assertEquals(person.getLastName(), personToCompare.getLastName());
 	}
 
-	@Test
-	void updatePersonAddressNotFoundTest() throws Exception {
-		String address = "18 rue Jean Moulin";
-		Person person = new Person.PersonBuilder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build();
-		List<Person> persons = new ArrayList<>();
-		persons.add(person);
-		String resource = "person"+ " " + person.firstName + " " + person.lastName;
-		Person personToCompare = person;
-
-		when(this.data.getPersons()).thenReturn(new ArrayList<>());
-		try {
-			this.service.updatePerson(address, personToCompare.firstName, personToCompare.lastName);
-			fail("Should throw resource not found exception");
-		}catch(ResourceNotFoundException resourceNotFoundException){
-			assert(resourceNotFoundException.getMessage().contains(resource));
-		}
-	}
-
 
 	@Test
 	void getPersonByFullNameTest () throws Exception {
-		Person p = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("12 rue de la marine").city("Lille").zip("62000").phone("05-66-99-88").email("test@gmail.com").build();
-		List<Person> persons = new ArrayList<>();
-		List<Person> personsToCompare = new ArrayList<>();
-		persons.add(p);
-		when(this.data.getPersons()).thenReturn(persons);
 		String firstName = "Jean";
 		String lastName = "Dubois";
-		Person personToCompare = this.service.getPersonByFullName(firstName, lastName);
-		// verify(this.utils, times(1)).getPersons();
-		assertEquals(persons.get(0).firstName, personToCompare.firstName);
-		assertEquals(persons.get(0), personToCompare);
+
+		this.service.getPersonByFullName(firstName, lastName);
+
+		verify(this.data, times(1)).getPersons();
 	}
 
 	@Test

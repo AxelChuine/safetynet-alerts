@@ -16,7 +16,7 @@ public interface IPersonService {
 
 	List<String> getAllEmailAddressesByCity(String pCity) throws Exception;
 
-	Person getPersonByFullName(String pFirstName, String pLastName) throws Exception;
+	PersonDto getPersonByFullName(String pFirstName, String pLastName) throws Exception;
 
 
 	// FIXME: à tester
@@ -28,9 +28,9 @@ public interface IPersonService {
 
 	List<Person> getAllPersons() throws IOException;
 
-	void addPerson(PersonDto pPerson) throws IOException;
+	PersonDto addPerson(PersonDto pPerson) throws IOException;
 
-	void updatePerson(String pAddress, String pFirstName, String pLastName) throws IOException, ResourceNotFoundException, Exception;
+	PersonDto updatePerson(String pAddress, String pFirstName, String pLastName) throws IOException, ResourceNotFoundException, Exception;
 
 	void deletePerson(String firstName, String lastName);
 
