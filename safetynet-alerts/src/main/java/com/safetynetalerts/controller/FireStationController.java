@@ -38,14 +38,16 @@ public class FireStationController {
 	public ResponseEntity<StationNumberDto> getHeadCountByFirestation(@RequestParam("stationNumber") String stationNumber) throws IOException {
 		logger.info("get head count by firestation");
 		StationNumberDto persons = this.personFirestationService.getHeadCountByFirestation(stationNumber);
-		return ResponseEntity.ok(persons);
+		if (Objects.isNull(persons)) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(persons, HttpStatus.OK);
 	}
 
 	@GetMapping("/phone-alert")
 	public ResponseEntity<PhoneAlertDto> getCellNumbers(@RequestParam("stationNumber") String stationNumber) throws IOException {
 		logger.info("get cell numbers by station number");
-		PhoneAlertDto cellNumbers = this.personFirestationService.getCellNumbers(stationNumber);
-		return ResponseEntity.ok(cellNumbers);
+		return new ResponseEntity<>(this.personFirestationService.getCellNumbers(stationNumber), HttpStatus.OK);
 	}
 
 	@GetMapping("/firestations")

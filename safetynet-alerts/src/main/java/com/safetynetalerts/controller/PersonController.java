@@ -38,15 +38,13 @@ public class PersonController {
 	@GetMapping("/childAlert")
 	public ResponseEntity<List<ChildAlertDto>> getChildByAddress(@RequestParam("address") String address) throws IOException {
 		logger.info("launch of retrieval of every child by address");
-		List<ChildAlertDto> childDto = this.personService.getChildByAddress(address);
-		return ResponseEntity.ok(childDto);
+		return new ResponseEntity<>(this.personService.getChildByAddress(address), HttpStatus.OK);
 	}
 
 	@GetMapping("/persons")
 	public ResponseEntity<List<Person>> getAllPersons() throws IOException {
 		logger.info("launch retrieval of every persons");
-		List<Person> persons = this.personService.getAllPersons();
-		return ResponseEntity.ok(persons);
+		return new ResponseEntity<>(this.personService.getAllPersons(), HttpStatus.OK);
 	}
 
 	/**
@@ -57,37 +55,30 @@ public class PersonController {
 	 * @throws IOException
 	 */
 	@PostMapping("/person")
-	public ResponseEntity createPerson(@RequestBody PersonDto pPerson) throws IOException {
+	public ResponseEntity<PersonDto> createPerson(@RequestBody PersonDto pPerson) throws IOException {
 		logger.info("launch of creation of a person");
-		Optional<Person> optionalPerson = this.personService.getAllPersons().stream().filter(person -> Objects.equals(person.firstName, pPerson.getFirstName()) && Objects.equals(person.lastName, pPerson.getLastName())).findFirst();
-		if (optionalPerson.isPresent()) {
-			return new ResponseEntity(HttpStatus.BAD_REQUEST);
-		}
-		this.personService.addPerson(pPerson);
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		return new ResponseEntity<>(this.personService.addPerson(pPerson), HttpStatus.CREATED);
 	}
 
 	/**
 	 * this allows the user to modify a person
 	 */
+
+	//FIXME: test failure : le mock ne fonctionne pas (?): il nullifie toutes les couches mais ne retourne pas une personne.
 	@PutMapping("/person")
-	public ResponseEntity updatePerson(@RequestParam("address") String pAddress, @RequestParam("firstName") String pFirstName, @RequestParam("lastName") String pLastName) throws Exception {
+	public ResponseEntity<PersonDto> updatePerson(@RequestParam("address") String pAddress, @RequestParam("firstName") String pFirstName, @RequestParam("lastName") String pLastName) throws Exception {
 		logger.info("update person");
-		this.personService.updatePerson(pAddress, pFirstName, pLastName);
-		if (Objects.isNull(this.personService.getPersonByFullName(pFirstName, pLastName))) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return new ResponseEntity<>(this.personService.updatePerson(pAddress, pFirstName, pLastName), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/person")
 	public ResponseEntity deletePerson(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws Exception {
 		logger.info("delete person");
-		this.personService.deletePerson(firstName, lastName);
 		if (Objects.isNull(this.personService.getPersonByFullName(firstName, lastName))) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
-		return ResponseEntity.status(HttpStatus.OK).build();
+		this.personService.deletePerson(firstName, lastName);
+		return new ResponseEntity(HttpStatus.OK);
 	}
 
 
