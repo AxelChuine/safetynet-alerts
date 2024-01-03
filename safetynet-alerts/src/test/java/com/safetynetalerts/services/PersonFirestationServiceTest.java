@@ -7,14 +7,13 @@ import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
+import com.safetynetalerts.repository.IFireStationRepository;
+import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonFirestationService;
-import com.safetynetalerts.utils.Data;
-import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -22,7 +21,6 @@ import java.io.IOException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -38,10 +36,10 @@ public class PersonFirestationServiceTest {
     private IMedicalRecordService medicalRecordService;
 
     @MockBean
-    private Data data;
+    private IPersonRepository personRepository;
 
     @MockBean
-    private Utils utils;
+    private IFireStationRepository fireStationRepository;
 
 
     @Test
@@ -82,7 +80,7 @@ public class PersonFirestationServiceTest {
         medicalRecords.add(m3);
 
 
-        when(this.data.getPersons()).thenReturn(persons);
+        when(this.personRepository.getAllPersons()).thenReturn(persons);
         when(this.fireStationService.getFireStationsByStationNumber("4")).thenReturn(fireStation);
         when(this.medicalRecordService.countAllPersons(persons)).thenReturn(mapPersons);
         StationNumberDto stationNumberToCompare = this.service.getHeadCountByFirestation("4");
@@ -107,7 +105,7 @@ public class PersonFirestationServiceTest {
         FireStation fireStation = new FireStation(addresses, stationNumber);
 
         when(this.fireStationService.getFireStationsByStationNumber("4")).thenReturn(fireStation);
-        when(this.data.getPersons()).thenReturn(persons);
+        when(this.personRepository.getAllPersons()).thenReturn(persons);
         PhoneAlertDto cellNumbersToCompare = this.service.getCellNumbers("4");
 
         assertEquals(cellNumbers.getCellNumbers(), cellNumbersToCompare.getCellNumbers());
@@ -147,8 +145,8 @@ public class PersonFirestationServiceTest {
         MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).allergies(allergies).medications(medications).build();
 
 
-        when(this.data.getFirestations()).thenReturn(firestations);
-        when(this.data.getPersons()).thenReturn(persons);
+        when(this.fireStationRepository.getAllFireStations()).thenReturn(firestations);
+        when(this.personRepository.getAllPersons()).thenReturn(persons);
         when(this.medicalRecordService.getMedicalRecordByFullName(firstName, lastName)).thenReturn(medicalRecord);
         when(this.fireStationService.getFireStationsByStationNumber(stationNumber)).thenReturn(firestation);
         List<PersonMedicalRecordDto> personMedicalRecordDtosToCompare = this.service.getPersonsAndMedicalRecordsByFirestation(stations);

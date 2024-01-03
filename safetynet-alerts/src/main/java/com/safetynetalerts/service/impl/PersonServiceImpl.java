@@ -5,13 +5,13 @@ import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.Person;
+import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonService;
 import com.safetynetalerts.utils.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.event.ListDataEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +28,16 @@ public class PersonServiceImpl implements IPersonService {
     @Autowired
     private IMedicalRecordService medicalRecordService;
 
+    private final IPersonRepository repository;
+
+    public PersonServiceImpl (IPersonRepository repository) {
+        this.repository = repository;
+    }
+
 
     @Override
     public List<Person> getAllPersonsByCity(String pCity) throws Exception {
-        List<Person> persons = data.getPersons();
+        List<Person> persons = this.repository.getAllPersons();
         List<Person> personsToReturn = new ArrayList<>();
         for (Person p : persons) {
             if (p.city.equals(pCity)) {
@@ -58,7 +64,7 @@ public class PersonServiceImpl implements IPersonService {
 
     public PersonDto getPersonByFullName(String pFirstName, String pLastName) throws Exception {
         Person person;
-        List<Person> persons = data.getPersons();
+        List<Person> persons = this.repository.getAllPersons();
         PersonDto personDto = new PersonDto();
         Optional<Person> personOptional = persons.stream().filter(p -> Objects.equals(p.getFirstName(), pFirstName) && Objects.equals(p.getLastName(), pLastName)).findFirst();
         if (personOptional.isPresent()) {
@@ -77,7 +83,7 @@ public class PersonServiceImpl implements IPersonService {
     }
 
     public List<Person> getPersonsByAddress(String pAddress) {
-        List<Person> personsByAddress = data.getPersons();
+        List<Person> personsByAddress = this.repository.getAllPersons();
         personsByAddress = personsByAddress.stream().filter(p -> Objects.equals(p.address, pAddress))
                 .collect(Collectors.toList());
         return personsByAddress;
@@ -109,18 +115,18 @@ public class PersonServiceImpl implements IPersonService {
 
     @Override
     public List<Person> getAllPersons() {
-        List<Person> persons = this.data.getPersons();
+        List<Person> persons = this.repository.getAllPersons();
         return persons;
     }
 
     @Override
     public PersonDto addPerson(PersonDto pPerson) {
         PersonDto personDto = pPerson;
-        if (this.data.getPersons().stream().anyMatch(p -> Objects.equals(p.firstName, pPerson.getFirstName()) && Objects.equals(p.lastName, pPerson.getLastName()))) {
+        if (this.repository.getAllPersons().stream().anyMatch(p -> Objects.equals(p.firstName, pPerson.getFirstName()) && Objects.equals(p.lastName, pPerson.getLastName()))) {
             return null;
         }
         Person person = new Person.PersonBuilder().firstName(pPerson.getFirstName()).lastName(pPerson.getLastName()).address(pPerson.getAddress()).city(pPerson.getCity()).zip(pPerson.getZip()).phone(pPerson.getPhone()).email(pPerson.getEmail()).build();
-        this.data.getPersons().add(person);
+        this.repository.getAllPersons().add(person);
         return personDto;
     }
 
@@ -134,13 +140,13 @@ public class PersonServiceImpl implements IPersonService {
         Person modifiedPerson = new Person.PersonBuilder().firstName(personDto.getFirstName()).lastName(personDto.getLastName()).address(pAddress).city(personDto.getCity()).
                 zip(personDto.getZip()).phone(personDto.getPhone()).email(personDto.getEmail()).build();
         Integer index = 0;
-        for (Person p : data.getPersons()) {
+        for (Person p : repository.getAllPersons()) {
             if (Objects.equals(p.firstName, pFirstName) && Objects.equals(p.lastName, pLastName)) {
-                index = data.getPersons().indexOf(p);
+                index = repository.getAllPersons().indexOf(p);
             }
         }
-        this.data.getPersons().remove(data.getPersons().get(index));
-        data.getPersons().add(modifiedPerson);
+        this.repository.getAllPersons().remove(repository.getAllPersons().get(index));
+        repository.getAllPersons().add(modifiedPerson);
 
         return personDto;
     }
@@ -148,7 +154,7 @@ public class PersonServiceImpl implements IPersonService {
 
     @Override
     public void deletePerson(String firstName, String lastName) {
-        List<Person> persons = data.getPersons();
+        List<Person> persons = repository.getAllPersons();
         Person person = null;
         for (Person p : persons) {
             person = p;

@@ -6,10 +6,11 @@ import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
+import com.safetynetalerts.repository.IFireStationRepository;
+import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonFirestationService;
-import com.safetynetalerts.service.IPersonService;
 import com.safetynetalerts.utils.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,21 +32,27 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
     @Autowired
     private IMedicalRecordService medicalRecordService;
 
-    @Autowired
-    private IPersonService personService;
+    private final IPersonRepository personRepository;
+
+    private final IFireStationRepository fireStationRepository;
+
+    public PersonFirestationServiceImpl(IPersonRepository personRepository, IFireStationRepository fireStationRepository) {
+        this.personRepository = personRepository;
+        this.fireStationRepository = fireStationRepository;
+    }
 
 
     public List<Person> getAllPersonsByFireStation(String stationNumber) throws IOException {
-    List<Person> persons = this.data.getPersons();
-    List<Person> personsByFirestation = new ArrayList<>();
-    FireStation firestation = fireStationService.getFireStationsByStationNumber(stationNumber);
-        for (Person person : persons) {
-            if (firestation.getAddresses().contains(person.getAddress())) {
-                if (!personsByFirestation.contains(person)) {
-                        personsByFirestation.add(person);
+        List<Person> persons = this.personRepository.getAllPersons();
+        List<Person> personsByFirestation = new ArrayList<>();
+        FireStation firestation = fireStationService.getFireStationsByStationNumber(stationNumber);
+            for (Person person : persons) {
+                if (firestation.getAddresses().contains(person.getAddress())) {
+                    if (!personsByFirestation.contains(person)) {
+                            personsByFirestation.add(person);
+                    }
                 }
             }
-        }
         return personsByFirestation;
     }
 
@@ -68,7 +75,7 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
 
     @Override
     public List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations) throws IOException {
-        List<FireStation> firestations = this.data.getFirestations();
+        List<FireStation> firestations = this.fireStationRepository.getAllFireStations();
         List<Person> persons = new ArrayList<>();
         List<MedicalRecord> medicalRecords = new ArrayList<>();
         List<PersonMedicalRecordDto> personMedicalRecordDtos = new ArrayList<>();

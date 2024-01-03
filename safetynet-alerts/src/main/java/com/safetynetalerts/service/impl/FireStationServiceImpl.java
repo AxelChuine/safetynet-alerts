@@ -6,6 +6,7 @@ import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
+import com.safetynetalerts.repository.IFireStationRepository;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.utils.Data;
@@ -28,11 +29,17 @@ public class FireStationServiceImpl implements IFireStationService {
 	@Autowired
 	private IMedicalRecordService medicalRecordService;
 
+	private final IFireStationRepository repository;
+
 	List<FireStation> fireStations = new ArrayList<>();
 
-	public List<FireStationDto> getAllFireStations() throws IOException {
+    public FireStationServiceImpl(IFireStationRepository repository) {
+        this.repository = repository;
+    }
+
+    public List<FireStationDto> getAllFireStations() throws IOException {
 		List<FireStationDto> fireStationDtos = new ArrayList<>();
-		for (FireStation fireStation : this.data.getFirestations()) {
+		for (FireStation fireStation : this.repository.getAllFireStations()) {
 			FireStationDto fireStationDto = new FireStationDto(new HashSet<>(fireStation.getAddresses()), fireStation.getStationNumber());
 			fireStationDtos.add(fireStationDto);
 		}
@@ -41,7 +48,7 @@ public class FireStationServiceImpl implements IFireStationService {
 
 	public void createFirestation(FireStationDto pFirestation) {
 		FireStation fireStation = new FireStation(new HashSet<>(pFirestation.getAddresses()), pFirestation.getStationNumber());
-		this.data.getFirestations().add(fireStation);
+		this.repository.getAllFireStations().add(fireStation);
 	}
 
 
@@ -71,7 +78,7 @@ public class FireStationServiceImpl implements IFireStationService {
 	@Override
 	public FireStation getFireStationsByStationNumber(String stationNumber) throws IOException {
 		FireStation fireStation = new FireStation();
-		Optional<FireStation> optionalFireStation = this.data.getFirestations().stream()
+		Optional<FireStation> optionalFireStation = this.repository.getAllFireStations().stream()
 				.filter(firestation -> Objects.equals(firestation.getStationNumber(), stationNumber))
 				.findFirst();
 		if (optionalFireStation.isPresent())  {
@@ -85,9 +92,4 @@ public class FireStationServiceImpl implements IFireStationService {
 		SimplePersonDto simplePersonDto = new SimplePersonDto(pPerson.firstName, pPerson.lastName, pPerson.address, pPerson.phone);
 		return simplePersonDto;
 	}
-
-
-
-
-
 }
