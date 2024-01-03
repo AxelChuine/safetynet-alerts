@@ -1,10 +1,10 @@
 package com.safetynetalerts.services;
 
-import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.Person;
+import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonFirestationService;
 import com.safetynetalerts.service.IPersonService;
@@ -46,6 +46,9 @@ class PersonServiceTest {
 
 	@MockBean
 	private IMedicalRecordService medicalRecordService;
+	
+	@MockBean
+	private IPersonRepository repository;
 
 
 	@BeforeEach
@@ -58,27 +61,27 @@ class PersonServiceTest {
 	@Test
 	void getAllPersonsByCityTest() throws Exception {
 		String vCity = "Culver";
-		List<Person> persons = this.data.getPersons();
+		List<Person> persons = List.of(new Person.PersonBuilder().city(vCity).build(), new Person.PersonBuilder().city(vCity).build());
+
+		when(this.repository.getAllPersons()).thenReturn(persons);
 		List<Person> personsToCompare = this.service.getAllPersonsByCity(vCity);
-		for (Person p : persons) {
-			if (!p.city.equals(vCity)) {
-				persons.remove(p);
-			}
-		}
+
 		assertEquals(persons, personsToCompare);
 	}
 
 	@Test
 	void getAllEmailAddressesByCity() throws Exception {
 		String vCity = "Culver";
-		List<Person> persons = this.data.getPersons();
+		String email1 = "test@gmail.com";
+		String email2 = "test2@gmail.com";
+		List<Person> personList = List.of(new Person.PersonBuilder().city(vCity).email(email1).build(), new Person.PersonBuilder().city(vCity).email(email2).build());
 		List<String> emailAddresses = new ArrayList<>();
+		emailAddresses.add(email1);
+		emailAddresses.add(email2);
+
+		when(this.repository.getAllPersons()).thenReturn(personList);
 		List<String> emailAddressesToCompare = this.service.getAllEmailAddressesByCity(vCity);
-		for (Person p : persons) {
-			if (p.city.equals(vCity)) {
-				emailAddresses.add(p.email);
-			}
-		}
+
 		assertEquals(emailAddresses, emailAddressesToCompare);
 	}
 
@@ -86,7 +89,7 @@ class PersonServiceTest {
 	void getAllPersonsTest() throws IOException {
 		List<Person> people = List.of(new Person.PersonBuilder().build(), new Person.PersonBuilder().build());
 
-		when(this.data.getPersons()).thenReturn(people);
+		when(this.repository.getAllPersons()).thenReturn(people);
 		List<Person> peopleToCompare = this.service.getAllPersons();
 
 		assertEquals(people, peopleToCompare);
@@ -99,7 +102,7 @@ class PersonServiceTest {
 		List<Person> persons = new ArrayList<>();
 		persons.add(person);
 
-		when(this.data.getPersons()).thenReturn(persons);
+		when(this.repository.getAllPersons()).thenReturn(persons);
 		Person personToCompare = new Person.PersonBuilder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build();
 		this.service.updatePerson(address, personToCompare.firstName, personToCompare.lastName);
 
@@ -112,10 +115,12 @@ class PersonServiceTest {
 	void getPersonByFullNameTest () throws Exception {
 		String firstName = "Jean";
 		String lastName = "Dubois";
+		List<Person> persons = List.of(new Person.PersonBuilder().build(), new Person.PersonBuilder().build());
 
-		this.service.getPersonByFullName(firstName, lastName);
+		when(this.repository.getAllPersons()).thenReturn(persons);
+		PersonDto person = this.service.getPersonByFullName(firstName, lastName);
 
-		verify(this.data, times(1)).getPersons();
+		verify(this.repository).getAllPersons();
 	}
 
 	@Test
@@ -126,8 +131,8 @@ class PersonServiceTest {
 		expectedPersons.add(person);
 
 		// ACT
-		when(this.data.getPersons()).thenReturn(expectedPersons);
-		List<Person> persons = this.data.getPersons();
+		when(this.repository.getAllPersons()).thenReturn(expectedPersons);
+		List<Person> persons = this.repository.getAllPersons();
 		this.service.deletePerson("Jean", "Dubois");
 
 		// ASSERT
@@ -142,7 +147,7 @@ class PersonServiceTest {
 		List<Person> expectedPersons = new ArrayList<>();
 		expectedPersons.add(person);
 		// ACT
-		when(this.data.getPersons()).thenReturn(expectedPersons);
+		when(this.repository.getAllPersons()).thenReturn(expectedPersons);
 		List<Person> persons = this.service.getPersonsByAddress(address);
 		// ASSERT
 		assertEquals(expectedPersons, persons);
@@ -168,8 +173,8 @@ class PersonServiceTest {
 		expectedPersons.add(p3);
 		String lastName = "Dubois";
 		// ACT
-		when(this.data.getPersons()).thenReturn(expectedPersons);
-		List<Person> persons = this.data.getPersons();
+		when(this.repository.getAllPersons()).thenReturn(expectedPersons);
+		List<Person> persons = this.repository.getAllPersons();
 		List<Person> personsToCompare = this.service.getFamilyMembers(expectedPersons, lastName);
 		// ASSERT
 		assertEquals(persons, personsToCompare);
