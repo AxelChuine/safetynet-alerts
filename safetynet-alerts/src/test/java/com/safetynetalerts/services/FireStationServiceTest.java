@@ -1,14 +1,11 @@
 package com.safetynetalerts.services;
 
 import com.safetynetalerts.dto.FireStationDto;
-import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.models.FireStation;
-import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
+import com.safetynetalerts.repository.IFireStationRepository;
+import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IFireStationService;
-import com.safetynetalerts.service.IPersonFirestationService;
-import com.safetynetalerts.utils.Data;
-import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,16 +26,13 @@ public class FireStationServiceTest {
 	@Autowired
 	private IFireStationService service;
 
-	@MockBean
-	private IPersonFirestationService personFirestationService;
+    @MockBean
+	private IPersonRepository personRepository;
 
 	@MockBean
-	private Utils utils;
+	private IFireStationRepository repository;
 
-	@MockBean
-	private Data data;
-
-	@Test
+    @Test
 	public void getAllFireStationsTest() throws IOException {
 		String address = "1509 Culver St";
 		List<FireStation> expectedFireStations = new ArrayList<>();
@@ -55,7 +49,7 @@ public class FireStationServiceTest {
 			expectedFirestationsToCompare.add(fireStationDto);
 		}
 
-		when(this.data.getFirestations()).thenReturn(expectedFireStations);
+		when(this.repository.getAllFireStations()).thenReturn(expectedFireStations);
 		List<FireStationDto> stationsToCompare = this.service.getAllFireStations();
 		assertEquals(expectedFirestationsToCompare, stationsToCompare);
 	}
@@ -74,43 +68,12 @@ public class FireStationServiceTest {
 		firestations.add(fireStation);
 
 		// WHEN
-		when(this.data.getFirestations()).thenReturn(firestations);
+		when(this.repository.getAllFireStations()).thenReturn(firestations);
 		this.service.createFirestation(fireStationDto);
 		// THEN
 		assertEquals(firestations.get(0).getStationNumber(), "17");
 	}
 
-	@Test
-	public void convertToPersonMedicalRecordDtoTest() throws IOException {
-		// ARRANGE
-		List<String> allergies = new ArrayList<>();
-		allergies.add("Chat");
-		List<String> medications = new ArrayList<>();
-		medications.add("paracétamol");
-		Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("18 rue Jean Moulin").city("Lille").zip("62000").phone("04").email("test").build();
-		MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName("Jean").lastName("Dubois").birthDate("05/11/2000").allergies(allergies).medications(medications).build();
-		PersonMedicalRecordDto personMedicalRecordDto = new PersonMedicalRecordDto();
-		personMedicalRecordDto.setFirstName(person.firstName);
-		personMedicalRecordDto.setLastName(person.lastName);
-		personMedicalRecordDto.setAge(23);
-		personMedicalRecordDto.setPhone(person.phone);
-		personMedicalRecordDto.setMedications(medications);
-		personMedicalRecordDto.setAllergies(allergies);
-
-		List<Person> persons = new ArrayList<>();
-		persons.add(person);
-		List<MedicalRecord> medicalRecords = new ArrayList<>();
-		medicalRecords.add(medicalRecord);
-		// ACT
-		when(this.data.getPersons()).thenReturn(persons);
-		when(this.data.getMedicalRecords()).thenReturn(medicalRecords);
-		PersonMedicalRecordDto personToCompare = this.service.convertToPersonMedicalRecord(person, medicalRecord);
-
-		// ASSERT
-		assertEquals(personMedicalRecordDto.getFirstName(), personToCompare.getFirstName());
-		assertEquals(personMedicalRecordDto.getLastName(), personToCompare.getLastName());
-
-	}
 
 	@Test
 	public void createSimplePersonDtoTest () throws IOException {
@@ -119,7 +82,7 @@ public class FireStationServiceTest {
 		List<Person> persons = new ArrayList<>();
 		persons.add(person);
 
-		when(this.data.getPersons()).thenReturn(persons);
+		when(this.personRepository.getAllPersons()).thenReturn(persons);
 		com.safetynetalerts.dto.SimplePersonDto simplePersonToCompare = this.service.createSimplePersonDto(person);
 		assertEquals(simplePerson, simplePersonToCompare);
 	}
@@ -135,7 +98,7 @@ public class FireStationServiceTest {
 		firestations.add(fireStation);
 
 
-		when(this.data.getFirestations()).thenReturn(firestations);
+		when(this.repository.getAllFireStations()).thenReturn(firestations);
 		FireStation fireStationToCompare = this.service.getFireStationsByStationNumber(stationNumber);
 
 		assertEquals(fireStation, fireStationToCompare);

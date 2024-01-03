@@ -3,9 +3,8 @@ package com.safetynetalerts.services;
 import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
+import com.safetynetalerts.repository.IMedicalRecordRepository;
 import com.safetynetalerts.service.IMedicalRecordService;
-import com.safetynetalerts.utils.Data;
-import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,21 +17,17 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class MedicalRecordServiceTest {
 
-	@MockBean
-	private Utils utils;
-
-	@Autowired
+    @Autowired
 	private IMedicalRecordService service;
 
-	@MockBean
-	private Data data;
+    @MockBean
+	private IMedicalRecordRepository repository;
 
-    // FIXME: test  à relancer
 	@Test
 	void getMedicalRecordByFullNameTest() throws IOException {
 		String vFirstName = "John";
@@ -45,7 +40,7 @@ public class MedicalRecordServiceTest {
 		List<MedicalRecord> medicalRecords = new ArrayList<>();
 		medicalRecords.add(medicalRecord);
 
-		when(this.data.getMedicalRecords()).thenReturn(medicalRecords);
+		when(this.repository.getAllMedicalRecords()).thenReturn(medicalRecords);
 		MedicalRecord medicalRecordsToCompare = this.service.getMedicalRecordByFullName(vFirstName, vLastName);
 
 		assertEquals(medicalRecord.getFirstName(), medicalRecordsToCompare.getFirstName());
@@ -61,7 +56,7 @@ public class MedicalRecordServiceTest {
 		List<MedicalRecord> medicalRecords = new ArrayList<>();
 		medicalRecords.add(medicalRecord);
 
-		when(this.data.getMedicalRecords()).thenReturn(medicalRecords);
+		when(this.repository.getAllMedicalRecords()).thenReturn(medicalRecords);
 		Integer ageToCompare = this.service.getAgeOfPerson(medicalRecord.getFirstName(), medicalRecord.getLastName());
 		assertEquals(24, ageToCompare);
 	}
@@ -82,7 +77,7 @@ public class MedicalRecordServiceTest {
 			medicalRecordDtos.add(medicalRecordDto);
 		}
 
-		when(this.data.getMedicalRecords()).thenReturn(medicalRecords);
+		when(this.repository.getAllMedicalRecords()).thenReturn(medicalRecords);
 		List<MedicalRecordDto> medicalRecordsToCompare = this.service.getAllMedicalRecords();
 		assertEquals(medicalRecordDtos.get(0).getFirstName(), medicalRecordsToCompare.get(0).getFirstName());
 		assertEquals(medicalRecordDtos.get(0).getLastName(), medicalRecordsToCompare.get(0).getLastName());
@@ -97,7 +92,7 @@ public class MedicalRecordServiceTest {
 		List<MedicalRecord> medicalRecords = new ArrayList<>();
 		medicalRecords.add(m);
 
-		when(this.data.getMedicalRecords()).thenReturn(medicalRecords);
+		when(this.repository.getAllMedicalRecords()).thenReturn(medicalRecords);
 		MedicalRecord mToCompare = this.service.getMedicalRecordByUnderage(m.getFirstName(), m.getLastName());
 		assertEquals(m, mToCompare);
 	}
@@ -133,7 +128,7 @@ public class MedicalRecordServiceTest {
 		persons.add(p2);
 
 
-		when(this.data.getMedicalRecords()).thenReturn(medicalRecords);
+		when(this.repository.getAllMedicalRecords()).thenReturn(medicalRecords);
 		Map<String, Integer> mapPersonsToCompare = this.service.countAllPersons(persons);
 
 		assertEquals(mapPersons, mapPersonsToCompare);
@@ -152,7 +147,7 @@ public class MedicalRecordServiceTest {
 		medicalRecords.add(medicalRecord);
 
 
-		when(this.data.getMedicalRecords()).thenReturn(medicalRecords);
+		when(this.repository.getAllMedicalRecords()).thenReturn(medicalRecords);
 		boolean isUnderagedToCompare = this.service.isUnderaged(firstName, lastName);
 
 		assertEquals(isUnderaged, isUnderagedToCompare);
@@ -162,10 +157,10 @@ public class MedicalRecordServiceTest {
 	public void createMedicalRecordTest () throws IOException {
 		MedicalRecordDto medicalRecordDto = new MedicalRecordDto.MedicalRecordDtoBuilder().build();
 		MedicalRecord medicalRecord = new MedicalRecord();
-		List<MedicalRecord> medicalRecords = this.data.getMedicalRecords();
+		List<MedicalRecord> medicalRecords = this.repository.getAllMedicalRecords();
 		medicalRecords.add(medicalRecord);
 
-		when(this.data.getMedicalRecords()).thenReturn(medicalRecords);
+		when(this.repository.getAllMedicalRecords()).thenReturn(medicalRecords);
 		this.service.createMedicalRecord(medicalRecordDto);
 		List<MedicalRecordDto> medicalRecordsToCompare = this.service.getAllMedicalRecords();
 
@@ -183,7 +178,7 @@ public class MedicalRecordServiceTest {
 		List<MedicalRecord> medicalRecords = new ArrayList<>();
 		medicalRecords.add(medicalRecord);
 
-		when(this.data.getMedicalRecords()).thenReturn(medicalRecords);
+		when(this.repository.getAllMedicalRecords()).thenReturn(medicalRecords);
 		MedicalRecord medicalRecordToCompare = new MedicalRecord.MedicalRecordBuilder().firstName("Jean").lastName("Dubois").birthDate("01/01/2001").medications(medications).allergies(allergies).build();
 		this.service.updateMedicalRecord(medicalRecordToCompare.getFirstName(), medicalRecordToCompare.getLastName(), allergie);
 
@@ -193,25 +188,15 @@ public class MedicalRecordServiceTest {
 	}
 
 
-	//FIXME: test qui passe avant que je ne code la fonction
 	@Test
 	public void deleteMedicalRecordTest() {
 		List<MedicalRecord> medicalRecords = new ArrayList<>();
 		String firstName = "Jean";
 		String lastName = "Dubois";
-		List<String> allergies = new ArrayList<>();
-		allergies.add("lactose");
-		List<String> medications = new ArrayList<>();
-		medications.add("paracétamol");
-		String birthDate = "01/01/2001";
-		MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).medications(medications).allergies(allergies).build();
-		medicalRecords.add(medicalRecord);
 
-		when(this.data.getMedicalRecords()).thenReturn(medicalRecords);
-		List<MedicalRecord> medicalRecordsToCompare = this.data.getMedicalRecords();
 		this.service.deleteMedicalRecordByFullName(firstName, lastName);
 
-		assertEquals(medicalRecords, medicalRecordsToCompare);
+		verify(this.repository, times(2)).getAllMedicalRecords();
 	}
 
 }

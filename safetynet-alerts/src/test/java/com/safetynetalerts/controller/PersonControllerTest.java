@@ -110,8 +110,7 @@ public class PersonControllerTest {
         assertEquals(HttpStatus.CREATED, responsePerson.getStatusCode());
     }
 
-    //FIXME: test failure: thenReturn ne marche pas.
-    /*@Test
+    @Test
     public void updatePersonTest() throws Exception {
         String address = "47 rue du Jambon";
         String firstName = "Jean";
@@ -125,7 +124,7 @@ public class PersonControllerTest {
         ResponseEntity<PersonDto> responsePerson = this.controller.updatePerson(address, firstName, lastName);
 
         assertEquals(HttpStatus.OK, responsePerson.getStatusCode());
-    }*/
+    }
 
     @Test
     public void deletePersonTest() throws Exception {

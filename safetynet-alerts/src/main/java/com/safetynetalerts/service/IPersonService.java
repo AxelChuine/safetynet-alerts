@@ -18,12 +18,8 @@ public interface IPersonService {
 
 	PersonDto getPersonByFullName(String pFirstName, String pLastName) throws Exception;
 
-
-	// FIXME: à tester
 	List<ChildAlertDto> getChildByAddress(String pAddress) throws IOException;
 
-
-	// FIXME: à tester
 	List<Person> getFamilyMembers(List<Person> pFamilyMember, String pLastName);
 
 	List<Person> getAllPersons() throws IOException;
