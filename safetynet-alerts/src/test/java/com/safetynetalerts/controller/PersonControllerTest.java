@@ -148,4 +148,15 @@ public class PersonControllerTest {
 
         assertEquals(HttpStatus.NOT_FOUND, responsePerson.getStatusCode());
     }
+
+    @Test
+    public void getPersonByFullNameShouldReturnCode200 () throws Exception {
+        String firstName = "Jean";
+        String lastName = "Dubois";
+        Person person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).build();
+
+        when(this.service.getPersonByFullName(firstName, lastName)).thenReturn(person);
+        ResponseEntity responsePerson = this.controller.getPersonByFullName(firstName, lastName);
+        assertEquals(HttpStatus.OK, responsePerson.getStatusCode());
+    }
 }

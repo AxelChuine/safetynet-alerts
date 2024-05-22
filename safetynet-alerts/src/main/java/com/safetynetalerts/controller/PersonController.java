@@ -78,8 +78,16 @@ public class PersonController {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
 		this.personService.deletePerson(firstName, lastName);
-		return new ResponseEntity(HttpStatus.OK);
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
-
+	@GetMapping("/person")
+    public ResponseEntity<List<Person>> getPersonByFullName(@RequestParam("firstName") String firstName,@RequestParam("lastName") String lastName) throws Exception {
+		logger.info("get a person by his full name");
+		List<Person> persons = List.of(this.personService.getPersonByFullName(firstName, lastName));
+		if (Objects.isNull(persons.get(0))) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
