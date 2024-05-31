@@ -20,4 +20,9 @@ public class FireStationRepository implements IFireStationRepository {
     public List<FireStation> getAllFireStations() {
         return this.data.getFirestations();
     }
+
+    @Override
+    public FireStation createFireStation(FireStation fireStation) {
+        return this.data.createFireStation(fireStation);
+    }
 }
