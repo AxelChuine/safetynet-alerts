@@ -7,17 +7,14 @@ import com.safetynetalerts.service.IPersonService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -64,7 +61,6 @@ public class PersonController {
 	 * this allows the user to modify a person
 	 */
 
-	//FIXME: test failure : le mock ne fonctionne pas (?): il nullifie toutes les couches mais ne retourne pas une personne.
 	@PutMapping("/person")
 	public ResponseEntity<PersonDto> updatePerson(@RequestParam("address") String pAddress, @RequestParam("firstName") String pFirstName, @RequestParam("lastName") String pLastName) throws Exception {
 		logger.info("update person");
