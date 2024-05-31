@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.Person;
@@ -7,17 +8,14 @@ import com.safetynetalerts.service.IPersonService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -55,16 +53,11 @@ public class PersonController {
 	 * @throws IOException
 	 */
 	@PostMapping("/person")
-	public ResponseEntity<PersonDto> createPerson(@RequestBody PersonDto pPerson) throws IOException {
+	public ResponseEntity<PersonDto> createPerson(@RequestBody PersonDto pPerson) throws ResourceAlreadyExistsException {
 		logger.info("launch of creation of a person");
 		return new ResponseEntity<>(this.personService.addPerson(pPerson), HttpStatus.CREATED);
 	}
 
-	/**
-	 * this allows the user to modify a person
-	 */
-
-	//FIXME: test failure : le mock ne fonctionne pas (?): il nullifie toutes les couches mais ne retourne pas une personne.
 	@PutMapping("/person")
 	public ResponseEntity<PersonDto> updatePerson(@RequestParam("address") String pAddress, @RequestParam("firstName") String pFirstName, @RequestParam("lastName") String pLastName) throws Exception {
 		logger.info("update person");
@@ -82,12 +75,9 @@ public class PersonController {
 	}
 
 	@GetMapping("/person")
-    public ResponseEntity<List<Person>> getPersonByFullName(@RequestParam("firstName") String firstName,@RequestParam("lastName") String lastName) throws Exception {
+    public ResponseEntity<List<PersonDto>> getPersonByFullName(@RequestParam("firstName") String firstName,@RequestParam("lastName") String lastName) throws Exception {
 		logger.info("get a person by his full name");
-		List<Person> persons = List.of(this.personService.getPersonByFullName(firstName, lastName));
-		if (Objects.isNull(persons.get(0))) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
-		return ResponseEntity.status(HttpStatus.OK).build();
+		List<PersonDto> persons = List.of(this.personService.getPersonByFullName(firstName, lastName));
+		return new ResponseEntity<>(persons, HttpStatus.OK);
     }
 }
