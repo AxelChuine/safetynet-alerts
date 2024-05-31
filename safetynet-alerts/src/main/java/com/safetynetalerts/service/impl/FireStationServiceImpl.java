@@ -31,6 +31,7 @@ public class FireStationServiceImpl implements IFireStationService {
 
 	private final IFireStationRepository repository;
 
+
 	List<FireStation> fireStations = new ArrayList<>();
 
     public FireStationServiceImpl(IFireStationRepository repository) {
@@ -48,7 +49,7 @@ public class FireStationServiceImpl implements IFireStationService {
 
 	public void createFirestation(FireStationDto pFirestation) {
 		FireStation fireStation = new FireStation(new HashSet<>(pFirestation.getAddresses()), pFirestation.getStationNumber());
-		this.repository.getAllFireStations().add(fireStation);
+		this.repository.createFireStation(fireStation);
 	}
 
 
