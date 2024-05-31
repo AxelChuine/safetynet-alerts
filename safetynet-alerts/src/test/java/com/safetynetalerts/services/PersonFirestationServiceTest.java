@@ -111,7 +111,6 @@ public class PersonFirestationServiceTest {
         assertEquals(cellNumbers.getCellNumbers(), cellNumbersToCompare.getCellNumbers());
     }
 
-    // FIXME: test à régler
     @Test
     public void getPersonsAndMedicalRecordsByFirestationTest () throws IOException {
         String address = "101 rue jean moulin";
