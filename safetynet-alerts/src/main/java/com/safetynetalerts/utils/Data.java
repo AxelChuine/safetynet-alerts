@@ -21,6 +21,11 @@ public class Data {
 
 	private List<FireStation> firestations = new ArrayList<>();
 
-
+	public FireStation createFireStation(FireStation fireStation) {
+		List<FireStation> newFireStations = new ArrayList<>(this.firestations);
+		newFireStations.add(fireStation);
+		this.firestations = newFireStations;
+		return fireStation;
+	}
 
 }
