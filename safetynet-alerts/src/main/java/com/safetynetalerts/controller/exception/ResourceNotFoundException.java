@@ -15,5 +15,6 @@ public class ResourceNotFoundException extends Exception{
 
     public ResourceNotFoundException (String pResources) {
         this.message = pResources;
+        this.status = HttpStatus.NOT_FOUND;
     }
 }
