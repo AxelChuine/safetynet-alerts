@@ -12,7 +12,7 @@ public class ManagerException {
      *
      * @param e The exception
      */
-    @ExceptionHandler(ResourceNotFoundException.class)
+    @ExceptionHandler({ResourceNotFoundException.class, ResourceAlreadyExistsException.class})
     public ResponseEntity<String> handleException(ResourceNotFoundException e) {
         return new ResponseEntity<>(e.getMessage() + e.getMessage(), e.getStatus());
     }
