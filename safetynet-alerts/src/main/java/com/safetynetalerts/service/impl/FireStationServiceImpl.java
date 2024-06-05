@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FireStationServiceImpl implements IFireStationService {
@@ -38,12 +39,7 @@ public class FireStationServiceImpl implements IFireStationService {
     }
 
     public List<FireStationDto> getAllFireStations() throws IOException {
-		List<FireStationDto> fireStationDtos = new ArrayList<>();
-		for (FireStation fireStation : this.repository.getAllFireStations()) {
-			FireStationDto fireStationDto = new FireStationDto(new HashSet<>(fireStation.getAddresses()), fireStation.getStationNumber());
-			fireStationDtos.add(fireStationDto);
-		}
-		return fireStationDtos;
+		return IFM(this.data.getAllFireStations().stream().collect(Collectors.toList()));
 	}
 
 	public void createFirestation(FireStationDto pFirestation) {
