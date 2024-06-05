@@ -6,16 +6,18 @@ import com.safetynetalerts.utils.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @SpringBootTest
 public class FireStationRepositoryTest {
-    @Autowired
+    @InjectMocks
     private FireStationRepository repository;
 
     @Mock
@@ -25,14 +27,15 @@ public class FireStationRepositoryTest {
 
     @BeforeEach
     public void setUp() {
-        fireStation = new FireStation();
+        Set<String> addresses = new HashSet<>();
+        fireStation = new FireStation(addresses, "7");
     }
 
     @Test
     public void getAllFireStationsShouldReturnAllFireStations() {
         List<FireStation> fireStations = List.of(fireStation);
 
-        Mockito.when(this.repository.getAllFireStations()).thenReturn(fireStations);
+        Mockito.when(this.data.getAllFireStations()).thenReturn(fireStations);
         List<FireStation> fireStationsToCompare = repository.getAllFireStations();
 
         Assertions.assertEquals(fireStations, fireStationsToCompare);
