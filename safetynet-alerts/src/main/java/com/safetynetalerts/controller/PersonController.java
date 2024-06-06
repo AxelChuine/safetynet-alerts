@@ -3,12 +3,10 @@ package com.safetynetalerts.controller;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
-import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IPersonService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +19,15 @@ import java.util.Objects;
 @RestController
 public class PersonController {
 
-	@Autowired
-	private IPersonService personService;
+	private final IPersonService personService;
 
-	private Logger logger = LoggerFactory.getLogger(PersonController.class);
+	private final Logger logger = LoggerFactory.getLogger(PersonController.class);
 
-	@GetMapping("/communityEmail")
+    public PersonController(IPersonService personService) {
+        this.personService = personService;
+    }
+
+    @GetMapping("/communityEmail")
 	public ResponseEntity<List<String>> getAllEmailAddresses(@RequestParam("city") String pCity) throws Exception {
 		logger.info("launch of retrieval of every email addresses by city");
 		List<String> emailAddresses = this.personService.getAllEmailAddressesByCity(pCity);
@@ -40,7 +41,7 @@ public class PersonController {
 	}
 
 	@GetMapping("/persons")
-	public ResponseEntity<List<Person>> getAllPersons() throws IOException {
+	public ResponseEntity<List<PersonDto>> getAllPersons() throws IOException {
 		logger.info("launch retrieval of every persons");
 		return new ResponseEntity<>(this.personService.getAllPersons(), HttpStatus.OK);
 	}
@@ -73,8 +74,7 @@ public class PersonController {
 		this.personService.deletePerson(firstName, lastName);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
-
-	@GetMapping("/person")
+@GetMapping("/person")
     public ResponseEntity<List<PersonDto>> getPersonByFullName(@RequestParam("firstName") String firstName,@RequestParam("lastName") String lastName) throws Exception {
 		logger.info("get a person by his full name");
 		List<PersonDto> persons = List.of(this.personService.getPersonByFullName(firstName, lastName));

@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Getter
@@ -21,12 +22,14 @@ public class Data {
 
 	private List<FireStation> firestations = new ArrayList<>();
 
+	public Collection<FireStation> getAllFireStations () {
+		return this.firestations;
+	}
 
 	public FireStation createFireStation(FireStation fireStation) {
-		List<FireStation> result = new ArrayList<>();
-		result.addAll(this.firestations);
-		result.add(fireStation);
-		this.firestations = result;
+  List<FireStation> newFireStations = new ArrayList<>(this.firestations);
+		newFireStations.add(fireStation);
+		this.firestations = newFireStations;
 		return fireStation;
 	}
 }
