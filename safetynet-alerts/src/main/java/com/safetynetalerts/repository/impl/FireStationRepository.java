@@ -5,6 +5,7 @@ import com.safetynetalerts.repository.IFireStationRepository;
 import com.safetynetalerts.utils.Data;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -17,8 +18,8 @@ public class FireStationRepository implements IFireStationRepository {
     }
 
     @Override
-    public FireStation createFireStation(FireStation fireStation) {
-        return this.data.createFireStation(fireStation);
+    public List<FireStation> getAllFireStations() {
+        return new ArrayList<>(this.data.getAllFireStations());
     }
 
     @Override
