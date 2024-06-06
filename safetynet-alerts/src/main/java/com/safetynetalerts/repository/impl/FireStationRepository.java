@@ -23,11 +23,6 @@ public class FireStationRepository implements IFireStationRepository {
 
     @Override
     public FireStation createFireStation(FireStation fireStation) {
-        return null;
-    }
-
-    @Override
-    public FireStation createFireStation(FireStation fireStation) {
         return this.data.createFireStation(fireStation);
     }
 }
