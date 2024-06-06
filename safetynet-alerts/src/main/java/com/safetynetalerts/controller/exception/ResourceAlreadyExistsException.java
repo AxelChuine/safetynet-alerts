@@ -1,20 +1,17 @@
 package com.safetynetalerts.controller.exception;
 
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @NoArgsConstructor
 @Data
-public class ResourceNotFoundException extends Exception{
-
+public class ResourceAlreadyExistsException extends Exception {
     private String message;
-
     private HttpStatus status;
 
-    public ResourceNotFoundException (String pResources) {
-        this.message = pResources;
-        this.status = HttpStatus.NOT_FOUND;
+    public ResourceAlreadyExistsException(String message) {
+        this.message = message;
+        this.status = HttpStatus.BAD_REQUEST;
     }
 }

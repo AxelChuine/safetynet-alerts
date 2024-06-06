@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.service.IPersonService;
@@ -53,14 +54,11 @@ public class PersonController {
 	 * @throws IOException
 	 */
 	@PostMapping("/person")
-	public ResponseEntity<PersonDto> createPerson(@RequestBody PersonDto pPerson) throws IOException {
+	public ResponseEntity<PersonDto> createPerson(@RequestBody PersonDto pPerson) throws ResourceAlreadyExistsException {
 		logger.info("launch of creation of a person");
 		return new ResponseEntity<>(this.personService.addPerson(pPerson), HttpStatus.CREATED);
 	}
 
-	/**
-	 * this allows the user to modify a person
-	 */
 
 	@PutMapping("/person")
 	public ResponseEntity<PersonDto> updatePerson(@RequestParam("address") String pAddress, @RequestParam("firstName") String pFirstName, @RequestParam("lastName") String pLastName) throws Exception {
@@ -75,6 +73,13 @@ public class PersonController {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
 		this.personService.deletePerson(firstName, lastName);
-		return new ResponseEntity(HttpStatus.OK);
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
+  
+  @GetMapping("/person")
+    public ResponseEntity<List<PersonDto>> getPersonByFullName(@RequestParam("firstName") String firstName,@RequestParam("lastName") String lastName) throws Exception {
+		logger.info("get a person by his full name");
+		List<PersonDto> persons = List.of(this.personService.getPersonByFullName(firstName, lastName));
+		return new ResponseEntity<>(persons, HttpStatus.OK);
+    }
 }
