@@ -159,11 +159,14 @@ public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsExcept
 
 
     @Override
-    public void deletePerson(String firstName, String lastName) {
+    public void deletePerson(String firstName, String lastName) throws ResourceNotFoundException {
         List<Person> persons = repository.getAllPersons();
         Person person = null;
         for (Person p : persons) {
             person = p;
+        }
+        if (Objects.isNull(person)) {
+            throw new ResourceNotFoundException("La personne " + person.firstName + " " + person.lastName +" n'existe pas.");
         }
         persons.remove(person);
         data.setPersons(persons);
