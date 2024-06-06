@@ -23,13 +23,13 @@ public interface IPersonService {
 
 	List<Person> getFamilyMembers(List<Person> pFamilyMember, String pLastName);
 
-	List<Person> getAllPersons() throws IOException;
+	List<PersonDto> getAllPersons() throws IOException;
 
 	PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsException;
 
 	PersonDto updatePerson(String pAddress, String pFirstName, String pLastName) throws IOException, ResourceNotFoundException, Exception;
 
-	void deletePerson(String firstName, String lastName);
+	void deletePerson(String firstName, String lastName) throws ResourceNotFoundException;
 
 	SimplePersonDto convertToSimplePersonDto(Person personToChange);
 

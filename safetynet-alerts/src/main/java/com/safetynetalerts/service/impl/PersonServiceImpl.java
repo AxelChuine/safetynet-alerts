@@ -115,20 +115,25 @@ public class PersonServiceImpl implements IPersonService {
     }
 
     @Override
-    public List<Person> getAllPersons() {
+    public List<PersonDto> getAllPersons() {
         List<Person> persons = this.repository.getAllPersons();
-        return persons;
+        List<PersonDto> personsToReturn = new ArrayList<>();
+        for (Person p : persons) {
+            PersonDto personDto = new PersonDto(p.firstName, p.lastName, p.address, p.city, p.zip, p.phone, p.email);
+            personsToReturn.add(personDto);
+        }
+        return personsToReturn;
     }
 
     @Override
-    public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsException {
+public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsException {
         PersonDto personDto = pPerson;
         if (this.repository.getAllPersons().stream().anyMatch(p -> Objects.equals(p.firstName, pPerson.getFirstName()) && Objects.equals(p.lastName, pPerson.getLastName()))) {
             throw new ResourceAlreadyExistsException("La personne que vous essayez de créer existe déjà.");
         }
         Person person = new Person.PersonBuilder().firstName(pPerson.getFirstName()).lastName(pPerson.getLastName()).address(pPerson.getAddress()).city(pPerson.getCity()).zip(pPerson.getZip()).phone(pPerson.getPhone()).email(pPerson.getEmail()).build();
         this.repository.getAllPersons().add(person);
-        return personDto;
+        return pPerson;
     }
 
     @Override
@@ -154,11 +159,14 @@ public class PersonServiceImpl implements IPersonService {
 
 
     @Override
-    public void deletePerson(String firstName, String lastName) {
+    public void deletePerson(String firstName, String lastName) throws ResourceNotFoundException {
         List<Person> persons = repository.getAllPersons();
         Person person = null;
         for (Person p : persons) {
             person = p;
+        }
+        if (Objects.isNull(person)) {
+            throw new ResourceNotFoundException("La personne " + person.firstName + " " + person.lastName +" n'existe pas.");
         }
         persons.remove(person);
         data.setPersons(persons);

@@ -69,11 +69,8 @@ public class PersonController {
 	@DeleteMapping("/person")
 	public ResponseEntity deletePerson(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws Exception {
 		logger.info("delete person");
-		if (Objects.isNull(this.personService.getPersonByFullName(firstName, lastName))) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
-		}
 		this.personService.deletePerson(firstName, lastName);
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return new ResponseEntity(HttpStatus.OK);
 	}
   
   @GetMapping("/person")

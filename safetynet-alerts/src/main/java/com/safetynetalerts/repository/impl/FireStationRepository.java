@@ -17,11 +17,6 @@ public class FireStationRepository implements IFireStationRepository {
     }
 
     @Override
-    public List<FireStation> getAllFireStations() {
-        return this.data.getAllFireStations().stream().toList();
-    }
-
-    @Override
     public FireStation createFireStation(FireStation fireStation) {
         return this.data.createFireStation(fireStation);
     }
@@ -30,4 +25,5 @@ public class FireStationRepository implements IFireStationRepository {
     public FireStation createFireStation(FireStation fireStation) {
         return this.data.createFireStation(fireStation);
     }
+
 }
