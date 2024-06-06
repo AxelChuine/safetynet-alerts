@@ -22,7 +22,7 @@ public interface IPersonService {
 
 	List<Person> getFamilyMembers(List<Person> pFamilyMember, String pLastName);
 
-	List<Person> getAllPersons() throws IOException;
+	List<PersonDto> getAllPersons() throws IOException;
 
 	PersonDto addPerson(PersonDto pPerson) throws IOException;
 

@@ -8,8 +8,9 @@ import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -27,10 +28,10 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class PersonControllerTest {
 
-    @Autowired
+    @InjectMocks
     private PersonController controller;
 
-    @MockBean
+    @Mock
     private IPersonService service;
 
     @MockBean
@@ -84,16 +85,10 @@ public class PersonControllerTest {
 
     @Test
     public void getAllPersonsTest() throws IOException {
-        Person p1 = new Person.PersonBuilder().build();
-        Person p2 = new Person.PersonBuilder().build();
-        Person p3 = new Person.PersonBuilder().build();
-        List<Person> persons = new ArrayList<>();
-        persons.add(p1);
-        persons.add(p2);
-        persons.add(p3);
+        List<PersonDto> persons = List.of(new PersonDto(), new PersonDto(), new PersonDto());
 
         when(this.service.getAllPersons()).thenReturn(persons);
-        ResponseEntity<List<Person>> personsResponse = this.controller.getAllPersons();
+        ResponseEntity<List<PersonDto>> personsResponse = this.controller.getAllPersons();
 
         assertEquals(HttpStatus.OK, personsResponse.getStatusCode());
         assertEquals(persons, personsResponse.getBody());

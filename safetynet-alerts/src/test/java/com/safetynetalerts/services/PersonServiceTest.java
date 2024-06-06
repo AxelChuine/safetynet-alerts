@@ -6,9 +6,7 @@ import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IMedicalRecordService;
-import com.safetynetalerts.service.IPersonFirestationService;
 import com.safetynetalerts.service.IPersonService;
-import com.safetynetalerts.service.impl.FireStationServiceImpl;
 import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +22,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.util.AssertionErrors.fail;
 
 @SpringBootTest
 class PersonServiceTest {
@@ -36,13 +33,7 @@ class PersonServiceTest {
 	private IPersonService service;
 
 	@MockBean
-	private FireStationServiceImpl firestationService;
-
-	@MockBean
 	private Data data;
-
-	@MockBean
-	private IPersonFirestationService personFirestationService;
 
 	@MockBean
 	private IMedicalRecordService medicalRecordService;
@@ -90,7 +81,7 @@ class PersonServiceTest {
 		List<Person> people = List.of(new Person.PersonBuilder().build(), new Person.PersonBuilder().build());
 
 		when(this.repository.getAllPersons()).thenReturn(people);
-		List<Person> peopleToCompare = this.service.getAllPersons();
+		List<PersonDto> peopleToCompare = this.service.getAllPersons();
 
 		assertEquals(people, peopleToCompare);
 	}

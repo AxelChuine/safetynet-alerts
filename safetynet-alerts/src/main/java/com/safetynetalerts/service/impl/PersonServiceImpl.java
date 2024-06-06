@@ -114,20 +114,24 @@ public class PersonServiceImpl implements IPersonService {
     }
 
     @Override
-    public List<Person> getAllPersons() {
+    public List<PersonDto> getAllPersons() {
         List<Person> persons = this.repository.getAllPersons();
-        return persons;
+        List<PersonDto> personsToReturn = new ArrayList<>();
+        for (Person p : persons) {
+            PersonDto personDto = new PersonDto(p.firstName, p.lastName, p.address, p.city, p.zip, p.phone, p.email);
+            personsToReturn.add(personDto);
+        }
+        return personsToReturn;
     }
 
     @Override
     public PersonDto addPerson(PersonDto pPerson) {
-        PersonDto personDto = pPerson;
         if (this.repository.getAllPersons().stream().anyMatch(p -> Objects.equals(p.firstName, pPerson.getFirstName()) && Objects.equals(p.lastName, pPerson.getLastName()))) {
             return null;
         }
         Person person = new Person.PersonBuilder().firstName(pPerson.getFirstName()).lastName(pPerson.getLastName()).address(pPerson.getAddress()).city(pPerson.getCity()).zip(pPerson.getZip()).phone(pPerson.getPhone()).email(pPerson.getEmail()).build();
         this.repository.getAllPersons().add(person);
-        return personDto;
+        return pPerson;
     }
 
     @Override
