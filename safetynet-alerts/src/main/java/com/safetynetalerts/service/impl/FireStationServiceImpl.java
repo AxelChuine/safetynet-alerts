@@ -38,8 +38,9 @@ public class FireStationServiceImpl implements IFireStationService {
     }
 
     public List<FireStationDto> getAllFireStations() throws IOException {
+		List<FireStation> firestationsToConvert = this.repository.getAllFireStations();
 		List<FireStationDto> fireStationDtos = new ArrayList<>();
-		for (FireStation fireStation : this.repository.getAllFireStations()) {
+		for (FireStation fireStation : firestationsToConvert) {
 			FireStationDto fireStationDto = new FireStationDto(new HashSet<>(fireStation.getAddresses()), fireStation.getStationNumber());
 			fireStationDtos.add(fireStationDto);
 		}
@@ -48,7 +49,7 @@ public class FireStationServiceImpl implements IFireStationService {
 
 	public void createFirestation(FireStationDto pFirestation) {
 		FireStation fireStation = new FireStation(new HashSet<>(pFirestation.getAddresses()), pFirestation.getStationNumber());
-		this.repository.getAllFireStations().add(fireStation);
+		this.repository.createFireStation(fireStation);
 	}
 
 

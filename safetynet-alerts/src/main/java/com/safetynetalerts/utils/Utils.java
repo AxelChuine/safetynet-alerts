@@ -7,7 +7,6 @@ import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -45,11 +44,14 @@ public class Utils {
 
 	private Any allergies;
 
-	@Autowired
-	private Data data;
+	private final Data data;
+
+    public Utils(Data data) {
+        this.data = data;
+    }
 
 
-	public final List<FireStation> getAllFirestations() throws IOException {
+    public final List<FireStation> getAllFirestations() throws IOException {
 		List<FireStation> fireStations = new ArrayList<>();
 		this.file = Files.readAllBytes(new File(path).toPath());
 		this.iter = JsonIterator.parse(file);
