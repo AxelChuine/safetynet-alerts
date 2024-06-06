@@ -1,5 +1,6 @@
 package com.safetynetalerts.service.impl;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
@@ -62,7 +63,7 @@ public class PersonServiceImpl implements IPersonService {
         return emailAddresses;
     }
 
-    public PersonDto getPersonByFullName(String pFirstName, String pLastName) throws Exception {
+    public PersonDto getPersonByFullName(String pFirstName, String pLastName) throws ResourceNotFoundException {
         Person person;
         List<Person> persons = this.repository.getAllPersons();
         PersonDto personDto = new PersonDto();
@@ -77,7 +78,7 @@ public class PersonServiceImpl implements IPersonService {
             personDto.setPhone(person.phone);
             personDto.setEmail(person.email);
         } else {
-            return null;
+            throw new ResourceNotFoundException("La personne s'appelant " + pFirstName + " " + pLastName + " n'existe pas.");
         }
         return personDto;
     }
@@ -125,9 +126,10 @@ public class PersonServiceImpl implements IPersonService {
     }
 
     @Override
-    public PersonDto addPerson(PersonDto pPerson) {
+public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsException {
+        PersonDto personDto = pPerson;
         if (this.repository.getAllPersons().stream().anyMatch(p -> Objects.equals(p.firstName, pPerson.getFirstName()) && Objects.equals(p.lastName, pPerson.getLastName()))) {
-            return null;
+            throw new ResourceAlreadyExistsException("La personne que vous essayez de créer existe déjà.");
         }
         Person person = new Person.PersonBuilder().firstName(pPerson.getFirstName()).lastName(pPerson.getLastName()).address(pPerson.getAddress()).city(pPerson.getCity()).zip(pPerson.getZip()).phone(pPerson.getPhone()).email(pPerson.getEmail()).build();
         this.repository.getAllPersons().add(person);

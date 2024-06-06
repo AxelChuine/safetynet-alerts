@@ -1,5 +1,6 @@
 package com.safetynetalerts.service;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
@@ -24,7 +25,7 @@ public interface IPersonService {
 
 	List<PersonDto> getAllPersons() throws IOException;
 
-	PersonDto addPerson(PersonDto pPerson) throws IOException;
+	PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsException;
 
 	PersonDto updatePerson(String pAddress, String pFirstName, String pLastName) throws IOException, ResourceNotFoundException, Exception;
 

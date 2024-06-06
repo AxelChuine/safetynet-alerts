@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.Person;
@@ -96,7 +97,7 @@ public class PersonControllerTest {
 
 
     @Test
-    public void createPersonTest() throws IOException {
+    public void createPersonTest() throws ResourceAlreadyExistsException {
         PersonDto personDto = new PersonDto("Jean", "Dubois", "47 rue du Jambon", "Lilles", "62400", "04", "test@gmail.com");
 
         when(this.service.addPerson(personDto)).thenReturn(personDto);
@@ -142,5 +143,16 @@ public class PersonControllerTest {
         ResponseEntity responsePerson = this.controller.deletePerson(firstName, lastName);
 
         assertEquals(HttpStatus.NOT_FOUND, responsePerson.getStatusCode());
+    }
+
+    @Test
+    public void getPersonByFullNameShouldReturnCode200 () throws Exception {
+        String firstName = "Jean";
+        String lastName = "Dubois";
+        PersonDto person = new PersonDto(firstName, lastName, null, null, null, null, null);
+
+        when(this.service.getPersonByFullName(firstName, lastName)).thenReturn(person);
+        ResponseEntity responsePerson = this.controller.getPersonByFullName(firstName, lastName);
+        assertEquals(HttpStatus.OK, responsePerson.getStatusCode());
     }
 }

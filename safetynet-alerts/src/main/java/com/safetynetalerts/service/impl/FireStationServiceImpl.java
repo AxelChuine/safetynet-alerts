@@ -31,6 +31,7 @@ public class FireStationServiceImpl implements IFireStationService {
 
 	private final IFireStationRepository repository;
 
+
 	List<FireStation> fireStations = new ArrayList<>();
 
     public FireStationServiceImpl(IFireStationRepository repository) {

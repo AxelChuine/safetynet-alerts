@@ -6,5 +6,4 @@
 *.gz
 
 target/generated-sources/annotations/com/safetynetalerts/service/mapper/IFireStationMapperImpl.java
-
 .idea/misc.xml

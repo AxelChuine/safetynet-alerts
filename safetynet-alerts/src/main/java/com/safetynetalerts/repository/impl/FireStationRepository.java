@@ -25,4 +25,9 @@ public class FireStationRepository implements IFireStationRepository {
     public FireStation createFireStation(FireStation fireStation) {
         return this.data.createFireStation(fireStation);
     }
+
+    @Override
+    public FireStation createFireStation(FireStation fireStation) {
+        return this.data.createFireStation(fireStation);
+    }
 }
