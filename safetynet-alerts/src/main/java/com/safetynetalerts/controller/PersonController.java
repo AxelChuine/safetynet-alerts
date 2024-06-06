@@ -68,13 +68,11 @@ public class PersonController {
 	@DeleteMapping("/person")
 	public ResponseEntity deletePerson(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws Exception {
 		logger.info("delete person");
-		if (Objects.isNull(this.personService.getPersonByFullName(firstName, lastName))) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
-		}
 		this.personService.deletePerson(firstName, lastName);
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return new ResponseEntity(HttpStatus.OK);
 	}
-@GetMapping("/person")
+
+	@GetMapping("/person")
     public ResponseEntity<List<PersonDto>> getPersonByFullName(@RequestParam("firstName") String firstName,@RequestParam("lastName") String lastName) throws Exception {
 		logger.info("get a person by his full name");
 		List<PersonDto> persons = List.of(this.personService.getPersonByFullName(firstName, lastName));

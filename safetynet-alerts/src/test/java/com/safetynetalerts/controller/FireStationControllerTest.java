@@ -1,6 +1,7 @@
 package com.safetynetalerts.controller;
 
 import com.safetynetalerts.dto.FireStationDto;
+import com.safetynetalerts.dto.PhoneAlertDto;
 import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IFireStationService;
@@ -80,7 +81,13 @@ public class FireStationControllerTest {
 
     @Test
     public void getCellNumbersTest () throws IOException {
-        ResponseEntity responseCellNumbers = this.controller.getCellNumbers("4");
+        String stationNumber = "4";
+        PhoneAlertDto cellNumbers = new PhoneAlertDto();
+
+        when(this.personFirestationService.getCellNumbers(stationNumber)).thenReturn(cellNumbers);
+        ResponseEntity responseCellNumbers = this.controller.getCellNumbers(stationNumber);
+
+
         assertEquals(HttpStatus.OK, responseCellNumbers.getStatusCode());
     }
 

@@ -1,5 +1,6 @@
 package com.safetynetalerts.services;
 
+import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.dto.SimplePersonDto;
@@ -79,11 +80,12 @@ class PersonServiceTest {
 	@Test
 	void getAllPersonsTest() throws IOException {
 		List<Person> people = List.of(new Person.PersonBuilder().build(), new Person.PersonBuilder().build());
+		List<PersonDto> persons = List.of(new PersonDto(), new PersonDto());
 
 		when(this.repository.getAllPersons()).thenReturn(people);
 		List<PersonDto> peopleToCompare = this.service.getAllPersons();
 
-		assertEquals(people, peopleToCompare);
+		assertEquals(persons, peopleToCompare);
 	}
 
 	@Test
@@ -106,7 +108,7 @@ class PersonServiceTest {
 	void getPersonByFullNameTest () throws Exception {
 		String firstName = "Jean";
 		String lastName = "Dubois";
-		List<Person> persons = List.of(new Person.PersonBuilder().build(), new Person.PersonBuilder().build());
+		List<Person> persons = List.of(new Person.PersonBuilder().firstName(firstName).lastName(lastName).build(), new Person.PersonBuilder().build());
 
 		when(this.repository.getAllPersons()).thenReturn(persons);
 		PersonDto person = this.service.getPersonByFullName(firstName, lastName);
@@ -115,7 +117,7 @@ class PersonServiceTest {
 	}
 
 	@Test
-	public void deletePersonTest () throws IOException {
+	public void deletePersonTest () throws IOException, ResourceNotFoundException {
 		// ARRANGE
 		List<Person> expectedPersons = new ArrayList<>();
 		Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("12 rue de la marine").city("Lille").zip("62000").phone("05-66-99-88").email("test@gmail.com").build();

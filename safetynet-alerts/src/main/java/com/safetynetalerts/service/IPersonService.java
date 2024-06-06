@@ -29,7 +29,7 @@ public interface IPersonService {
 
 	PersonDto updatePerson(String pAddress, String pFirstName, String pLastName) throws IOException, ResourceNotFoundException, Exception;
 
-	void deletePerson(String firstName, String lastName);
+	void deletePerson(String firstName, String lastName) throws ResourceNotFoundException;
 
 	SimplePersonDto convertToSimplePersonDto(Person personToChange);
 
