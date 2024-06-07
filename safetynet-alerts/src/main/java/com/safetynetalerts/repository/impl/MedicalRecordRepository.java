@@ -1,5 +1,6 @@
 package com.safetynetalerts.repository.impl;
 
+import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.repository.IMedicalRecordRepository;
 import com.safetynetalerts.utils.Data;
@@ -19,5 +20,10 @@ public class MedicalRecordRepository implements IMedicalRecordRepository {
     @Override
     public List<MedicalRecord> getAllMedicalRecords() {
         return this.data.getMedicalRecords();
+    }
+
+    @Override
+    public MedicalRecord createMedicalRecord(MedicalRecordDto medicalRecord) {
+        return null;
     }
 }

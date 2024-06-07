@@ -1,5 +1,6 @@
 package com.safetynetalerts.services;
 
+import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
@@ -154,7 +155,7 @@ public class MedicalRecordServiceTest {
 	}
 
 	@Test
-	public void createMedicalRecordTest () throws IOException {
+	public void createMedicalRecordTest () throws IOException, ResourceNotFoundException {
 		MedicalRecordDto medicalRecordDto = new MedicalRecordDto.MedicalRecordDtoBuilder().build();
 		MedicalRecord medicalRecord = new MedicalRecord();
 		List<MedicalRecord> medicalRecords = this.repository.getAllMedicalRecords();

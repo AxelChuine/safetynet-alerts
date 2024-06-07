@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.service.IMedicalRecordService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +24,8 @@ public class MedicalRecordController {
 
     Logger logger = LoggerFactory.getLogger(MedicalRecordController.class);
 
-    @PostMapping("/medical-records")
-    public ResponseEntity createMedicalRecord(@RequestBody MedicalRecordDto pMedicalRecord){
+    @PostMapping("/medical-record")
+    public ResponseEntity createMedicalRecord(@RequestBody MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException {
         logger.info("launch creation medical record");
         this.service.createMedicalRecord(pMedicalRecord);
         if (Objects.isNull(pMedicalRecord)) {

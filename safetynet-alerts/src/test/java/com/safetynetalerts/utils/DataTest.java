@@ -1,9 +1,12 @@
 package com.safetynetalerts.utils;
 
 import com.safetynetalerts.models.FireStation;
+import com.safetynetalerts.models.MedicalRecord;
+import com.safetynetalerts.models.Person;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -34,5 +37,36 @@ public class DataTest {
         FireStation fireStationToCompare = this.data.createFireStation(this.fireStation);
 
         Assertions.assertNotNull(fireStationToCompare);
+    }
+
+    @Test
+    public void getAllMedicalRecordsShouldReturnAllMedicalRecords() {
+        List<MedicalRecord> medicalRecords = this.data.getAllMedicalRecords();
+
+        Assertions.assertNotNull(medicalRecords);
+    }
+
+    @Test
+    public void createMedicalRecordShouldCreateMedicalRecord() {
+        MedicalRecord medicalRecord = new MedicalRecord();
+
+        MedicalRecord medicalRecordToCompare = this.data.createMedicalRecord(medicalRecord);
+
+        Assertions.assertNotNull(medicalRecordToCompare);
+    }
+
+    @Test
+    public void getAllPersonsShouldReturnAllPersons() {
+        List<Person> persons = this.data.getAllPersons();
+
+        Assertions.assertNotNull(persons);
+    }
+
+    @Test
+    public void createPersonShouldCreatePerson() {
+        Person person = new Person.PersonBuilder().build();
+        Person personToCreate = this.data.createPerson(person);
+
+        Assertions.assertNotNull(personToCreate);
     }
 }

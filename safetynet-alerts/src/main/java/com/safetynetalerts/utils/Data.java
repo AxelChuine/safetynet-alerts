@@ -5,6 +5,7 @@ import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import lombok.Getter;
 import lombok.Setter;
+import org.eclipse.jetty.http.MetaData;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -27,9 +28,31 @@ public class Data {
 	}
 
 	public FireStation createFireStation(FireStation fireStation) {
-  List<FireStation> newFireStations = new ArrayList<>(this.firestations);
+  		List<FireStation> newFireStations = new ArrayList<>(this.firestations);
 		newFireStations.add(fireStation);
 		this.firestations = newFireStations;
 		return fireStation;
+	}
+
+	public List<MedicalRecord> getAllMedicalRecords() {
+		return this.medicalRecords;
+	}
+
+	public MedicalRecord createMedicalRecord(MedicalRecord medicalRecord) {
+		List<MedicalRecord> medicalRecords = new ArrayList<>(this.medicalRecords);
+		medicalRecords.add(medicalRecord);
+		this.medicalRecords = medicalRecords;
+		return medicalRecord;
+	}
+
+	public List<Person> getAllPersons() {
+		return this.persons;
+	}
+
+	public Person createPerson(Person person) {
+		List<Person> newPersons = new ArrayList<>(this.persons);
+		newPersons.add(person);
+		this.persons = newPersons;
+		return person;
 	}
 }

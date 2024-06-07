@@ -1,5 +1,6 @@
 package com.safetynetalerts.service.impl;
 
+import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
@@ -173,9 +174,19 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	}
 
 	@Override
-	public void createMedicalRecord(MedicalRecordDto pMedicalRecord) {
-		MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(pMedicalRecord.getFirstName()).lastName(pMedicalRecord.getLastName()).birthDate(pMedicalRecord.getBirthDate()).medications(pMedicalRecord.getMedications()).allergies(pMedicalRecord.getAllergies()).build();
-		this.repository.getAllMedicalRecords().add(medicalRecord);
+	public MedicalRecordDto createMedicalRecord(MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException {
+		MedicalRecordDto medicalRecord = null;
+		if (Objects.nonNull(pMedicalRecord)) {
+			medicalRecord = new MedicalRecordDto
+					.MedicalRecordDtoBuilder()
+					.firstName(pMedicalRecord.getFirstName())
+					.lastName(pMedicalRecord.getLastName())
+					.birthDate(pMedicalRecord.getBirthDate())
+					.medications(pMedicalRecord.getMedications())
+					.allergies(pMedicalRecord.getAllergies()).build();
+		}
+		this.repository.createMedicalRecord(medicalRecord);
+		return medicalRecord;
 	}
 
 	@Override
