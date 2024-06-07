@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.service.IMedicalRecordService;
@@ -25,13 +26,9 @@ public class MedicalRecordController {
     Logger logger = LoggerFactory.getLogger(MedicalRecordController.class);
 
     @PostMapping("/medical-record")
-    public ResponseEntity createMedicalRecord(@RequestBody MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException {
+    public ResponseEntity<MedicalRecordDto> createMedicalRecord(@RequestBody MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException, ResourceAlreadyExistsException {
         logger.info("launch creation medical record");
-        this.service.createMedicalRecord(pMedicalRecord);
-        if (Objects.isNull(pMedicalRecord)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return new ResponseEntity<>(this.service.createMedicalRecord(pMedicalRecord), HttpStatus.CREATED);
     }
 
     @GetMapping("/medical-records")

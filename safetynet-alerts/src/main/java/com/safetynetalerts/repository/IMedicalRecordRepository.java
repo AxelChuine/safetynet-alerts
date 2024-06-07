@@ -8,5 +8,5 @@ import java.util.List;
 public interface IMedicalRecordRepository {
     List<MedicalRecord> getAllMedicalRecords();
 
-    MedicalRecord createMedicalRecord(MedicalRecordDto medicalRecord);
+    MedicalRecord createMedicalRecord(MedicalRecord medicalRecord);
 }

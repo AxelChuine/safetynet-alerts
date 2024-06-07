@@ -1,5 +1,6 @@
 package com.safetynetalerts.repositories;
 
+import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.repository.impl.MedicalRecordRepository;
 import com.safetynetalerts.utils.Data;
@@ -9,17 +10,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.util.Assert;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
 public class MedicalRecordRepositoryTest {
     @InjectMocks
-    private MedicalRecordRepository medicalRecordRepository;
+    private MedicalRecordRepository repository;
 
     @Mock
     private Data data;
@@ -40,8 +39,16 @@ public class MedicalRecordRepositoryTest {
     @Test
     public void getAllMedicalRecordsShouldReturnAllMedicalRecords() {
         Mockito.when(this.data.getAllMedicalRecords()).thenReturn(this.medicalRecords);
-        List<MedicalRecord> allMedicalRecords = medicalRecordRepository.getAllMedicalRecords();
+        List<MedicalRecord> allMedicalRecords = repository.getAllMedicalRecords();
 
         Assertions.assertEquals(this.medicalRecords, allMedicalRecords);
+    }
+
+    @Test
+    public void createMedicalRecordShouldCreateMedicalRecord() {
+        Mockito.when(this.data.createMedicalRecord(medicalRecord)).thenReturn(medicalRecord);
+        MedicalRecord medicalRecordToCompare = this.repository.createMedicalRecord(medicalRecord);
+
+        Assertions.assertEquals(medicalRecord, medicalRecordToCompare);
     }
 }

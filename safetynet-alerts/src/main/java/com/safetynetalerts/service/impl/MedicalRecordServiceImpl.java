@@ -1,5 +1,6 @@
 package com.safetynetalerts.service.impl;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.models.MedicalRecord;
@@ -174,19 +175,24 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	}
 
 	@Override
-	public MedicalRecordDto createMedicalRecord(MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException {
-		MedicalRecordDto medicalRecord = null;
+	public MedicalRecordDto createMedicalRecord(MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException, ResourceAlreadyExistsException {
+        MedicalRecord medicalRecord = null;
+		if (this.repository.getAllMedicalRecords().stream().anyMatch(m -> Objects.equals(m.getFirstName(), pMedicalRecord.getFirstName()) && Objects.equals(m.getLastName(), pMedicalRecord.getLastName()))) {
+			throw new ResourceAlreadyExistsException("Le dossier médical existe déja");
+		}
 		if (Objects.nonNull(pMedicalRecord)) {
-			medicalRecord = new MedicalRecordDto
-					.MedicalRecordDtoBuilder()
+			medicalRecord = new MedicalRecord
+					.MedicalRecordBuilder()
 					.firstName(pMedicalRecord.getFirstName())
 					.lastName(pMedicalRecord.getLastName())
 					.birthDate(pMedicalRecord.getBirthDate())
 					.medications(pMedicalRecord.getMedications())
 					.allergies(pMedicalRecord.getAllergies()).build();
+		} else {
+			throw new ResourceNotFoundException("Medical record not found");
 		}
 		this.repository.createMedicalRecord(medicalRecord);
-		return medicalRecord;
+		return pMedicalRecord;
 	}
 
 	@Override
