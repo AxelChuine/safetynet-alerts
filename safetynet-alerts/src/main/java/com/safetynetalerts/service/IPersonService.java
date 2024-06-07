@@ -19,7 +19,7 @@ public interface IPersonService {
 
 	PersonDto getPersonByFullName(String pFirstName, String pLastName) throws Exception;
 
-	List<ChildAlertDto> getChildByAddress(String pAddress) throws IOException;
+	List<ChildAlertDto> getChildByAddress(String pAddress) throws IOException, ResourceNotFoundException;
 
 	List<Person> getFamilyMembers(List<Person> pFamilyMember, String pLastName);
 

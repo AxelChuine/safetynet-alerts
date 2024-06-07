@@ -59,7 +59,7 @@ public class MedicalRecordControllerTest {
     }
 
     @Test
-    public void updateMedicalRecordTest () throws IOException {
+    public void updateMedicalRecordTest () throws IOException, ResourceNotFoundException {
         List<String> allergies = new ArrayList<>();
         String allergie = "gluten";
         allergies.add("lactose");
@@ -76,7 +76,7 @@ public class MedicalRecordControllerTest {
     }
 
     @Test
-    public void deleteMedicalRecordTest () throws IOException {
+    public void deleteMedicalRecordTest () throws IOException, ResourceNotFoundException {
         List<String> medications = new ArrayList<>();
         medications.add("paracétamol");
         List<String> allergies = new ArrayList<>();

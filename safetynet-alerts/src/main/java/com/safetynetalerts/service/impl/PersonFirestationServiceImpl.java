@@ -1,5 +1,6 @@
 package com.safetynetalerts.service.impl;
 
+import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.dto.PhoneAlertDto;
 import com.safetynetalerts.dto.StationNumberDto;
@@ -74,7 +75,7 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
     }
 
     @Override
-    public List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations) throws IOException {
+    public List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations) throws IOException, ResourceNotFoundException {
         List<FireStation> firestations = this.fireStationRepository.getAllFireStations();
         List<Person> persons = new ArrayList<>();
         List<MedicalRecord> medicalRecords = new ArrayList<>();

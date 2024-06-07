@@ -1,23 +1,18 @@
 package com.safetynetalerts.controller;
 
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
+import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IPersonService;
-import com.safetynetalerts.utils.Data;
-import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,16 +30,8 @@ public class PersonControllerTest {
     @Mock
     private IPersonService service;
 
-    @MockBean
-    private Utils utils;
-
-    @MockBean
-    private Data data;
-
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
     @Test
@@ -63,7 +50,7 @@ public class PersonControllerTest {
     }
 
     @Test
-    public void getChildAddressTest() throws IOException {
+    public void getChildAddressTest() throws IOException, ResourceNotFoundException {
         String address = "67 rue Jean moulin";
         Person p1 = new Person.PersonBuilder().build();
         Person p2 = new Person.PersonBuilder().build();
@@ -132,17 +119,6 @@ public class PersonControllerTest {
         ResponseEntity responsePerson = this.controller.deletePerson(firstName, lastName);
 
         assertEquals(HttpStatus.OK, responsePerson.getStatusCode());
-    }
-
-    @Test
-    public void deletePersonNotExistingTest () throws Exception {
-        String firstName = "Jean";
-        String lastName = "Duboid";
-
-        when(this.service.getPersonByFullName(firstName, lastName)).thenReturn(null);
-        ResponseEntity responsePerson = this.controller.deletePerson(firstName, lastName);
-
-        assertEquals(HttpStatus.NOT_FOUND, responsePerson.getStatusCode());
     }
 
     @Test

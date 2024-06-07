@@ -1,6 +1,9 @@
 package com.safetynetalerts.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -15,4 +18,9 @@ public class PersonDto {
     private String zip;
     private String phone;
     private String email;
+
+    public PersonDto(String pFirstName, String pLastName) {
+        this.firstName = pFirstName;
+        this.lastName = pLastName;
+    }
 }

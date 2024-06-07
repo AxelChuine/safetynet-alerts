@@ -17,9 +17,9 @@ public interface IMedicalRecordService {
 	Map<String, Integer> countAllPersons(List<Person> pPersons) throws IOException;
 
 
-	Integer getAgeOfPerson(String firstName, String lastName) throws IOException;
+	Integer getAgeOfPerson(String firstName, String lastName) throws IOException, ResourceNotFoundException;
 
-	MedicalRecord getMedicalRecordByFullName(String pFirstName, String pLastName) throws IOException;
+	MedicalRecord getMedicalRecordByFullName(String pFirstName, String pLastName) throws ResourceNotFoundException;
 
 	boolean isUnderaged(String pFirstName, String pLastName) throws IOException;
 
@@ -28,7 +28,7 @@ public interface IMedicalRecordService {
 	List<MedicalRecordDto> getAllMedicalRecords() throws IOException;
 
 
-	void updateMedicalRecord (String firstName, String lastName, String allergie) throws IOException;
+	MedicalRecordDto updateMedicalRecord (String firstName, String lastName, String allergie) throws ResourceNotFoundException;
 
 	MedicalRecordDto createMedicalRecord(MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException, ResourceAlreadyExistsException;
 

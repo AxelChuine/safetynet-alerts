@@ -1,11 +1,13 @@
 package com.safetynetalerts.services;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IMedicalRecordRepository;
 import com.safetynetalerts.service.IMedicalRecordService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,8 +31,18 @@ public class MedicalRecordServiceTest {
     @MockBean
 	private IMedicalRecordRepository repository;
 
+	private MedicalRecord medicalRecord;
+
+	private MedicalRecordDto medicalRecordDto;
+
+	@BeforeEach
+	public void setUp() {
+		medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName("Jean").lastName("Doe").birthDate("04/05/2000").build();
+		medicalRecordDto = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName("Jean").lastName("Doe").birthDate("04/05/2000").build();
+	}
+
 	@Test
-	void getMedicalRecordByFullNameTest() throws IOException {
+	void getMedicalRecordByFullNameTest() throws IOException, ResourceNotFoundException {
 		String vFirstName = "John";
 		String vLastName = "Boyd";
 		List<String> medications = new ArrayList<>();
@@ -49,7 +61,7 @@ public class MedicalRecordServiceTest {
 	}
 
 	@Test
-	void getAgeOfPersonTest() throws IOException {
+	void getAgeOfPersonTest() throws IOException, ResourceNotFoundException {
 		MedicalRecord medicalRecord = new MedicalRecord();
 		medicalRecord.setFirstName("John");
 		medicalRecord.setLastName("Dubois");
@@ -155,21 +167,15 @@ public class MedicalRecordServiceTest {
 	}
 
 	@Test
-	public void createMedicalRecordTest () throws IOException, ResourceNotFoundException {
-		MedicalRecordDto medicalRecordDto = new MedicalRecordDto.MedicalRecordDtoBuilder().build();
-		MedicalRecord medicalRecord = new MedicalRecord();
-		List<MedicalRecord> medicalRecords = this.repository.getAllMedicalRecords();
-		medicalRecords.add(medicalRecord);
+	public void createMedicalRecordTest () throws ResourceNotFoundException, ResourceAlreadyExistsException {
+		when(this.repository.createMedicalRecord(medicalRecord)).thenReturn(medicalRecord);
+		MedicalRecordDto medicalRecordToCompare = this.service.createMedicalRecord(medicalRecordDto);
 
-		when(this.repository.getAllMedicalRecords()).thenReturn(medicalRecords);
-		this.service.createMedicalRecord(medicalRecordDto);
-		List<MedicalRecordDto> medicalRecordsToCompare = this.service.getAllMedicalRecords();
-
-		assertEquals(medicalRecords.get(0).getFirstName(), medicalRecordsToCompare.get(0).getFirstName());
+		assertEquals(medicalRecordDto, medicalRecordToCompare);
 	}
 
 	@Test
-	public void updateMedicalRecordTest () throws IOException {
+	public void updateMedicalRecordTest () throws IOException, ResourceNotFoundException {
 		String allergie = "lactose";
 		List<String> allergies = new ArrayList<>();
 		allergies.add(allergie);

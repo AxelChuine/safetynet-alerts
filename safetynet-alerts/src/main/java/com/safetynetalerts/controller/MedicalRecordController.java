@@ -38,7 +38,7 @@ public class MedicalRecordController {
     }
 
     @PutMapping("/medical-record")
-    public ResponseEntity updateMedicalRecord (@RequestParam("firstName") String pFirstName, @RequestParam("lastName") String pLastName, @RequestParam("allergie") String pAllergie) throws IOException {
+    public ResponseEntity<MedicalRecordDto> updateMedicalRecord (@RequestParam("firstName") String pFirstName, @RequestParam("lastName") String pLastName, @RequestParam("allergie") String pAllergie) throws ResourceNotFoundException {
         logger.info("launch of update of a medical record");
         this.service.updateMedicalRecord(pFirstName, pLastName, pAllergie);
         if (Objects.isNull(this.service.getMedicalRecordByFullName(pFirstName, pLastName))) {
@@ -49,7 +49,7 @@ public class MedicalRecordController {
 
 
     @DeleteMapping("/medical-record")
-    public ResponseEntity deleteMedicalRecord(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws IOException {
+    public ResponseEntity deleteMedicalRecord(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws IOException, ResourceNotFoundException {
         logger.info("launch of deletion of a medical record");
         this.service.deleteMedicalRecordByFullName(firstName, lastName);
         if (Objects.isNull(this.service.getMedicalRecordByFullName(firstName, lastName))) {

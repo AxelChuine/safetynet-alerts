@@ -1,6 +1,5 @@
 package com.safetynetalerts.repository.impl;
 
-import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.repository.IMedicalRecordRepository;
 import com.safetynetalerts.utils.Data;

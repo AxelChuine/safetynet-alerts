@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.dto.PhoneAlertDto;
 import com.safetynetalerts.dto.StationNumberDto;
@@ -92,7 +93,7 @@ public class FireStationControllerTest {
     }
 
     @Test
-    public void getAllPersonsAndMedicalRecordByFirestationTest () throws IOException {
+    public void getAllPersonsAndMedicalRecordByFirestationTest () throws IOException, ResourceNotFoundException {
         String station1 = "1";
         List<String> fireStations = new ArrayList<>();
         fireStations.add(station1);

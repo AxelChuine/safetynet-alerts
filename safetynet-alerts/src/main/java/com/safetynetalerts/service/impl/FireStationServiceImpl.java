@@ -1,5 +1,6 @@
 package com.safetynetalerts.service.impl;
 
+import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.dto.SimplePersonDto;
@@ -66,7 +67,7 @@ public class FireStationServiceImpl implements IFireStationService {
 	 * use the person in parameter and his medical record to create an object personMedicalRecordDto.
 	 */
 	@Override
-	public PersonMedicalRecordDto convertToPersonMedicalRecord(Person pPerson, MedicalRecord pMedicalRecord) throws IOException {
+	public PersonMedicalRecordDto convertToPersonMedicalRecord(Person pPerson, MedicalRecord pMedicalRecord) throws IOException, ResourceNotFoundException {
 		PersonMedicalRecordDto personMedicalRecordDto = new PersonMedicalRecordDto();
 		personMedicalRecordDto.setFirstName(pPerson.firstName);
 		personMedicalRecordDto.setLastName(pPerson.lastName);

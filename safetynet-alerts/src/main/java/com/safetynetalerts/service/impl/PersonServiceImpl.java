@@ -96,7 +96,7 @@ public class PersonServiceImpl implements IPersonService {
      * @throws IOException
      */
     @Override
-    public List<ChildAlertDto> getChildByAddress(String pAddress) throws IOException {
+    public List<ChildAlertDto> getChildByAddress(String pAddress) throws IOException, ResourceNotFoundException {
         List<ChildAlertDto> childrenAlertDto = new ArrayList<>();
         List<Person> peopleByAddress = this.getPersonsByAddress(pAddress);
         for (Person p : peopleByAddress) {
@@ -163,7 +163,9 @@ public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsExcept
         List<Person> persons = repository.getAllPersons();
         Person person = null;
         for (Person p : persons) {
-            person = p;
+            if (Objects.equals(p.firstName, firstName) && Objects.equals(p.lastName, lastName)) {
+                person = p;
+            }
         }
         if (Objects.isNull(person)) {
             throw new ResourceNotFoundException("La personne " + person.firstName + " " + person.lastName +" n'existe pas.");

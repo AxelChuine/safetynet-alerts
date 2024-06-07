@@ -1,6 +1,7 @@
 package com.safetynetalerts.controller;
 
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
+import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.service.IPersonService;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -35,7 +35,7 @@ public class PersonController {
 	}
 
 	@GetMapping("/childAlert")
-	public ResponseEntity<List<ChildAlertDto>> getChildByAddress(@RequestParam("address") String address) throws IOException {
+	public ResponseEntity<List<ChildAlertDto>> getChildByAddress(@RequestParam("address") String address) throws IOException, ResourceNotFoundException {
 		logger.info("launch of retrieval of every child by address");
 		return new ResponseEntity<>(this.personService.getChildByAddress(address), HttpStatus.OK);
 	}
@@ -67,7 +67,7 @@ public class PersonController {
 	}
 
 	@DeleteMapping("/person")
-	public ResponseEntity deletePerson(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws Exception {
+	public ResponseEntity deletePerson(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws ResourceNotFoundException {
 		logger.info("delete person");
 		this.personService.deletePerson(firstName, lastName);
 		return new ResponseEntity(HttpStatus.OK);

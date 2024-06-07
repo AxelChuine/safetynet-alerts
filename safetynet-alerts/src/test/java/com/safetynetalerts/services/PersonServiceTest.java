@@ -10,6 +10,7 @@ import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonService;
 import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.utils.Utils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -133,6 +134,19 @@ class PersonServiceTest {
 	}
 
 	@Test
+	public void deleteAPersonThatDoesNotExistShouldThrowResourceNotFoundException() throws ResourceNotFoundException {
+		String firstName = "Jean";
+		String lastName = "Dubois";
+		PersonDto personDto = new PersonDto(firstName, lastName);
+
+		ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class, () ->
+				this.service.deletePerson("Jean", "Dubois"));
+
+		Assertions.assertEquals(resourceNotFoundException.getMessage(), "La personne " +
+				personDto.getFirstName() + " " + personDto.getLastName() +" n'existe pas.");
+	}
+
+	@Test
 	public void getPersonByAddressTest() throws IOException {
 		// ARRANGE
 		String address = "18 rue jean moulin";
@@ -193,7 +207,7 @@ class PersonServiceTest {
 	}
 
 	@Test
-	public void getChildByAddressTest () throws IOException {
+	public void getChildByAddressTest () throws IOException, ResourceNotFoundException {
 		String address = "95 rue du maréchal pétain";
 		List<Person> personsByAddress = new ArrayList<>();
 		Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address(address).build();

@@ -1,13 +1,12 @@
 package com.safetynetalerts.dto;
 
-import java.util.List;
-
 import com.safetynetalerts.models.Person;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor

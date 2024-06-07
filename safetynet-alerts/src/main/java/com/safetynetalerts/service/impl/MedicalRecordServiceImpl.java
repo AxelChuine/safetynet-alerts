@@ -82,7 +82,7 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	 * @param pLastName
 	 * @return a list of medical records according to the parameters
 	 */
-	public MedicalRecord getMedicalRecordByFullName(String pFirstName, String pLastName) throws IOException {
+	public MedicalRecord getMedicalRecordByFullName(String pFirstName, String pLastName) throws ResourceNotFoundException {
 		List<MedicalRecord> records = this.repository.getAllMedicalRecords();
 		MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().build();
 		int count = 0;
@@ -105,10 +105,10 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	 * @param firstName
 	 * @param lastName
 	 * @return
-	 * @throws IOException
+	 * @throws ResourceNotFoundException
 	 */
 	@Override
-	public Integer getAgeOfPerson(String firstName, String lastName) throws IOException {
+	public Integer getAgeOfPerson(String firstName, String lastName) throws ResourceNotFoundException {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 		LocalDate birthDate = LocalDate.parse(this.getMedicalRecordByFullName(firstName, lastName).getBirthDate(), formatter);
 		LocalDate instant = LocalDate.now();
@@ -161,17 +161,29 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	}
 
 	@Override
-	public void updateMedicalRecord(String firstName, String lastName, String allergie) throws IOException {
+	public MedicalRecordDto updateMedicalRecord(String firstName, String lastName, String allergie) throws ResourceNotFoundException {
+		MedicalRecordDto medicalRecordDto = null;
 		Integer index = 0;
 		Integer indexOfElement = 0;
 		for (MedicalRecord m  : this.repository.getAllMedicalRecords()) {
 			if (Objects.equals(m.getFirstName(), firstName) && Objects.equals(m.getLastName(), lastName)) {
 				m.getAllergies().add(allergie);
 				indexOfElement = index;
+				medicalRecordDto = new MedicalRecordDto.MedicalRecordDtoBuilder()
+						.firstName(m.getFirstName())
+						.lastName(m.getLastName())
+						.birthDate(m.getBirthDate())
+						.medications(m.getMedications())
+						.allergies(m.getAllergies())
+						.build();
+			}
+			if (Objects.isNull(m)) {
+				throw new ResourceNotFoundException("Medical Record not found");
 			}
 			index ++;
 		}
 		this.repository.getAllMedicalRecords().get(indexOfElement).getAllergies().add(allergie);
+		return medicalRecordDto;
 	}
 
 	@Override

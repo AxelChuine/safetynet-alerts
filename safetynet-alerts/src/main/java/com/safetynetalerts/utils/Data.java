@@ -5,7 +5,6 @@ import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import lombok.Getter;
 import lombok.Setter;
-import org.eclipse.jetty.http.MetaData;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

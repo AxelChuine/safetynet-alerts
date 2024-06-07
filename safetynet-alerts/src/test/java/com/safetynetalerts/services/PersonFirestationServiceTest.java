@@ -1,6 +1,7 @@
 package com.safetynetalerts.services;
 
 
+import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.dto.PhoneAlertDto;
 import com.safetynetalerts.dto.StationNumberDto;
@@ -112,7 +113,7 @@ public class PersonFirestationServiceTest {
     }
 
     @Test
-    public void getPersonsAndMedicalRecordsByFirestationTest () throws IOException {
+    public void getPersonsAndMedicalRecordsByFirestationTest () throws IOException, ResourceNotFoundException {
         String address = "101 rue jean moulin";
         List<String> medications = new ArrayList<>();
         String medication = "paracétamol";
