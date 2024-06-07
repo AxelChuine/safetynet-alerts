@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.models.MedicalRecord;
@@ -33,11 +34,11 @@ public class MedicalRecordControllerTest {
     private Utils utils;
 
     @Test
-    public void createMedicalRecordTest () throws ResourceNotFoundException {
+    public void createMedicalRecordTest () throws ResourceNotFoundException, ResourceAlreadyExistsException {
         MedicalRecordDto medicalRecord = new MedicalRecordDto.MedicalRecordDtoBuilder().build();
 
         when(this.service.createMedicalRecord(medicalRecord)).thenReturn(medicalRecord);
-        ResponseEntity responseMedicalRecord = this.controller.createMedicalRecord(medicalRecord);
+        ResponseEntity<MedicalRecordDto> responseMedicalRecord = this.controller.createMedicalRecord(medicalRecord);
         assertEquals(HttpStatus.CREATED, responseMedicalRecord.getStatusCode());
     }
 

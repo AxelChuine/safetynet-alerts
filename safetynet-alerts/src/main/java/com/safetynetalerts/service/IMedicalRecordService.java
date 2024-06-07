@@ -1,5 +1,6 @@
 package com.safetynetalerts.service;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.models.MedicalRecord;
@@ -29,7 +30,7 @@ public interface IMedicalRecordService {
 
 	void updateMedicalRecord (String firstName, String lastName, String allergie) throws IOException;
 
-	MedicalRecordDto createMedicalRecord(MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException;
+	MedicalRecordDto createMedicalRecord(MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException, ResourceAlreadyExistsException;
 
 	void deleteMedicalRecordByFullName(String firstName, String lastName);
 }

@@ -6,6 +6,7 @@ import com.safetynetalerts.repository.IMedicalRecordRepository;
 import com.safetynetalerts.utils.Data;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -19,11 +20,11 @@ public class MedicalRecordRepository implements IMedicalRecordRepository {
 
     @Override
     public List<MedicalRecord> getAllMedicalRecords() {
-        return this.data.getMedicalRecords();
+        return new ArrayList<>(this.data.getAllMedicalRecords());
     }
 
     @Override
-    public MedicalRecord createMedicalRecord(MedicalRecordDto medicalRecord) {
-        return null;
+    public MedicalRecord createMedicalRecord(MedicalRecord medicalRecord) {
+        return this.data.createMedicalRecord(medicalRecord);
     }
 }
