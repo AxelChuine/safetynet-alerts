@@ -54,9 +54,8 @@ class PersonServiceTest {
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
 		persons = List.of(new Person.PersonBuilder().lastName(lastName).build(), new Person.PersonBuilder().build());
-		this.personDto = new PersonDto();
-		this.personDto.setLastName(lastName);
-		personDtos = List.of(this.personDto, new PersonDto());
+		this.personDto = new PersonDto.PersonDtoBuilder().lastName(lastName).build();
+		personDtos = List.of(this.personDto, new PersonDto.PersonDtoBuilder().build());
 	}
 
 
@@ -91,7 +90,7 @@ class PersonServiceTest {
 	@Test
 	void getAllPersonsTest() throws IOException {
 		List<Person> people = List.of(new Person.PersonBuilder().build(), new Person.PersonBuilder().build());
-		List<PersonDto> persons = List.of(new PersonDto(), new PersonDto());
+		List<PersonDto> persons = List.of(new PersonDto.PersonDtoBuilder().build(), new PersonDto.PersonDtoBuilder().build());
 
 		when(this.repository.getAllPersons()).thenReturn(people);
 		List<PersonDto> peopleToCompare = this.service.getAllPersons();
@@ -147,7 +146,7 @@ class PersonServiceTest {
 	public void deleteAPersonThatDoesNotExistShouldThrowResourceNotFoundException() throws ResourceNotFoundException {
 		String firstName = "Jean";
 		String lastName = "Dubois";
-		PersonDto personDto = new PersonDto(firstName, lastName);
+		PersonDto personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).build();
 
 		ResourceNotFoundException resourceNotFoundException = Assertions.assertThrows(ResourceNotFoundException.class, () ->
 				this.service.deletePerson("Jean", "Dubois"));
@@ -165,7 +164,7 @@ class PersonServiceTest {
 		expectedPersons.add(person);
 		// ACT
 		when(this.repository.getAllPersons()).thenReturn(expectedPersons);
-		List<Person> persons = this.service.getPersonsByAddress(address);
+		List<PersonDto> persons = this.service.getPersonsByAddress(address);
 		// ASSERT
 		assertEquals(expectedPersons, persons);
 	}
@@ -181,18 +180,22 @@ class PersonServiceTest {
 	@Test
 	public void getFamilyMembersTest() {
 		// ARRANGE
-		Person p1 = new Person.PersonBuilder().firstName("John").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
-		Person p2 = new Person.PersonBuilder().firstName("Mathias").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
+		Person p1 = new Person.
+				PersonBuilder().firstName("John").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
+		Person p2 = new Person.PersonBuilder().firstName("John").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
 		Person p3 = new Person.PersonBuilder().firstName("Lukas").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
-		List<Person> expectedPersons = new ArrayList<>();
-		expectedPersons.add(p1);
-		expectedPersons.add(p2);
-		expectedPersons.add(p3);
+		List<Person> expectedPersons = List.of(p1, p2, p3);
+
+
+		PersonDto p1Dto = new PersonDto.PersonDtoBuilder().firstName("John").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
+		PersonDto p2Dto = new PersonDto.PersonDtoBuilder().firstName("Mathias").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
+		PersonDto p3Dto = new PersonDto.PersonDtoBuilder().firstName("Lukas").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
+		List<PersonDto> expectedPersonsDto = List.of(p1Dto, p2Dto, p3Dto);
 		String lastName = "Dubois";
 		// ACT
 		when(this.repository.getAllPersons()).thenReturn(expectedPersons);
 		List<Person> persons = this.repository.getAllPersons();
-		List<Person> personsToCompare = this.service.getFamilyMembers(expectedPersons, lastName);
+		List<PersonDto> personsToCompare = this.service.getFamilyMembers(expectedPersonsDto, lastName);
 		// ASSERT
 		assertEquals(persons, personsToCompare);
 	}
@@ -219,9 +222,9 @@ class PersonServiceTest {
 	@Test
 	public void getChildByAddressTest () throws IOException, ResourceNotFoundException {
 		String address = "95 rue du maréchal pétain";
-		List<Person> personsByAddress = new ArrayList<>();
-		Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address(address).build();
-		Person adult = new Person.PersonBuilder().firstName("Marc").lastName("Dubois").address(address).build();
+		List<PersonDto> personsByAddress = new ArrayList<>();
+		PersonDto person = new PersonDto.PersonDtoBuilder().firstName("Jean").lastName("Dubois").address(address).build();
+		PersonDto adult = new PersonDto.PersonDtoBuilder().firstName("Marc").lastName("Dubois").address(address).build();
 		personsByAddress.add(person);
 		personsByAddress.add(adult);
 		ChildAlertDto childAlertDto = new ChildAlertDto("Jean", "Dubois", 0, personsByAddress);

@@ -1,11 +1,11 @@
 package com.safetynetalerts.service.impl;
 
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
+import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.dto.PhoneAlertDto;
 import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.FireStation;
-import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IFireStationRepository;
 import com.safetynetalerts.repository.IPersonRepository;
@@ -78,7 +78,7 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
     public List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations) throws IOException, ResourceNotFoundException {
         List<FireStation> firestations = this.fireStationRepository.getAllFireStations();
         List<Person> persons = new ArrayList<>();
-        List<MedicalRecord> medicalRecords = new ArrayList<>();
+        List<MedicalRecordDto> medicalRecords = new ArrayList<>();
         List<PersonMedicalRecordDto> personMedicalRecordDtos = new ArrayList<>();
         for (FireStation firestation : firestations) {
             persons = this.getAllPersonsByFireStation(firestation.getStationNumber());
@@ -87,7 +87,7 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
             medicalRecords.add(this.medicalRecordService.getMedicalRecordByFullName(p.firstName, p.lastName));
         }
         for (Person p : persons) {
-            for (MedicalRecord m : medicalRecords) {
+            for (MedicalRecordDto m : medicalRecords) {
                 PersonMedicalRecordDto personMedicalRecordDto = new PersonMedicalRecordDto(p.firstName, p.lastName, p.phone, this.medicalRecordService.getAgeOfPerson(p.firstName, p.lastName), m.getMedications(), m.getAllergies());
                 personMedicalRecordDtos.add(personMedicalRecordDto);
             }

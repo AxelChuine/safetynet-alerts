@@ -2,6 +2,7 @@ package com.safetynetalerts.services;
 
 
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
+import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.dto.PhoneAlertDto;
 import com.safetynetalerts.dto.StationNumberDto;
@@ -142,7 +143,7 @@ public class PersonFirestationServiceTest {
         firestations.add(firestation);
 
         String birthDate = "01/01/2001";
-        MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).allergies(allergies).medications(medications).build();
+        MedicalRecordDto medicalRecord = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).allergies(allergies).medications(medications).build();
 
 
         when(this.fireStationRepository.getAllFireStations()).thenReturn(firestations);

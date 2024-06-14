@@ -35,10 +35,28 @@ public class MedicalRecordServiceTest {
 
 	private MedicalRecordDto medicalRecordDto;
 
+	private PersonDto personDto;
+
+	private List<PersonDto> persons;
+
+	private String firstName = "Jean";
+
+	private String lastName = "Doe";
+
+	private String birthDate = "04/05/2000";
+
+	private List<MedicalRecord> medicalRecords;
+
+	private List<MedicalRecordDto> medicalRecordDtos;
+
 	@BeforeEach
 	public void setUp() {
-		medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName("Jean").lastName("Doe").birthDate("04/05/2000").build();
-		medicalRecordDto = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName("Jean").lastName("Doe").birthDate("04/05/2000").build();
+		medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
+		medicalRecordDto = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
+		this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).build();
+		this.persons = List.of(this.personDto);
+		this.medicalRecords = List.of(medicalRecord);
+		this.medicalRecordDtos = List.of(medicalRecordDto);
 	}
 
 	@Test
@@ -54,7 +72,7 @@ public class MedicalRecordServiceTest {
 		medicalRecords.add(medicalRecord);
 
 		when(this.repository.getAllMedicalRecords()).thenReturn(medicalRecords);
-		MedicalRecord medicalRecordsToCompare = this.service.getMedicalRecordByFullName(vFirstName, vLastName);
+		MedicalRecordDto medicalRecordsToCompare = this.service.getMedicalRecordByFullName(vFirstName, vLastName);
 
 		assertEquals(medicalRecord.getFirstName(), medicalRecordsToCompare.getFirstName());
 		assertEquals(medicalRecord.getLastName(), medicalRecordsToCompare.getLastName());

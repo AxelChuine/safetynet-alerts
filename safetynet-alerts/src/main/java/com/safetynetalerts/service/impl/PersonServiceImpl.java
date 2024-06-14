@@ -67,25 +67,29 @@ public class PersonServiceImpl implements IPersonService {
     public PersonDto getPersonByFullName(String pFirstName, String pLastName) throws ResourceNotFoundException {
         Person person;
         List<Person> persons = this.repository.getAllPersons();
-        PersonDto personDto = new PersonDto();
+        PersonDto personDto = null;
         Optional<Person> personOptional = persons.stream().filter(p -> Objects.equals(p.getFirstName(), pFirstName) && Objects.equals(p.getLastName(), pLastName)).findFirst();
         if (personOptional.isPresent()) {
             person = personOptional.get();
-            personDto.setFirstName(person.firstName);
-            personDto.setLastName(person.lastName);
-            personDto.setAddress(person.address);
-            personDto.setCity(person.city);
-            personDto.setZip(person.zip);
-            personDto.setPhone(person.phone);
-            personDto.setEmail(person.email);
+            personDto = new PersonDto
+                    .PersonDtoBuilder()
+                    .firstName(person.firstName)
+                    .lastName(person.lastName)
+                    .address(person.address)
+                    .city(person.city)
+                    .zip(person.zip)
+                    .phone(person.phone)
+                    .email(person.email)
+                    .build();
         } else {
             throw new ResourceNotFoundException("La personne s'appelant " + pFirstName + " " + pLastName + " n'existe pas.");
         }
         return personDto;
     }
 
-    public List<Person> getPersonsByAddress(String pAddress) {
-        List<Person> personsByAddress = this.repository.getAllPersons();
+    public List<PersonDto> getPersonsByAddress(String pAddress) {
+        List<Person> persons = this.repository.getAllPersons();
+        List<PersonDto> personsByAddress = new ArrayList<>();
         personsByAddress = personsByAddress.stream().filter(p -> Objects.equals(p.address, pAddress))
                 .collect(Collectors.toList());
         return personsByAddress;
@@ -109,8 +113,8 @@ public class PersonServiceImpl implements IPersonService {
     @Override
     public List<ChildAlertDto> getChildByAddress(String pAddress) throws IOException, ResourceNotFoundException {
         List<ChildAlertDto> childrenAlertDto = new ArrayList<>();
-        List<Person> peopleByAddress = this.getPersonsByAddress(pAddress);
-        for (Person p : peopleByAddress) {
+        List<PersonDto> peopleByAddress = this.getPersonsByAddress(pAddress);
+        for (PersonDto p : peopleByAddress) {
             if (this.medicalRecordService.isUnderaged(p.firstName, p.lastName)) {
                 ChildAlertDto childAlertDto = new ChildAlertDto(p.firstName, p.lastName, this.medicalRecordService.getAgeOfPerson(p.firstName, p.lastName), this.getFamilyMembers(peopleByAddress, p.lastName));
                 childrenAlertDto.add(childAlertDto);
@@ -119,8 +123,8 @@ public class PersonServiceImpl implements IPersonService {
         return childrenAlertDto;
     }
 
-    public List<Person> getFamilyMembers(List<Person> pFamilyMember, String pLastName) {
-        List<Person> familyMember = new ArrayList<>();
+    public List<PersonDto> getFamilyMembers(List<PersonDto> pFamilyMember, String pLastName) {
+        List<PersonDto> familyMember = new ArrayList<>();
         familyMember = pFamilyMember.stream().filter(p -> Objects.equals(p.lastName, pLastName)).collect(Collectors.toList());
         return familyMember;
     }
@@ -130,7 +134,16 @@ public class PersonServiceImpl implements IPersonService {
         List<Person> persons = this.repository.getAllPersons();
         List<PersonDto> personsToReturn = new ArrayList<>();
         for (Person p : persons) {
-            PersonDto personDto = new PersonDto(p.firstName, p.lastName, p.address, p.city, p.zip, p.phone, p.email);
+            PersonDto personDto = new PersonDto
+                    .PersonDtoBuilder()
+                    .firstName(p.firstName)
+                    .lastName(p.lastName)
+                    .address(p.address)
+                    .city(p.city)
+                    .zip(p.zip)
+                    .phone(p.phone)
+                    .email(p.email)
+                    .build();
             personsToReturn.add(personDto);
         }
         return personsToReturn;

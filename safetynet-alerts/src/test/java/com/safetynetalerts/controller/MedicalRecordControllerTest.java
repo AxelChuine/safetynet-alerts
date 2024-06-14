@@ -68,7 +68,7 @@ public class MedicalRecordControllerTest {
         List<String> medications = new ArrayList<>();
         medications.add("paracétamol");
         Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("94 Rue jean moulin").build();
-        MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(person.firstName).lastName(person.lastName).medications(medications).allergies(allergies).build();
+        MedicalRecordDto medicalRecord = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName(person.firstName).lastName(person.lastName).medications(medications).allergies(allergies).build();
 
         when(this.service.getMedicalRecordByFullName(person.firstName, person.lastName)).thenReturn(medicalRecord);
         ResponseEntity responseMedicalRecord = this.controller.updateMedicalRecord(person.firstName, person.lastName, allergie);
@@ -85,7 +85,7 @@ public class MedicalRecordControllerTest {
         MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(medicalRecordDto.getFirstName()).lastName(medicalRecordDto.getLastName()).birthDate(medicalRecordDto.getBirthDate()).medications(medicalRecordDto.getMedications()).allergies(medicalRecordDto.getAllergies()).build();
 
 
-        when(this.service.getMedicalRecordByFullName(medicalRecordDto.getFirstName(), medicalRecordDto.getLastName())).thenReturn(medicalRecord);
+        when(this.service.getMedicalRecordByFullName(medicalRecordDto.getFirstName(), medicalRecordDto.getLastName())).thenReturn(medicalRecordDto);
         ResponseEntity responseMedicalRecord = this.controller.deleteMedicalRecord(medicalRecordDto.getFirstName(), medicalRecordDto.getLastName());
         assertEquals(HttpStatus.OK, responseMedicalRecord.getStatusCode());
     }

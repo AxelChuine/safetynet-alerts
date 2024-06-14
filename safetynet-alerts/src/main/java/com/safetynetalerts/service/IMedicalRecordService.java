@@ -3,6 +3,7 @@ package com.safetynetalerts.service;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
+import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 
@@ -19,7 +20,7 @@ public interface IMedicalRecordService {
 
 	Integer getAgeOfPerson(String firstName, String lastName) throws IOException, ResourceNotFoundException;
 
-	MedicalRecord getMedicalRecordByFullName(String pFirstName, String pLastName) throws ResourceNotFoundException;
+	MedicalRecordDto getMedicalRecordByFullName(String pFirstName, String pLastName) throws ResourceNotFoundException;
 
 	boolean isUnderaged(String pFirstName, String pLastName) throws IOException;
 
@@ -33,4 +34,6 @@ public interface IMedicalRecordService {
 	MedicalRecordDto createMedicalRecord(MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException, ResourceAlreadyExistsException;
 
 	void deleteMedicalRecordByFullName(String firstName, String lastName);
+
+	List<MedicalRecordDto> getAllMedicalRecordByListOfPersons(List<PersonDto> personDtoList) throws ResourceNotFoundException;
 }

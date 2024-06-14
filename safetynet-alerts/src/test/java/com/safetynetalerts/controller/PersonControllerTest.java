@@ -4,7 +4,6 @@ import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
-import com.safetynetalerts.models.Person;
 import com.safetynetalerts.service.IPersonService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,13 +51,10 @@ public class PersonControllerTest {
     @Test
     public void getChildAddressTest() throws IOException, ResourceNotFoundException {
         String address = "67 rue Jean moulin";
-        Person p1 = new Person.PersonBuilder().build();
-        Person p2 = new Person.PersonBuilder().build();
-        Person p3 = new Person.PersonBuilder().build();
-        List<Person> family = new ArrayList<>();
-        family.add(p1);
-        family.add(p2);
-        family.add(p3);
+        PersonDto p1 = new PersonDto.PersonDtoBuilder().build();
+        PersonDto p2 = new PersonDto.PersonDtoBuilder().build();
+        PersonDto p3 = new PersonDto.PersonDtoBuilder().build();
+        List<PersonDto> family = List.of(p1, p2, p3);
         List<ChildAlertDto> childAlertDtos = new ArrayList<>();
         ChildAlertDto child1 = new ChildAlertDto("Jean", "Dubois", 17, family);
         childAlertDtos.add(child1);
@@ -73,7 +69,7 @@ public class PersonControllerTest {
 
     @Test
     public void getAllPersonsTest() throws IOException {
-        List<PersonDto> persons = List.of(new PersonDto(), new PersonDto(), new PersonDto());
+        List<PersonDto> persons = List.of(new PersonDto.PersonDtoBuilder().build(), new PersonDto.PersonDtoBuilder().build(), new PersonDto.PersonDtoBuilder().build());
 
         when(this.service.getAllPersons()).thenReturn(persons);
         ResponseEntity<List<PersonDto>> personsResponse = this.controller.getAllPersons();
@@ -85,7 +81,15 @@ public class PersonControllerTest {
 
     @Test
     public void createPersonTest() throws ResourceAlreadyExistsException {
-        PersonDto personDto = new PersonDto("Jean", "Dubois", "47 rue du Jambon", "Lilles", "62400", "04", "test@gmail.com");
+        PersonDto personDto = new PersonDto.
+                PersonDtoBuilder()
+                .firstName("Jean")
+                .lastName( "Dubois")
+                .address("47 rue du Jambon")
+                .city( "Lilles")
+                .zip( "62400")
+                .phone( "04")
+                .email( "test@gmail.com").build();
 
         when(this.service.addPerson(personDto)).thenReturn(personDto);
         ResponseEntity<PersonDto> responsePerson = this.controller.createPerson(personDto);
@@ -98,10 +102,11 @@ public class PersonControllerTest {
         String address = "47 rue du Jambon";
         String firstName = "Jean";
         String lastName = "Dubois";
-        PersonDto personDto = new PersonDto();
-        personDto.setFirstName(firstName);
-        personDto.setLastName(lastName);
-        personDto.setAddress(address);
+        PersonDto personDto = new PersonDto
+                .PersonDtoBuilder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .address(address).build();
 
         when(this.service.updatePerson(firstName, lastName, address)).thenReturn(personDto);
         ResponseEntity<PersonDto> responsePerson = this.controller.updatePerson(address, firstName, lastName);
@@ -113,7 +118,7 @@ public class PersonControllerTest {
     public void deletePersonTest() throws Exception {
         String firstName = "Jean";
         String lastName = "Dubois";
-        PersonDto personDto = new PersonDto();
+        PersonDto personDto = new PersonDto.PersonDtoBuilder().build();
 
         when(this.service.getPersonByFullName(firstName, lastName)).thenReturn(personDto);
         ResponseEntity responsePerson = this.controller.deletePerson(firstName, lastName);
@@ -125,7 +130,11 @@ public class PersonControllerTest {
     public void getPersonByFullNameShouldReturnCode200 () throws Exception {
         String firstName = "Jean";
         String lastName = "Dubois";
-        PersonDto person = new PersonDto(firstName, lastName, null, null, null, null, null);
+        PersonDto person = new PersonDto
+                .PersonDtoBuilder()
+                .firstName(firstName)
+                        .lastName(lastName)
+                                .build();
 
         when(this.service.getPersonByFullName(firstName, lastName)).thenReturn(person);
         ResponseEntity responsePerson = this.controller.getPersonByFullName(firstName, lastName);

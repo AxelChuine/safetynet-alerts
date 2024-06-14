@@ -22,7 +22,7 @@ public interface IPersonService {
 
 	List<ChildAlertDto> getChildByAddress(String pAddress) throws IOException, ResourceNotFoundException;
 
-	List<Person> getFamilyMembers(List<Person> pFamilyMember, String pLastName);
+	List<PersonDto> getFamilyMembers(List<PersonDto> pFamilyMember, String pLastName);
 
 	List<PersonDto> getAllPersons() throws IOException;
 
@@ -37,7 +37,7 @@ public interface IPersonService {
 	List<SimplePersonDto> convertToDtoList (List<Person> pPersons);
 
 
-	List<Person> getPersonsByAddress(String address);
+	List<PersonDto> getPersonsByAddress(String address);
 
 	PersonInfo getPersonInfo(String lastName);
 
