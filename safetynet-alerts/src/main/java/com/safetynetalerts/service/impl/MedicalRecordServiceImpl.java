@@ -3,6 +3,7 @@ package com.safetynetalerts.service.impl;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
+import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IMedicalRecordRepository;
@@ -82,9 +83,9 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	 * @param pLastName
 	 * @return a list of medical records according to the parameters
 	 */
-	public MedicalRecord getMedicalRecordByFullName(String pFirstName, String pLastName) throws ResourceNotFoundException {
+	public MedicalRecordDto getMedicalRecordByFullName(String pFirstName, String pLastName) throws ResourceNotFoundException {
 		List<MedicalRecord> records = this.repository.getAllMedicalRecords();
-		MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().build();
+		MedicalRecordDto medicalRecord = new MedicalRecordDto.MedicalRecordDtoBuilder().build();
 		int count = 0;
 		while (count < records.size()) {
 			if (records.get(count).getFirstName().equals(pFirstName)
@@ -218,5 +219,18 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 			index++;
 		}
 		this.repository.getAllMedicalRecords().remove(indexOfElement);
+	}
+
+	@Override
+	public List<MedicalRecordDto> getAllMedicalRecordByListOfPersons(List<PersonDto> personDtoList) throws ResourceNotFoundException {
+		List<MedicalRecordDto> medicalRecordsToReturn = new ArrayList<>();
+		for (PersonDto personDto : personDtoList) {
+			MedicalRecordDto medicalRecordDto = this.getMedicalRecordByFullName(personDto.firstName, personDto.lastName);
+			medicalRecordsToReturn.add(medicalRecordDto);
+		}
+		if (Objects.isNull(medicalRecordsToReturn)) {
+			throw new ResourceNotFoundException("Medical Record not found");
+		}
+        return medicalRecordsToReturn;
 	}
 }

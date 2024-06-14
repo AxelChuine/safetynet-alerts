@@ -3,12 +3,15 @@ package com.safetynetalerts.services;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
+import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IMedicalRecordRepository;
 import com.safetynetalerts.service.IMedicalRecordService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -224,4 +227,11 @@ public class MedicalRecordServiceTest {
 		verify(this.repository, times(2)).getAllMedicalRecords();
 	}
 
+	@Test
+	public void getAllMedicalRecordByListOfPersonsShouldReturnAListOfMedicalRecordsDto () throws ResourceNotFoundException {
+		Mockito.when(this.service.getMedicalRecordByFullName(firstName, lastName)).thenReturn(medicalRecordDto);
+		List<MedicalRecordDto> medicalRecordsToCompare = this.service.getAllMedicalRecordByListOfPersons(persons);
+
+		Assertions.assertEquals(this.medicalRecordDtos, medicalRecordsToCompare);
+	}
 }
