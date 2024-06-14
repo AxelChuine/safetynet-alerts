@@ -229,7 +229,9 @@ public class MedicalRecordServiceTest {
 
 	@Test
 	public void getAllMedicalRecordByListOfPersonsShouldReturnAListOfMedicalRecordsDto () throws ResourceNotFoundException {
-		Mockito.when(this.service.getMedicalRecordByFullName(firstName, lastName)).thenReturn(medicalRecordDto);
+		for (PersonDto personDto1 : this.persons) {
+			Mockito.when(this.service.getMedicalRecordByFullName(firstName, lastName)).thenReturn(medicalRecordDto);
+		}
 		List<MedicalRecordDto> medicalRecordsToCompare = this.service.getAllMedicalRecordByListOfPersons(persons);
 
 		Assertions.assertEquals(this.medicalRecordDtos, medicalRecordsToCompare);
