@@ -1,9 +1,7 @@
 package com.safetynetalerts.services;
 
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
-import com.safetynetalerts.dto.ChildAlertDto;
-import com.safetynetalerts.dto.PersonDto;
-import com.safetynetalerts.dto.SimplePersonDto;
+import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IMedicalRecordService;
@@ -13,6 +11,7 @@ import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,10 +42,21 @@ class PersonServiceTest {
 	@MockBean
 	private IPersonRepository repository;
 
+	private List<Person> persons;
+
+	private List<PersonDto> personDtos;
+
+	private String lastName = "Dubois";
+
+	private PersonDto personDto;
 
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
+		persons = List.of(new Person.PersonBuilder().lastName(lastName).build(), new Person.PersonBuilder().build());
+		this.personDto = new PersonDto();
+		this.personDto.setLastName(lastName);
+		personDtos = List.of(this.personDto, new PersonDto());
 	}
 
 
@@ -228,5 +238,18 @@ class PersonServiceTest {
 		assertEquals(childAlertDtos.get(0).getLastName(), childAlertDtosToCompare.get(0).getLastName());
 	}
 
+	@Test
+	public void getPersonInfoShouldReturnAListOfPersonsInfoIfExists() {
+		String lastName = "Dubois";
+		List<String> allergies = List.of("peanut", "milk");
+		List<String> medications = List.of("ventoline");
+		SpecificPersonInfo specificPersonInfo = new SpecificPersonInfo("Jean", "Dubois", 15, "test@gmail.com", medications, allergies);
+		PersonInfo personInfo = new PersonInfo(List.of(specificPersonInfo));
+
+		Mockito.when(this.repository.getAllPersons()).thenReturn(this.persons);
+		PersonInfo personInfoToCompare = this.service.getPersonInfo(lastName);
+
+		Assertions.assertEquals(personInfo, personInfoToCompare);
+	}
 
 }

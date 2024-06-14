@@ -4,6 +4,7 @@ import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
+import com.safetynetalerts.dto.PersonInfo;
 import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.Person;
 
@@ -37,4 +38,8 @@ public interface IPersonService {
 
 
 	List<Person> getPersonsByAddress(String address);
+
+	PersonInfo getPersonInfo(String lastName);
+
+	PersonInfo createPersonInfo(Person person);
 }

@@ -4,6 +4,7 @@ import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
+import com.safetynetalerts.dto.PersonInfo;
 import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IPersonRepository;
@@ -90,6 +91,16 @@ public class PersonServiceImpl implements IPersonService {
         return personsByAddress;
     }
 
+    @Override
+    public PersonInfo getPersonInfo(String lastName) {
+        return null;
+    }
+
+    @Override
+    public PersonInfo createPersonInfo(Person person) {
+        return null;
+    }
+
     /**
      * @param pAddress
      * @return
@@ -168,7 +179,7 @@ public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsExcept
             }
         }
         if (Objects.isNull(person)) {
-            throw new ResourceNotFoundException("La personne " + person.firstName + " " + person.lastName +" n'existe pas.");
+            throw new ResourceNotFoundException("La personne " + firstName + " " + lastName +" n'existe pas.");
         }
         persons.remove(person);
         data.setPersons(persons);
