@@ -16,6 +16,6 @@ public class PersonByFireDto {
     private String lastName;
     private String cellNumber;
     private Integer age;
-    List<String> medications;
-    List<String> allergies;
+    private List<String> medications;
+    private List<String> allergies;
 }
