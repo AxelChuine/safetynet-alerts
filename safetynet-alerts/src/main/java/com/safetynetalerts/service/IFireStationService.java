@@ -25,7 +25,9 @@ public interface IFireStationService {
 
 	String getStationNumberByAddress(String address) throws IOException;
 
-	FireStationDto updateFireStation(String newStationNumber, String oldStationNumber);
+	FireStationDto updateFireStation(String newStationNumber, String oldStationNumber) throws ResourceNotFoundException;
 
 	FireStationDto convertToDto(FireStation fireStation) throws ResourceNotFoundException;
+
+	FireStation save(FireStation oldFirestation, FireStation newFirestation) throws ResourceNotFoundException;
 }

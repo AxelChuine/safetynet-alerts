@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @SpringBootTest
 public class DataTest {
@@ -19,9 +21,17 @@ public class DataTest {
 
     private FireStation fireStation;
 
+    private String address = "17 rue du moulin";
+
+    private Set<String> addresses;
+
+    private String stationNumber = "17";
+
     @BeforeEach
     public void setUp() {
-        fireStation = new FireStation();
+        this.addresses = new HashSet<>();
+        this.addresses.add(address);
+        fireStation = new FireStation(this.addresses, stationNumber);
     }
 
     @Test
@@ -67,5 +77,14 @@ public class DataTest {
         Person personToCreate = this.data.createPerson(person);
 
         Assertions.assertNotNull(personToCreate);
+    }
+
+    @Test
+    public void saveFirestationShouldSaveFireStation() {
+        FireStation oldFireStation = new FireStation(this.addresses, "4");
+
+        FireStation firestationToCompare = this.data.saveFirestation(oldFireStation, this.fireStation);
+
+        Assertions.assertEquals("17", firestationToCompare.getStationNumber());
     }
 }

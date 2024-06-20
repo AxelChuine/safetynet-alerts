@@ -110,14 +110,20 @@ public class FireStationServiceImpl implements IFireStationService {
 	}
 
 	@Override
-	public FireStationDto updateFireStation(String newStationNumber, String oldStationNumber) {
-		FireStation fireStation;
+	public FireStationDto updateFireStation(String newStationNumber, String oldStationNumber) throws ResourceNotFoundException {
+		FireStation newFirestation = null;
+		FireStation oldFirestation = null;
 		Optional<FireStation> optionalFireStation = this.repository.getAllFireStations().stream().filter(fs -> Objects.equals(fs.getStationNumber(), oldStationNumber)).findFirst();
 		if (optionalFireStation.isPresent()) {
-			fireStation = optionalFireStation.get();
-			fireStation.setStationNumber(newStationNumber);
+			oldFirestation = optionalFireStation.get();
+			newFirestation = optionalFireStation.get();
+			newFirestation.setStationNumber(newStationNumber);
+			this.save(oldFirestation, newFirestation);
 		}
-		return null;
+		if (Objects.isNull(newFirestation)) {
+			throw new ResourceNotFoundException("FireStation not found");
+		}
+		return convertToDto(newFirestation);
 	}
 
 	@Override
@@ -126,5 +132,10 @@ public class FireStationServiceImpl implements IFireStationService {
 			throw new ResourceNotFoundException("this firestation does not exist");
 		}
 		return new FireStationDto(new HashSet<>(fireStation.getAddresses()), fireStation.getStationNumber());
+	}
+
+	@Override
+	public FireStation save(FireStation oldFirestation, FireStation newFirestation) {
+		return this.repository.save(oldFirestation, newFirestation);
 	}
 }

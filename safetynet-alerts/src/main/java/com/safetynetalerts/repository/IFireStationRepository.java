@@ -9,4 +9,6 @@ public interface IFireStationRepository {
     List<FireStation> getAllFireStations();
 
     FireStation createFireStation(FireStation fireStation);
+
+    FireStation save(FireStation oldFirestation, FireStation newFirestation);
 }

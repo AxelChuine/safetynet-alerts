@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,10 +26,21 @@ public class FireStationRepositoryTest {
 
     private FireStation fireStation;
 
+    private List<FireStation> fireStations;
+
+    private String stationNumber = "17";
+
+    private String address = "17 rue jean moulin";
+
+    private Set<String> addresses;
+
     @BeforeEach
     public void setUp() {
-        Set<String> addresses = new HashSet<>();
-        fireStation = new FireStation(addresses, "7");
+        this.addresses = new HashSet<>();
+        this.addresses.add(address);
+        fireStation = new FireStation(addresses, stationNumber);
+        this.fireStations = new ArrayList<>();
+        fireStations.add(fireStation);
     }
 
     @Test
@@ -45,6 +57,16 @@ public class FireStationRepositoryTest {
     public void createFireStationShouldReturnFireStation() {
         Mockito.when(this.data.createFireStation(fireStation)).thenReturn(fireStation);
         FireStation firestationToCompare = this.repository.createFireStation(fireStation);
+
+        Assertions.assertEquals(this.fireStation, firestationToCompare);
+    }
+
+    @Test
+    public void updateFireStationShouldReturnFireStation() {
+        FireStation oldFirestation = new FireStation(this.addresses, "4");
+
+        Mockito.when(this.data.saveFirestation(oldFirestation, this.fireStation)).thenReturn(this.fireStation);
+        FireStation firestationToCompare = this.repository.save(oldFirestation, fireStation);
 
         Assertions.assertEquals(this.fireStation, firestationToCompare);
     }

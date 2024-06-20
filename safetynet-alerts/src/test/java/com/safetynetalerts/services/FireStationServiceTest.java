@@ -148,7 +148,7 @@ public class FireStationServiceTest {
 	}
 
 	@Test
-	public void updateNumberOfFireStationShouldUpdateTheNumberOfTheFirestationIfNewNumberDoesNotExists () {
+	public void updateNumberOfFireStationShouldUpdateTheNumberOfTheFirestationIfNewNumberDoesNotExists () throws ResourceNotFoundException {
 		String oldStationNumber = "4";
 
 		Mockito.when(this.repository.getAllFireStations()).thenReturn(this.fireStations);
@@ -163,5 +163,15 @@ public class FireStationServiceTest {
 		FireStationDto fireStationDtoToCompare = this.service.convertToDto(this.fireStation);
 
 		Assertions.assertEquals(this.fireStationDto, fireStationDtoToCompare);
+	}
+
+	@Test
+	public void saveFireStationShouldCreateNewFireStationIfNotExistsOrUpdateExistingOne () throws ResourceNotFoundException {
+		FireStation oldFirestation = new FireStation(this.addresses, "4");
+
+		Mockito.when(this.repository.save(oldFirestation, this.fireStation)).thenReturn(this.fireStation);
+		FireStation fireStationToCompare = this.service.save(oldFirestation, this.fireStation);
+
+		Assertions.assertEquals(this.fireStation, fireStationToCompare);
 	}
 }
