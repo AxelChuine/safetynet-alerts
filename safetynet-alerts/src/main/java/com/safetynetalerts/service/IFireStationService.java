@@ -24,4 +24,8 @@ public interface IFireStationService {
 	SimplePersonDto createSimplePersonDto(Person pPerson);
 
 	String getStationNumberByAddress(String address) throws IOException;
+
+	FireStationDto updateFireStation(String newStationNumber, String oldStationNumber);
+
+	FireStationDto convertToDto(FireStation fireStation) throws ResourceNotFoundException;
 }

@@ -1,5 +1,6 @@
 package com.safetynetalerts.services;
 
+import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.Person;
@@ -7,6 +8,7 @@ import com.safetynetalerts.repository.IFireStationRepository;
 import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IFireStationService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,29 @@ public class FireStationServiceTest {
 
 	@MockBean
 	private IFireStationRepository repository;
+
+	private String address = "18 rue jean moulin";
+
+	private String stationNumber = "17";
+
+	private Set<String> addresses;
+
+	private FireStation fireStation;
+
+	private FireStationDto fireStationDto;
+
+	private List<FireStation> fireStations;
+
+
+
+	@BeforeEach
+	void setUp() {
+		this.addresses = new HashSet<>();
+		this.addresses.add(address);
+		fireStation = new FireStation(this.addresses, stationNumber);
+		this.fireStationDto = new FireStationDto(this.addresses, stationNumber);
+		this.fireStations = new ArrayList<>();
+	}
 
     @Test
 	public void getAllFireStationsTest() throws IOException {
@@ -120,5 +145,23 @@ public class FireStationServiceTest {
 		String stationNumberToCompare = this.service.getStationNumberByAddress(address);
 
 		Assertions.assertEquals(stationNUmber, stationNumberToCompare);
+	}
+
+	@Test
+	public void updateNumberOfFireStationShouldUpdateTheNumberOfTheFirestationIfNewNumberDoesNotExists () {
+		String oldStationNumber = "4";
+
+		Mockito.when(this.repository.getAllFireStations()).thenReturn(this.fireStations);
+		FireStationDto firestationToCompare = this.service.updateFireStation(stationNumber, oldStationNumber);
+
+		Assertions.assertEquals(this.fireStationDto, firestationToCompare);
+	}
+
+	@Test
+	public void convertToDtoShouldConvertObjectToDto() throws ResourceNotFoundException {
+		Mockito.when(this.repository.getAllFireStations()).thenReturn(this.fireStations);
+		FireStationDto fireStationDtoToCompare = this.service.convertToDto(this.fireStation);
+
+		Assertions.assertEquals(this.fireStationDto, fireStationDtoToCompare);
 	}
 }
