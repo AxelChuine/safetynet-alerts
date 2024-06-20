@@ -87,10 +87,10 @@ public class PersonServiceImpl implements IPersonService {
         return personDto;
     }
 
-    public List<PersonDto> getPersonsByAddress(String pAddress) {
-        List<Person> persons = this.repository.getAllPersons();
+    public List<PersonDto> getPersonsByAddress(String pAddress) throws ResourceNotFoundException {
+        List<PersonDto> persons = convertToPersonDtoList(this.repository.getAllPersons());
         List<PersonDto> personsByAddress = new ArrayList<>();
-        personsByAddress = personsByAddress.stream().filter(p -> Objects.equals(p.address, pAddress))
+        personsByAddress = persons.stream().filter(p -> Objects.equals(p.address, pAddress))
                 .collect(Collectors.toList());
         return personsByAddress;
     }
@@ -105,11 +105,36 @@ public class PersonServiceImpl implements IPersonService {
         return null;
     }
 
-    /**
-     * @param pAddress
-     * @return
-     * @throws IOException
-     */
+    @Override
+    public PersonDto convertToPersonDto(Person person) throws ResourceNotFoundException {
+        if (Objects.isNull(person)) {
+            throw new ResourceNotFoundException("person not found exception");
+        }
+        return new PersonDto.PersonDtoBuilder()
+                .firstName(person.firstName)
+                .lastName(person.lastName)
+                .address(person.address)
+                .city(person.city)
+                .zip(person.zip)
+                .phone(person.phone)
+                .email(person.email)
+                .build();
+    }
+
+    @Override
+    public List<PersonDto> convertToPersonDtoList(List<Person> persons) throws ResourceNotFoundException {
+        if (Objects.isNull(persons)) {
+            throw new ResourceNotFoundException("persons not found exception");
+        }
+        List<PersonDto> personsDto = new ArrayList<>();
+        for (Person person : persons) {
+            PersonDto personDto = this.convertToPersonDto(person);
+            personsDto.add(personDto);
+        }
+        return personsDto;
+    }
+
+
     @Override
     public List<ChildAlertDto> getChildByAddress(String pAddress) throws IOException, ResourceNotFoundException {
         List<ChildAlertDto> childrenAlertDto = new ArrayList<>();

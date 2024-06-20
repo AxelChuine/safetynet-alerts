@@ -7,7 +7,6 @@ import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonService;
 import com.safetynetalerts.utils.Data;
-import com.safetynetalerts.utils.Utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,9 +26,6 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 class PersonServiceTest {
 
-	@MockBean
-	private Utils utils;
-
 	@Autowired
 	private IPersonService service;
 
@@ -46,16 +42,24 @@ class PersonServiceTest {
 
 	private List<PersonDto> personDtos;
 
+	private String firstName = "Jean";
+
 	private String lastName = "Dubois";
 
 	private PersonDto personDto;
 
+	private Person person;
+
+	private String address = "18 rue Jean moulin";
+
+
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
-		persons = List.of(new Person.PersonBuilder().lastName(lastName).build(), new Person.PersonBuilder().build());
-		this.personDto = new PersonDto.PersonDtoBuilder().lastName(lastName).build();
-		personDtos = List.of(this.personDto, new PersonDto.PersonDtoBuilder().build());
+		person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).build();
+		persons = List.of(this.person, new Person.PersonBuilder().address(address).build());
+		this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).build();
+		personDtos = List.of(this.personDto, new PersonDto.PersonDtoBuilder().address(address).build());
 	}
 
 
@@ -156,17 +160,11 @@ class PersonServiceTest {
 	}
 
 	@Test
-	public void getPersonByAddressTest() throws IOException {
-		// ARRANGE
-		String address = "18 rue jean moulin";
-		Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address(address).city("Strasbourg").zip("67400").phone("0454").email("test@gmail.com").build();
-		List<Person> expectedPersons = new ArrayList<>();
-		expectedPersons.add(person);
-		// ACT
-		when(this.repository.getAllPersons()).thenReturn(expectedPersons);
-		List<PersonDto> persons = this.service.getPersonsByAddress(address);
+	public void getPersonByAddressTest() throws ResourceNotFoundException {
+		when(this.repository.getAllPersons()).thenReturn(this.persons);
+		List<PersonDto> persons = this.service.getPersonsByAddress(this.address);
 		// ASSERT
-		assertEquals(expectedPersons, persons);
+		assertEquals(this.personDtos, persons);
 	}
 
 	@Test
@@ -253,6 +251,22 @@ class PersonServiceTest {
 		PersonInfo personInfoToCompare = this.service.getPersonInfo(lastName);
 
 		Assertions.assertEquals(personInfo, personInfoToCompare);
+	}
+
+	@Test
+	public void convertToPersonDtoShouldReturnAPersonDto () throws ResourceNotFoundException {
+		Mockito.when(this.repository.getAllPersons()).thenReturn(this.persons);
+		PersonDto personToCompare = this.service.convertToPersonDto(this.person);
+
+		Assertions.assertEquals(this.personDto, personToCompare);
+	}
+
+	@Test
+	public void convertToPersonDtoListShouldReturnAListOfDto() throws ResourceNotFoundException {
+		Mockito.when(this.repository.getAllPersons()).thenReturn(this.persons);
+		List<PersonDto> personsToCompare = this.service.convertToPersonDtoList(this.persons);
+
+		Assertions.assertEquals(this.personDtos, personsToCompare);
 	}
 
 }

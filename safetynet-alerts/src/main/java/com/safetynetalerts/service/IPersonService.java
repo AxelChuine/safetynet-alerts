@@ -37,9 +37,13 @@ public interface IPersonService {
 	List<SimplePersonDto> convertToDtoList (List<Person> pPersons);
 
 
-	List<PersonDto> getPersonsByAddress(String address);
+	List<PersonDto> getPersonsByAddress(String address) throws ResourceNotFoundException;
 
 	PersonInfo getPersonInfo(String lastName);
 
 	PersonInfo createPersonInfo(Person person);
+
+	PersonDto convertToPersonDto(Person person) throws ResourceNotFoundException;
+
+	List<PersonDto> convertToPersonDtoList(List<Person> persons) throws ResourceNotFoundException;
 }

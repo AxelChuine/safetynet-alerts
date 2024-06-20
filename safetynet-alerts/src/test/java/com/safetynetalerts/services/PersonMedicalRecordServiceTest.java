@@ -1,12 +1,10 @@
 package com.safetynetalerts.services;
 
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
-import com.safetynetalerts.dto.FireDto;
-import com.safetynetalerts.dto.MedicalRecordDto;
-import com.safetynetalerts.dto.PersonByFireDto;
-import com.safetynetalerts.dto.PersonDto;
+import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
+import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonMedicalRecordsService;
 import com.safetynetalerts.service.IPersonService;
@@ -18,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @SpringBootTest
 public class PersonMedicalRecordServiceTest {
@@ -30,6 +30,9 @@ public class PersonMedicalRecordServiceTest {
 
     @MockBean
     private IMedicalRecordService medicalRecordService;
+
+    @MockBean
+    private IFireStationService fireStationService;
 
     private String firstName = "John";
 
@@ -59,6 +62,12 @@ public class PersonMedicalRecordServiceTest {
 
     private List<MedicalRecordDto> medicalRecordDtoList;
 
+    String stationNumber = "17";
+
+    Set<String> addresses;
+
+    FireStationDto fireStationDto;
+
     @BeforeEach
     public void setUp() {
         this.person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).build();
@@ -69,22 +78,41 @@ public class PersonMedicalRecordServiceTest {
         this.medicalRecordDto = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
         this.medicalRecordList = List.of(medicalRecord);
         this.medicalRecordDtoList = List.of(medicalRecordDto);
+        this.fireStationDto = new FireStationDto(addresses, stationNumber);
     }
 
-    // TODO: test à faire
     @Test
-    public void getAllConcernedPersonsAndTheirInfosByFireShouldReturnAFireDtoObject () throws ResourceNotFoundException {
-        String firstName = "John";
-        String lastName = "Smith";
+    public void getAllConcernedPersonsAndTheirInfosByFireShouldReturnAFireDtoObject () throws ResourceNotFoundException, IOException {
+        Integer age = 0;
         PersonByFireDto personByFireDto = new PersonByFireDto();
         personByFireDto.setFirstName(firstName);
         personByFireDto.setLastName(lastName);
-        FireDto fireDto = new FireDto(17, List.of(personByFireDto));
+        personByFireDto.setAge(age);
+        FireDto fireDto = new FireDto(this.stationNumber, List.of(personByFireDto));
 
         Mockito.when(this.personService.getPersonsByAddress(address)).thenReturn(this.personDtoList);
         Mockito.when(this.medicalRecordService.getAllMedicalRecordByListOfPersons(this.personDtoList)).thenReturn(this.medicalRecordDtoList);
-        FireDto fireToCompare = this.service.getAllConcernedPersonsAndTheirInfosByFire();
+        Mockito.when(this.fireStationService.getStationNumberByAddress(address)).thenReturn(stationNumber);
+        FireDto fireToCompare = this.service.getAllConcernedPersonsAndTheirInfosByFire(address);
 
         Assertions.assertEquals(fireDto, fireToCompare);
+    }
+
+    @Test
+    public void convertListOfPersonsAndMedicalRecordsToPersonsByFireDtosShouldReturnAListOfPersonByFireDtoObject () throws ResourceNotFoundException, IOException {
+        Integer age = 0;
+        PersonByFireDto personByFireDto = new PersonByFireDto();
+        personByFireDto.setFirstName(firstName);
+        personByFireDto.setLastName(lastName);
+        personByFireDto.setAge(age);
+        List<PersonByFireDto> personByFireDtoList = List.of(personByFireDto);
+        List<PersonDto> personDtoList = List.of(personDto);
+        List<MedicalRecordDto> medicalRecordDtoList = List.of(medicalRecordDto);
+
+        Mockito.when(this.personService.getPersonsByAddress(address)).thenReturn(this.personDtoList);
+        Mockito.when(this.medicalRecordService.getAllMedicalRecordByListOfPersons(personDtoList)).thenReturn(this.medicalRecordDtoList);
+        List<PersonByFireDto> personByFireDtoToCompare = this.service.convertToPersonByFireDtoList(personDtoList, medicalRecordDtoList);
+
+        Assertions.assertEquals(personByFireDtoList, personByFireDtoToCompare);
     }
 }

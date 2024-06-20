@@ -12,6 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class FireDto {
-    private Integer stationNumber;
+    private String stationNumber;
     private List<PersonByFireDto> personByFireDtos;
 }

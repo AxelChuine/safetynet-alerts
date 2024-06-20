@@ -228,7 +228,7 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 			MedicalRecordDto medicalRecordDto = this.getMedicalRecordByFullName(personDto.firstName, personDto.lastName);
 			medicalRecordsToReturn.add(medicalRecordDto);
 		}
-		if (Objects.isNull(medicalRecordsToReturn)) {
+		if (medicalRecordsToReturn.isEmpty()) {
 			throw new ResourceNotFoundException("Medical Record not found");
 		}
         return medicalRecordsToReturn;

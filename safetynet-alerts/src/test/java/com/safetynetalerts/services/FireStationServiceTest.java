@@ -6,7 +6,9 @@ import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IFireStationRepository;
 import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IFireStationService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -102,5 +104,21 @@ public class FireStationServiceTest {
 		FireStation fireStationToCompare = this.service.getFireStationsByStationNumber(stationNumber);
 
 		assertEquals(fireStation, fireStationToCompare);
+	}
+
+	@Test
+	public void getStationNumberByAddressShouldReturnANumberIfExists () throws IOException {
+		String stationNUmber = "1";
+		String address = "78 rue des lapins";
+		Set<String> addresses = new HashSet<>();
+		addresses.add(address);
+		FireStation fireStation = new FireStation(addresses, stationNUmber);
+		List<FireStation> firestations = new ArrayList<>();
+		firestations.add(fireStation);
+
+		Mockito.when(this.repository.getAllFireStations()).thenReturn(firestations);
+		String stationNumberToCompare = this.service.getStationNumberByAddress(address);
+
+		Assertions.assertEquals(stationNUmber, stationNumberToCompare);
 	}
 }

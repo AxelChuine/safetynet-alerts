@@ -1,13 +1,11 @@
 package com.safetynetalerts.controller;
 
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
-import com.safetynetalerts.dto.FireStationDto;
-import com.safetynetalerts.dto.PersonMedicalRecordDto;
-import com.safetynetalerts.dto.PhoneAlertDto;
-import com.safetynetalerts.dto.StationNumberDto;
+import com.safetynetalerts.dto.*;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonFirestationService;
+import com.safetynetalerts.service.IPersonMedicalRecordsService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +31,15 @@ public class FireStationController {
 	@Autowired
 	private IPersonFirestationService personFirestationService;
 
+	private final IPersonMedicalRecordsService personMedicalRecordService;
+
 	Logger logger = LoggerFactory.getLogger(FireStationController.class);
 
-	@GetMapping("/firestation")
+    public FireStationController(IPersonMedicalRecordsService personMedicalRecordService) {
+        this.personMedicalRecordService = personMedicalRecordService;
+    }
+
+    @GetMapping("/firestation")
 	public ResponseEntity<StationNumberDto> getHeadCountByFirestation(@RequestParam("stationNumber") String stationNumber) throws IOException {
 		logger.info("get head count by firestation");
 		StationNumberDto persons = this.personFirestationService.getHeadCountByFirestation(stationNumber);
@@ -73,4 +77,9 @@ public class FireStationController {
 		return ResponseEntity.ok(this.personFirestationService.getPersonsAndMedicalRecordsByFirestation(stations));
 	}
 
+	@GetMapping("/fire")
+	public ResponseEntity<FireDto> getAllPersonsAndTheirInfosByAddress(@RequestParam("address") String address) throws IOException, ResourceNotFoundException {
+		logger.info("get all persons and associated medical records by address");
+		return new ResponseEntity<>(this.personMedicalRecordService.getAllConcernedPersonsAndTheirInfosByFire(address), HttpStatus.OK);
+	}
 }

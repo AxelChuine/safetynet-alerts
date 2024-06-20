@@ -49,6 +49,7 @@ public class FireStationServiceImpl implements IFireStationService {
 		return fireStationDtos;
 	}
 
+	//FIXME: erreur à la création
 	public void createFirestation(FireStationDto pFirestation) {
 		FireStation fireStation = new FireStation(new HashSet<>(pFirestation.getAddresses()), pFirestation.getStationNumber());
 		this.repository.createFireStation(fireStation);
@@ -94,5 +95,17 @@ public class FireStationServiceImpl implements IFireStationService {
 	public SimplePersonDto createSimplePersonDto(Person pPerson) {
 		SimplePersonDto simplePersonDto = new SimplePersonDto(pPerson.firstName, pPerson.lastName, pPerson.address, pPerson.phone);
 		return simplePersonDto;
+	}
+
+	@Override
+	public String getStationNumberByAddress(String address) throws IOException {
+		String stationNumber = null;
+		List<FireStation> fireStations = this.repository.getAllFireStations();
+		for (FireStation fireStation : fireStations) {
+			if (fireStation.getAddresses().contains(address)) {
+				stationNumber = fireStation.getStationNumber();
+			}
+		}
+		return stationNumber;
 	}
 }
