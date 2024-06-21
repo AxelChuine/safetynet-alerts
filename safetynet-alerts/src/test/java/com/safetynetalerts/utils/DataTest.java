@@ -32,6 +32,13 @@ public class DataTest {
     }
 
     @Test
+    public void deleteFireStationShouldDeleteFireStation() {
+        int size = this.data.getAllFireStations().size() - 1;
+        this.data.deleteFireStation(this.fireStation);
+        Assertions.assertEquals(size, this.data.getAllFireStations().size());
+    }
+
+    @Test
     public void createFireStationShouldCreateFireStation() {
         FireStation fireStationToCompare = this.data.createFireStation(this.fireStation);
 

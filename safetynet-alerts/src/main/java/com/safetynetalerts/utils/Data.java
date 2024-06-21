@@ -22,6 +22,8 @@ public class Data {
 
 	private List<FireStation> firestations = new ArrayList<>();
 
+	// zone firestation
+
 	public Collection<FireStation> getAllFireStations () {
 		return this.firestations;
 	}
@@ -33,6 +35,12 @@ public class Data {
 		return fireStation;
 	}
 
+	public void deleteFireStation (FireStation fireStation) {
+		this.firestations.remove(fireStation);
+	}
+
+	//zone medicalrecords
+
 	public List<MedicalRecord> getAllMedicalRecords() {
 		return this.medicalRecords;
 	}
@@ -43,6 +51,8 @@ public class Data {
 		this.medicalRecords = medicalRecords;
 		return medicalRecord;
 	}
+
+	//zone persons
 
 	public List<Person> getAllPersons() {
 		return this.persons;
