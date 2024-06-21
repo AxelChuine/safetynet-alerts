@@ -148,13 +148,11 @@ public class FireStationServiceTest {
 	}
 
 	@Test
-	public void updateNumberOfFireStationShouldUpdateTheNumberOfTheFirestationIfNewNumberDoesNotExists () throws ResourceNotFoundException {
-		String oldStationNumber = "4";
-
+	public void updateFireStationNumberForAddressShouldReturnAFireStation() throws ResourceNotFoundException {
 		Mockito.when(this.repository.getAllFireStations()).thenReturn(this.fireStations);
-		FireStationDto firestationToCompare = this.service.updateFireStation(stationNumber, oldStationNumber);
+		FireStationDto fireStationDtoToCompare = this.service.updateFireStationByAddress(address, stationNumber);
 
-		Assertions.assertEquals(this.fireStationDto, firestationToCompare);
+		Assertions.assertEquals(this.fireStationDto, fireStationDtoToCompare);
 	}
 
 	@Test
@@ -173,5 +171,32 @@ public class FireStationServiceTest {
 		FireStation fireStationToCompare = this.service.save(oldFirestation, this.fireStation);
 
 		Assertions.assertEquals(this.fireStation, fireStationToCompare);
+	}
+
+	@Test
+	public void updateAddressesByFireStationShouldReturnAFireStation() throws ResourceNotFoundException {
+		Mockito.when(this.repository.getAllFireStations()).thenReturn(this.fireStations);
+		FireStationDto fireStationToCompare = this.service.updateAddressesByFireStation(this.fireStationDto, this.address);
+
+		Assertions.assertEquals(this.fireStationDto, fireStationToCompare);
+	}
+
+	@Test
+	public void convertDtoToModelShouldReturnAModelObject() {
+		FireStation fireStationToCompare = this.service.convertDtoToModel(this.fireStationDto);
+
+		Assertions.assertEquals(this.fireStation, fireStationToCompare);
+	}
+
+	@Test
+	public void deleteAnAddressInFireStationAddressesShouldReturnAFireStationWithOneLessAddress() throws ResourceNotFoundException {
+		this.addresses.clear();
+		FireStation newFireStation = new FireStation(this.addresses, "4");
+		FireStationDto newFireStationDto = new FireStationDto(this.addresses, "4");
+
+		Mockito.when(this.repository.save(this.fireStation, newFireStation)).thenReturn(newFireStation);
+		FireStationDto fireStationToCompare = this.service.deleteAddressOfFireStation(this.fireStationDto, this.address);
+
+		Assertions.assertEquals(newFireStationDto, fireStationToCompare);
 	}
 }

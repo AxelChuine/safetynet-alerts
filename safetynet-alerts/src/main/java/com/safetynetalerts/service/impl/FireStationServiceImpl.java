@@ -110,23 +110,6 @@ public class FireStationServiceImpl implements IFireStationService {
 	}
 
 	@Override
-	public FireStationDto updateFireStation(String newStationNumber, String oldStationNumber) throws ResourceNotFoundException {
-		FireStation newFirestation = null;
-		FireStation oldFirestation = null;
-		Optional<FireStation> optionalFireStation = this.repository.getAllFireStations().stream().filter(fs -> Objects.equals(fs.getStationNumber(), oldStationNumber)).findFirst();
-		if (optionalFireStation.isPresent()) {
-			oldFirestation = optionalFireStation.get();
-			newFirestation = optionalFireStation.get();
-			newFirestation.setStationNumber(newStationNumber);
-			this.save(oldFirestation, newFirestation);
-		}
-		if (Objects.isNull(newFirestation)) {
-			throw new ResourceNotFoundException("FireStation not found");
-		}
-		return convertToDto(newFirestation);
-	}
-
-	@Override
 	public FireStationDto convertToDto(FireStation fireStation) throws ResourceNotFoundException {
 		if (Objects.isNull(fireStation)) {
 			throw new ResourceNotFoundException("this firestation does not exist");
@@ -137,5 +120,46 @@ public class FireStationServiceImpl implements IFireStationService {
 	@Override
 	public FireStation save(FireStation oldFirestation, FireStation newFirestation) {
 		return this.repository.save(oldFirestation, newFirestation);
+	}
+
+	@Override
+	public FireStationDto updateFireStationByAddress(String address, String stationNumber) throws ResourceNotFoundException {
+		Optional<FireStation> optionalFireStation = this.repository.getAllFireStations().stream().filter(fs -> fs.getStationNumber().contains(address)).findFirst();
+		if (optionalFireStation.isEmpty()) {
+			throw new ResourceNotFoundException("this address is not covered by any firestation");
+		}
+		FireStation oldFirestation = optionalFireStation.get();
+		FireStation tempOldFirestation = oldFirestation;
+		FireStation tempNewFirestation = new FireStation();
+		Optional<FireStation> optionalNewFireStation = this.repository.getAllFireStations().stream().filter(fs -> Objects.equals(fs.getStationNumber(), stationNumber)).findFirst();
+		if (optionalNewFireStation.isEmpty()) {
+			throw new ResourceNotFoundException("this firestation does not exist");
+		}
+		FireStation newFirestation = optionalNewFireStation.get();
+		return null;
+	}
+
+	@Override
+	public FireStationDto updateAddressesByFireStation(FireStationDto fireStationDto, String address) {
+		FireStationDto oldFireStation = fireStationDto;
+		List<String> addresses = new ArrayList<>();
+		addresses.addAll(fireStationDto.getAddresses());
+		addresses.add(address);
+		FireStationDto newFireStation = new FireStationDto(new HashSet<>(addresses), fireStationDto.getStationNumber());
+		this.save(convertDtoToModel(oldFireStation), convertDtoToModel(newFireStation));
+		return newFireStation;
+	}
+
+	@Override
+	public FireStation convertDtoToModel(FireStationDto fireStationDto) {
+		return new FireStation(new HashSet<>(fireStationDto.getAddresses()), fireStationDto.getStationNumber());
+	}
+
+	@Override
+	public FireStationDto deleteAddressOfFireStation(FireStationDto fireStationDto, String address) throws ResourceNotFoundException {
+        List<String> addresses = new ArrayList<>(fireStationDto.getAddresses());
+		addresses.remove(address);
+		FireStationDto newFireStationDto = new FireStationDto(new HashSet<>(addresses), fireStationDto.getStationNumber());
+        return convertToDto(this.save(convertDtoToModel(fireStationDto), convertDtoToModel(newFireStationDto)));
 	}
 }

@@ -5,14 +5,18 @@ import com.safetynetalerts.dto.FireDto;
 import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.dto.PhoneAlertDto;
 import com.safetynetalerts.dto.StationNumberDto;
+import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
+import com.safetynetalerts.repository.IFireStationRepository;
+import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonFirestationService;
 import com.safetynetalerts.service.IPersonMedicalRecordsService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +36,12 @@ public class FireStationControllerTest {
 
     @Autowired
     private FireStationController controller;
+
+    @Mock
+    private IFireStationService service;
+
+    @Mock
+    private IFireStationRepository repository;
 
     @MockBean
     private IPersonMedicalRecordsService personMedicalRecordsService;
@@ -68,6 +78,8 @@ public class FireStationControllerTest {
 
    private FireStationDto fireStationDto;
 
+   private FireStation fireStation;
+
    @BeforeEach
    void setUp() {
        allergies = new ArrayList<>();
@@ -82,6 +94,7 @@ public class FireStationControllerTest {
                .medications(medications)
                .build();
        this.fireStationDto = new FireStationDto(addresses, stationNumber);
+       this.fireStation = new FireStation(addresses, stationNumber);
    }
 
 
@@ -151,6 +164,4 @@ public class FireStationControllerTest {
         assertEquals(HttpStatus.OK, responseFire.getStatusCode());
         Assertions.assertEquals(fireDto, responseFire.getBody());
     }
-
-
 }
