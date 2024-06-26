@@ -25,7 +25,7 @@ public class DataTest {
 
     private Set<String> addresses;
 
-    private String stationNumber = "17";
+    private String stationNumber = "4";
 
     @BeforeEach
     public void setUp() {
@@ -39,6 +39,13 @@ public class DataTest {
         List<FireStation> fireStations = this.data.getFirestations();
 
         Assertions.assertNotNull(fireStations);
+    }
+
+    @Test
+    public void deleteFireStationShouldDeleteFireStation() {
+        int size = this.data.getAllFireStations().size() - 1;
+        this.data.deleteFireStation(this.fireStation);
+        Assertions.assertEquals(size, this.data.getAllFireStations().size());
     }
 
     @Test
