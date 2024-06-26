@@ -36,7 +36,9 @@ public class Data {
 	}
 
 	public void deleteFireStation (FireStation fireStation) {
-		this.firestations.remove(fireStation);
+		List<FireStation> tempFireStation = new ArrayList<>(this.getAllFireStations());
+		tempFireStation.remove(fireStation);
+		this.firestations = new ArrayList<>(tempFireStation);
 	}
 
 	//zone medicalrecords

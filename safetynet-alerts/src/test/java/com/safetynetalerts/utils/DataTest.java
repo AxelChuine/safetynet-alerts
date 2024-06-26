@@ -19,9 +19,12 @@ public class DataTest {
 
     private FireStation fireStation;
 
+    private String stationNumber = "4";
+
     @BeforeEach
     public void setUp() {
         fireStation = new FireStation();
+        fireStation.setStationNumber(stationNumber);
     }
 
     @Test
