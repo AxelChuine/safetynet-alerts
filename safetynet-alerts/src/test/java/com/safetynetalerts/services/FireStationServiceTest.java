@@ -57,6 +57,7 @@ public class FireStationServiceTest {
 		fireStation = new FireStation(this.addresses, stationNumber);
 		this.fireStationDto = new FireStationDto(this.addresses, stationNumber);
 		this.fireStations = new ArrayList<>();
+		this.fireStations.add(fireStation);
 	}
 
     @Test
@@ -148,7 +149,7 @@ public class FireStationServiceTest {
 	}
 
 	@Test
-	public void updateFireStationNumberForAddressShouldReturnAFireStation() throws ResourceNotFoundException {
+	public void updateFireStationNumberForAddressShouldReturnAFireStation() throws ResourceNotFoundException, IOException {
 		Mockito.when(this.repository.getAllFireStations()).thenReturn(this.fireStations);
 		FireStationDto fireStationDtoToCompare = this.service.updateFireStationByAddress(address, stationNumber);
 

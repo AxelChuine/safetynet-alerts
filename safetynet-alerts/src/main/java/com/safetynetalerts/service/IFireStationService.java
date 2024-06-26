@@ -29,7 +29,7 @@ public interface IFireStationService {
 
 	FireStation save(FireStation oldFirestation, FireStation newFirestation) throws ResourceNotFoundException;
 
-	FireStationDto updateFireStationByAddress(String address, String stationNumber) throws ResourceNotFoundException;
+	FireStationDto updateFireStationByAddress(String address, String stationNumber) throws ResourceNotFoundException, IOException;
 
 	FireStationDto updateAddressesByFireStation(FireStationDto fireStationDto, String address);
 

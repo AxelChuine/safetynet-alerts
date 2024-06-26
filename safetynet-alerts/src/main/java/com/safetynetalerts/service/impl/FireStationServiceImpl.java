@@ -33,8 +33,6 @@ public class FireStationServiceImpl implements IFireStationService {
 	private final IFireStationRepository repository;
 
 
-	List<FireStation> fireStations = new ArrayList<>();
-
     public FireStationServiceImpl(IFireStationRepository repository) {
         this.repository = repository;
     }
@@ -123,20 +121,24 @@ public class FireStationServiceImpl implements IFireStationService {
 	}
 
 	@Override
-	public FireStationDto updateFireStationByAddress(String address, String stationNumber) throws ResourceNotFoundException {
-		Optional<FireStation> optionalFireStation = this.repository.getAllFireStations().stream().filter(fs -> fs.getStationNumber().contains(address)).findFirst();
+	public FireStationDto updateFireStationByAddress(String address, String stationNumber) throws ResourceNotFoundException, IOException {
+		Optional<FireStation> optionalFireStation = this.repository.getAllFireStations().stream().filter(fs -> fs.getAddresses().contains(address)).findFirst();
 		if (optionalFireStation.isEmpty()) {
 			throw new ResourceNotFoundException("this address is not covered by any firestation");
 		}
 		FireStation oldFirestation = optionalFireStation.get();
-		FireStation tempOldFirestation = oldFirestation;
-		FireStation tempNewFirestation = new FireStation();
-		Optional<FireStation> optionalNewFireStation = this.repository.getAllFireStations().stream().filter(fs -> Objects.equals(fs.getStationNumber(), stationNumber)).findFirst();
-		if (optionalNewFireStation.isEmpty()) {
+        List<String> addresses = new ArrayList<>(oldFirestation.getAddresses());
+		addresses.remove(address);
+		oldFirestation.setAddresses(new HashSet<>(addresses));
+		FireStation newFirestation = this.getFireStationsByStationNumber(stationNumber);
+		if (Objects.isNull(newFirestation)) {
 			throw new ResourceNotFoundException("this firestation does not exist");
 		}
-		FireStation newFirestation = optionalNewFireStation.get();
-		return null;
+		addresses = new ArrayList<>(newFirestation.getAddresses());
+		addresses.add(address);
+		newFirestation.setAddresses(new HashSet<>(addresses));
+		this.repository.save(oldFirestation, newFirestation);
+		return convertToDto(newFirestation);
 	}
 
 	@Override

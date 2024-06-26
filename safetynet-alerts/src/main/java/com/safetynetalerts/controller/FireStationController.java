@@ -83,7 +83,7 @@ public class FireStationController {
 		return new ResponseEntity<>(this.personMedicalRecordService.getAllConcernedPersonsAndTheirInfosByFire(address), HttpStatus.OK);
 	}
 
-	public ResponseEntity<FireStationDto> updateFirestation(@RequestParam("address") String address, @RequestParam("station-number") String newStationNUmber) throws ResourceNotFoundException {
+	public ResponseEntity<FireStationDto> updateFirestation(@RequestParam("address") String address, @RequestParam("station-number") String newStationNUmber) throws ResourceNotFoundException, IOException {
 		logger.info("update firestation");
 		return new ResponseEntity<>(this.service.updateFireStationByAddress(address, newStationNUmber), HttpStatus.OK);
 	}
