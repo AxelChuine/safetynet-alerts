@@ -20,4 +20,9 @@ public class PersonRepositoryImpl implements IPersonRepository {
     public List<Person> getAllPersons() {
         return this.data.getPersons();
     }
+
+    @Override
+    public Person updateAddressOfPerson(Person person, Person newPerson) {
+        return this.data.savePersonWithNewAddress(person, newPerson);
+    }
 }

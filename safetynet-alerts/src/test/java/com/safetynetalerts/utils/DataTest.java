@@ -19,6 +19,12 @@ public class DataTest {
     @Autowired
     private Data data;
 
+    private String firstName;
+
+    private String lastName;
+
+    Person person;
+
     private FireStation fireStation;
 
     private String address = "17 rue du moulin";
@@ -32,6 +38,9 @@ public class DataTest {
         this.addresses = new HashSet<>();
         this.addresses.add(address);
         fireStation = new FireStation(this.addresses, stationNumber);
+        this.firstName = "Jean";
+        this.lastName = "Melbourne";
+        this.person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).build();
     }
 
     @Test
@@ -93,5 +102,15 @@ public class DataTest {
         FireStation firestationToCompare = this.data.saveFirestation(oldFireStation, this.fireStation);
 
         Assertions.assertEquals("17", firestationToCompare.getStationNumber());
+    }
+
+    @Test
+    public void updateAddressShouldReturnAPersonWithAnUpdatedAddress() {
+        String addressToBeUpdated = "28 rue du moulin";
+        Person person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).build();
+
+        Person personToCompare = this.data.savePersonWithNewAddress(this.person, person);
+
+        Assertions.assertNotNull(personToCompare);
     }
 }

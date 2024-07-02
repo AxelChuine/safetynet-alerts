@@ -134,6 +134,22 @@ public class PersonServiceImpl implements IPersonService {
         return personsDto;
     }
 
+    @Override
+    public Person convertToPerson(PersonDto pPersonDto) throws ResourceNotFoundException {
+        if (Objects.isNull(pPersonDto)) {
+            throw new ResourceNotFoundException("person not found exception");
+        }
+        return new Person.PersonBuilder()
+                .firstName(pPersonDto.firstName)
+                .lastName(pPersonDto.lastName)
+                .address(pPersonDto.address)
+                .city(pPersonDto.city)
+                .zip(pPersonDto.zip)
+                .phone(pPersonDto.phone)
+                .email(pPersonDto.email)
+                .build();
+    }
+
 
     @Override
     public List<ChildAlertDto> getChildByAddress(String pAddress) throws IOException, ResourceNotFoundException {
@@ -186,7 +202,7 @@ public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsExcept
     }
 
     @Override
-    public PersonDto updatePerson(String pAddress, String pFirstName, String pLastName) throws Exception {
+    public PersonDto updatePerson(String pAddress, String pFirstName, String pLastName) throws ResourceNotFoundException {
         PersonDto personDto = this.getPersonByFullName(pFirstName, pLastName);
         if (Objects.isNull(personDto.getFirstName()) || Objects.isNull(personDto.getLastName())) {
             String resource = "person" + " " + pFirstName + " " + pLastName;

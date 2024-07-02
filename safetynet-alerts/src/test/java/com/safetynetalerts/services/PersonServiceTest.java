@@ -110,11 +110,9 @@ class PersonServiceTest {
 		persons.add(person);
 
 		when(this.repository.getAllPersons()).thenReturn(persons);
-		Person personToCompare = new Person.PersonBuilder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build();
-		this.service.updatePerson(address, personToCompare.firstName, personToCompare.lastName);
+		PersonDto personToCompare = this.service.updatePerson(address, firstName, lastName);
 
-		assertEquals(person.getFirstName(), personToCompare.getFirstName());
-		assertEquals(person.getLastName(), personToCompare.getLastName());
+		assertEquals(personDto, personToCompare);
 	}
 
 
@@ -267,6 +265,13 @@ class PersonServiceTest {
 		List<PersonDto> personsToCompare = this.service.convertToPersonDtoList(this.persons);
 
 		Assertions.assertEquals(this.personDtos, personsToCompare);
+	}
+
+	@Test
+	public void convertPersonDtoToPersonShouldReturnAPerson() throws ResourceNotFoundException {
+		Person personToCompare = this.service.convertToPerson(this.personDto);
+
+		Assertions.assertEquals(this.person, personToCompare);
 	}
 
 }

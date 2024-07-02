@@ -74,4 +74,12 @@ public class Data {
 		newFireStations.add(fireStation);
 		return fireStation;
 	}
+
+	public Person savePersonWithNewAddress(Person person, Person person1) {
+        List<Person> newPersons = new ArrayList<>(this.persons);
+		newPersons.remove(person);
+		newPersons.add(person1);
+		this.persons = newPersons;
+		return person1;
+	}
 }

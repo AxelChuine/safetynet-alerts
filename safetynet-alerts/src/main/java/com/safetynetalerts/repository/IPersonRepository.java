@@ -8,4 +8,6 @@ import java.util.List;
 public interface IPersonRepository {
 
     List<Person> getAllPersons();
+
+    Person updateAddressOfPerson(Person person, Person newPerson);
 }
