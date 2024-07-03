@@ -95,10 +95,12 @@ public class PersonServiceImpl implements IPersonService {
         return personsByAddress;
     }
 
-    @Override
+
+    // FIXME: ne renvoie pas les informations de la personne
+    /*@Override
     public PersonInfo getPersonInfo(String lastName) {
         return null;
-    }
+    }*/
 
     @Override
     public PersonInfo createPersonInfo(Person person) {
@@ -165,8 +167,7 @@ public class PersonServiceImpl implements IPersonService {
     }
 
     public List<PersonDto> getFamilyMembers(List<PersonDto> pFamilyMember, String pLastName) {
-        List<PersonDto> familyMember = new ArrayList<>();
-        familyMember = pFamilyMember.stream().filter(p -> Objects.equals(p.lastName, pLastName)).collect(Collectors.toList());
+        List<PersonDto> familyMember = pFamilyMember.stream().filter(p -> Objects.equals(p.lastName, pLastName)).collect(Collectors.toList());
         return familyMember;
     }
 
@@ -208,18 +209,19 @@ public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsExcept
             String resource = "person" + " " + pFirstName + " " + pLastName;
             throw new ResourceNotFoundException(resource);
         }
-        Person modifiedPerson = new Person.PersonBuilder().firstName(personDto.getFirstName()).lastName(personDto.getLastName()).address(pAddress).city(personDto.getCity()).
-                zip(personDto.getZip()).phone(personDto.getPhone()).email(personDto.getEmail()).build();
-        Integer index = 0;
-        for (Person p : repository.getAllPersons()) {
-            if (Objects.equals(p.firstName, pFirstName) && Objects.equals(p.lastName, pLastName)) {
-                index = repository.getAllPersons().indexOf(p);
-            }
-        }
-        this.repository.getAllPersons().remove(repository.getAllPersons().get(index));
-        repository.getAllPersons().add(modifiedPerson);
+        PersonDto updatedPerson = new PersonDto
+                .PersonDtoBuilder()
+                .firstName(personDto.firstName)
+                .lastName(personDto.lastName)
+                .address(pAddress)
+                .city(personDto.city)
+                .zip(personDto.zip)
+                .phone(personDto.phone)
+                .email(personDto.email)
+                .build();
+        updatedPerson = convertToPersonDto(this.repository.updateAddressOfPerson(convertToPerson(personDto), convertToPerson(updatedPerson)));
 
-        return personDto;
+        return updatedPerson;
     }
 
 

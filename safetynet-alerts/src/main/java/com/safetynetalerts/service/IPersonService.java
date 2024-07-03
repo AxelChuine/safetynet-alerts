@@ -39,7 +39,8 @@ public interface IPersonService {
 
 	List<PersonDto> getPersonsByAddress(String address) throws ResourceNotFoundException;
 
-	PersonInfo getPersonInfo(String lastName);
+	// FIXME: implémenter la méthode correctement
+	/*PersonInfo getPersonInfo(String lastName);*/
 
 	PersonInfo createPersonInfo(Person person);
 
