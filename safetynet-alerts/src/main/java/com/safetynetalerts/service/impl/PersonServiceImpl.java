@@ -51,6 +51,7 @@ public class PersonServiceImpl implements IPersonService {
 
     @Override
     public List<String> getAllEmailAddressesByCity(String pCity) throws Exception {
+
         List<Person> persons = this.getAllPersonsByCity(pCity);
         List<String> emailAddresses = new ArrayList<>();
         for (Person p : persons) {

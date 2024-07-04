@@ -30,8 +30,7 @@ public class PersonController {
     @GetMapping("/communityEmail")
 	public ResponseEntity<List<String>> getAllEmailAddresses(@RequestParam("city") String pCity) throws Exception {
 		logger.info("launch of retrieval of every email addresses by city");
-		List<String> emailAddresses = this.personService.getAllEmailAddressesByCity(pCity);
-		return ResponseEntity.ok(emailAddresses);
+		return new ResponseEntity<>(this.personService.getAllEmailAddressesByCity(pCity), HttpStatus.OK);
 	}
 
 	@GetMapping("/childAlert")
@@ -61,9 +60,9 @@ public class PersonController {
 
 
 	@PutMapping("/person")
-	public ResponseEntity<PersonDto> updatePerson(@RequestParam("address") String pAddress, @RequestParam("firstName") String pFirstName, @RequestParam("lastName") String pLastName) throws Exception {
+	public ResponseEntity<PersonDto> updatePerson(@RequestParam("address") String address, @RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws Exception {
 		logger.info("update person");
-		return new ResponseEntity<>(this.personService.updatePerson(pAddress, pFirstName, pLastName), HttpStatus.OK);
+		return new ResponseEntity<>(this.personService.updatePerson(address, firstName, lastName), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/person")
@@ -74,7 +73,7 @@ public class PersonController {
 	}
   
   @GetMapping("/person")
-    public ResponseEntity<List<PersonDto>> getPersonByFullName(@RequestParam("firstName") String firstName,@RequestParam("lastName") String lastName) throws Exception {
+    public ResponseEntity<List<PersonDto>> getPersonByFullName(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws Exception {
 		logger.info("get a person by his full name");
 		List<PersonDto> persons = List.of(this.personService.getPersonByFullName(firstName, lastName));
 		return new ResponseEntity<>(persons, HttpStatus.OK);

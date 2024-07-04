@@ -8,14 +8,12 @@ import org.springframework.http.HttpStatus;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class ResourceAlreadyExistsException extends Exception {
-    private String message;
+public class BadResourceException extends Exception {
     private HttpStatus status;
+    private String message;
 
-    public ResourceAlreadyExistsException(String message) {
-        this.message = message;
+    public BadResourceException(String message) {
         this.status = HttpStatus.BAD_REQUEST;
+        this.message = message;
     }
 }
-
-

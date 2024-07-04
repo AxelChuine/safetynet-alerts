@@ -3,13 +3,11 @@ package com.safetynetalerts.controller;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
 import com.safetynetalerts.service.IFireStationService;
-import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonFirestationService;
 import com.safetynetalerts.service.IPersonMedicalRecordsService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,20 +20,17 @@ import java.util.Objects;
 @RestController
 public class FireStationController {
 
-	@Autowired
-	private IMedicalRecordService medicalService;
+	private final IFireStationService service;
 
-	@Autowired
-	private IFireStationService service;
-
-	@Autowired
-	private IPersonFirestationService personFirestationService;
+	private final IPersonFirestationService personFirestationService;
 
 	private final IPersonMedicalRecordsService personMedicalRecordService;
 
 	Logger logger = LoggerFactory.getLogger(FireStationController.class);
 
-    public FireStationController(IPersonMedicalRecordsService personMedicalRecordService) {
+    public FireStationController(IFireStationService service, IPersonFirestationService personFirestationService, IPersonMedicalRecordsService personMedicalRecordService) {
+        this.service = service;
+        this.personFirestationService = personFirestationService;
         this.personMedicalRecordService = personMedicalRecordService;
     }
 
