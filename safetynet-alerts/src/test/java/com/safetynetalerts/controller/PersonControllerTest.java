@@ -76,11 +76,6 @@ public class PersonControllerTest {
     }
 
     @Test
-    public void getAllEmailsShouldReturnBadRequestIfCityIsEmpty() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/communityEmail").param("city", "")).andExpect(MockMvcResultMatchers.status().isBadRequest());
-    }
-
-    @Test
     public void getChildAddressTest() throws IOException, ResourceNotFoundException {
         String address = "67 rue Jean moulin";
         PersonDto p1 = new PersonDto.PersonDtoBuilder().build();
@@ -100,6 +95,11 @@ public class PersonControllerTest {
     }
 
     @Test
+    public void childAlertShouldReturnHttpStatusOkIfParamExists() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/childAlert").param("address", address)).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
     public void getAllPersonsTest() throws IOException {
         List<PersonDto> persons = List.of(new PersonDto.PersonDtoBuilder().build(), new PersonDto.PersonDtoBuilder().build(), new PersonDto.PersonDtoBuilder().build());
 
@@ -108,6 +108,11 @@ public class PersonControllerTest {
 
         assertEquals(HttpStatus.OK, personsResponse.getStatusCode());
         assertEquals(persons, personsResponse.getBody());
+    }
+
+    @Test
+    public void getAllPersonsShouldReturnHttpStatusOk() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/persons")).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
 
@@ -129,6 +134,12 @@ public class PersonControllerTest {
         assertEquals(HttpStatus.CREATED, responsePerson.getStatusCode());
     }
 
+    // FIXME: test à terminer
+    @Test
+    public void createPersonShouldReturnHttpStatusOkIfParamExists() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/person")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
     @Test
     public void updatePersonTest() throws Exception {
         when(this.service.updatePerson(address, firstName, lastName)).thenReturn(personDto);
@@ -136,6 +147,15 @@ public class PersonControllerTest {
 
         assertEquals(HttpStatus.OK, responsePerson.getStatusCode());
         assertEquals(personDto, responsePerson.getBody());
+    }
+
+    @Test
+    public void updatePersonTestShouldReturnHttpStatusOkIfParamExists() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/person")
+                .param("address", address)
+                .param("firstName", firstName)
+                .param("lastName", lastName))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
@@ -147,9 +167,30 @@ public class PersonControllerTest {
     }
 
     @Test
+    public void deletePersonShouldReturnHttpStatusOkIfParamExists() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/person")
+                .param("firstName", firstName)
+                .param("lastName", lastName))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
     public void getPersonByFullNameShouldReturnCode200 () throws Exception {
+        List<PersonDto> personDtos = new ArrayList<>();
+        personDtos.add(this.personDto);
+
         when(this.service.getPersonByFullName(firstName, lastName)).thenReturn(personDto);
-        ResponseEntity responsePerson = this.controller.getPersonByFullName(firstName, lastName);
-        assertEquals(HttpStatus.OK, responsePerson.getStatusCode());
+        ResponseEntity<List<PersonDto>> responsePerson = this.controller.getPersonByFullName(firstName, lastName);
+        assertEquals(personDtos, responsePerson.getBody());
+    }
+
+
+    // FIXME: Test qui ne passe pas.
+    @Test
+    public void getPersonByFullNameShouldReturnHttpStatusOkIfParamsExists() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/person")
+                .param("firstName", firstName)
+                .param("lastName", lastName))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }

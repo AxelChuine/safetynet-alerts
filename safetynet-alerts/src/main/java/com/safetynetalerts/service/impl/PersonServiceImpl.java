@@ -1,5 +1,6 @@
 package com.safetynetalerts.service.impl;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
@@ -51,8 +52,13 @@ public class PersonServiceImpl implements IPersonService {
 
     @Override
     public List<String> getAllEmailAddressesByCity(String pCity) throws Exception {
-
+        if (Objects.isNull(pCity)) {
+            throw new BadResourceException(pCity + " doesn't exist");
+        }
         List<Person> persons = this.getAllPersonsByCity(pCity);
+        if (Objects.isNull(persons)) {
+            throw new ResourceNotFoundException("People not found");
+        }
         List<String> emailAddresses = new ArrayList<>();
         for (Person p : persons) {
             if (Objects.equals(p.city, pCity)) {
@@ -65,7 +71,10 @@ public class PersonServiceImpl implements IPersonService {
         return emailAddresses;
     }
 
-    public PersonDto getPersonByFullName(String pFirstName, String pLastName) throws ResourceNotFoundException {
+    public PersonDto getPersonByFullName(String pFirstName, String pLastName) throws ResourceNotFoundException, BadResourceException {
+        if (Objects.isNull(pFirstName) || Objects.isNull(pLastName)) {
+            throw new BadResourceException("One or two parameter(s) is / are missing");
+        }
         Person person;
         List<Person> persons = this.repository.getAllPersons();
         PersonDto personDto = null;
@@ -204,7 +213,7 @@ public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsExcept
     }
 
     @Override
-    public PersonDto updatePerson(String pAddress, String pFirstName, String pLastName) throws ResourceNotFoundException {
+    public PersonDto updatePerson(String pAddress, String pFirstName, String pLastName) throws ResourceNotFoundException, BadResourceException {
         PersonDto personDto = this.getPersonByFullName(pFirstName, pLastName);
         if (Objects.isNull(personDto.getFirstName()) || Objects.isNull(personDto.getLastName())) {
             String resource = "person" + " " + pFirstName + " " + pLastName;

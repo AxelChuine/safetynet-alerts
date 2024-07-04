@@ -72,10 +72,9 @@ public class PersonController {
 		return new ResponseEntity(HttpStatus.OK);
 	}
   
-  @GetMapping("/person")
+  	@GetMapping("/person")
     public ResponseEntity<List<PersonDto>> getPersonByFullName(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws Exception {
 		logger.info("get a person by his full name");
-		List<PersonDto> persons = List.of(this.personService.getPersonByFullName(firstName, lastName));
-		return new ResponseEntity<>(persons, HttpStatus.OK);
+		return new ResponseEntity<>(List.of(this.personService.getPersonByFullName(firstName, lastName)), HttpStatus.OK);
     }
 }
