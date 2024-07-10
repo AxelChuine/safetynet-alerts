@@ -46,6 +46,8 @@ class PersonServiceTest {
 
 	private String lastName = "Dubois";
 
+	private String city = "Culver";
+
 	private PersonDto personDto;
 
 	private Person person;
@@ -56,10 +58,10 @@ class PersonServiceTest {
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
-		person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).build();
-		persons = List.of(this.person, new Person.PersonBuilder().address(address).build());
-		this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).build();
-		personDtos = List.of(this.personDto, new PersonDto.PersonDtoBuilder().address(address).build());
+		person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).city(city).build();
+		persons = List.of(this.person);
+		this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).city(city).build();
+		personDtos = List.of(this.personDto);
 	}
 
 
@@ -213,7 +215,7 @@ class PersonServiceTest {
 			personsDto.add(this.service.convertToSimplePersonDto(person));
 		}
 
-		personsToCompare = this.service.convertToDtoList(persons);
+		personsToCompare = this.service.convertToSimplePersonDtoList(persons);
 		assertEquals(personsDto, personsToCompare);
 	}
 
@@ -266,9 +268,17 @@ class PersonServiceTest {
 	@Test
 	public void convertToPersonDtoListShouldReturnAListOfDto() throws ResourceNotFoundException {
 		Mockito.when(this.repository.getAllPersons()).thenReturn(this.persons);
-		List<PersonDto> personsToCompare = this.service.convertToPersonDtoList(this.persons);
+		List<PersonDto> personsToCompare = this.service.convertToDtoList(this.persons);
 
 		Assertions.assertEquals(this.personDtos, personsToCompare);
+	}
+
+	@Test
+	public void updateCityOfPersonShouldReturnPersonDtoIfExists() throws Exception {
+		Mockito.when(this.repository.getAllPersons()).thenReturn(this.persons);
+		PersonDto personToCompare = this.service.updateCityOfPerson(city, firstName, lastName);
+
+		Assertions.assertEquals(this.personDto, personToCompare);
 	}
 
 	@Test

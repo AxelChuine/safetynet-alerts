@@ -60,9 +60,15 @@ public class PersonController {
 
 
 	@PutMapping("/person")
-	public ResponseEntity<PersonDto> updatePerson(@RequestParam("address") String address, @RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws Exception {
-		logger.info("update person");
-		return new ResponseEntity<>(this.personService.updatePerson(address, firstName, lastName), HttpStatus.OK);
+	public ResponseEntity<PersonDto> updateAddressOfPerson(@RequestParam("address") String pAddress, @RequestParam("firstName") String pFirstName, @RequestParam("lastName") String pLastName) throws Exception {
+		logger.info("update address of person");
+		return new ResponseEntity<>(this.personService.updateAddressOfPerson(pAddress, pFirstName, pLastName), HttpStatus.OK);
+	}
+
+	@PutMapping("/city")
+	public ResponseEntity<PersonDto> updateCityOfPerson(@RequestParam("city") String city, @RequestParam("first-name") String firstName, @RequestParam("last-name") String lastName) throws Exception {
+		logger.info("update city of person");
+		return new ResponseEntity<>(this.personService.updateCityOfPerson(city, firstName, lastName), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/person")

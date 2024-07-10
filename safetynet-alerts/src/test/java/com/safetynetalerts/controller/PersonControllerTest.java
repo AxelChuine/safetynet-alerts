@@ -5,8 +5,11 @@ import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.service.IPersonService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,19 +41,26 @@ public class PersonControllerTest {
     @MockBean
     private IPersonService service;
 
-    private String firstName = "John";
+    private String firstName = "Jean";
 
-    private String lastName = "Boyd";
+    private String lastName = "Smith";
 
-    private String address = "67 rue Jean moulin";
+    private String address = "18 rue du moulin";
 
-    private String email = "test@gmail.com";
+    private String city = "Culver";
 
     private PersonDto personDto;
 
+    private List<PersonDto> personDtoList;
+
+
+    private String email = "test@gmail.com";
+
     @BeforeEach
     public void setUp() {
-        this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).email(email).build();
+        this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).city(city).build();
+        this.personDtoList = new ArrayList<>();
+        this.personDtoList.add(personDto);
     }
 
 
@@ -192,5 +202,24 @@ public class PersonControllerTest {
                 .param("firstName", firstName)
                 .param("lastName", lastName))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void updateCityOfPersonShouldReturnHttpStatusOk() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/city")
+                .param("city", city)
+                .param("first-name", firstName)
+                .param("last-name", lastName))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+
+    // FIXME: problème actual is null while it shouldn't be
+    @Test
+    public void updateCityOfPersonShouldReturnAPersonDto() throws Exception {
+        Mockito.when(this.service.updateCityOfPerson(city, firstName, lastName)).thenReturn(this.personDto);
+        ResponseEntity<PersonDto> responseEntity = this.controller.updateCityOfPerson(city, firstName, lastName);
+
+        Assertions.assertEquals(this.personDto, responseEntity.getBody());
     }
 }
