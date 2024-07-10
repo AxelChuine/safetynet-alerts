@@ -50,6 +50,8 @@ class PersonServiceTest {
 
 	private String city = "Culver";
 
+	private String zip = "45877";
+
 	private PersonDto personDto;
 
 	private Person person;
@@ -274,6 +276,17 @@ class PersonServiceTest {
 		Person personToCompare = this.service.convertToPerson(this.personDto);
 
 		Assertions.assertEquals(this.person, personToCompare);
+	}
+
+	@Test
+	public void updateZipOfPersonShouldReturnAPerson () throws ResourceNotFoundException {
+		Person updatedPerson = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).city(city).zip(zip).build();
+		PersonDto updatedPersonDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).city(city).zip(zip).build();
+
+		Mockito.when(this.repository.savePerson(this.person, updatedPerson)).thenReturn(updatedPerson);
+		PersonDto personToCompare = this.service.updateZipOfPerson(this.personDto, zip);
+
+		Assertions.assertEquals(updatedPersonDto, personToCompare);
 	}
 
 }

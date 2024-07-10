@@ -51,4 +51,6 @@ public interface IPersonService {
 	PersonDto updateCityOfPerson(String city, String firstName, String lastName) throws ResourceNotFoundException, BadResourceException;
 
 	Person convertToPerson(PersonDto pPersonDto) throws ResourceNotFoundException;
+
+	PersonDto updateZipOfPerson(PersonDto personDto, String zip) throws ResourceNotFoundException;
 }
