@@ -77,7 +77,7 @@ public class PersonServiceImpl implements IPersonService {
         }
         Person person;
         List<Person> persons = this.repository.getAllPersons();
-        PersonDto personDto = null;
+        PersonDto personDto;
         Optional<Person> personOptional = persons.stream().filter(p -> Objects.equals(p.getFirstName(), pFirstName) && Objects.equals(p.getLastName(), pLastName)).findFirst();
         if (personOptional.isPresent()) {
             person = personOptional.get();
@@ -98,10 +98,13 @@ public class PersonServiceImpl implements IPersonService {
     }
 
     public List<PersonDto> getPersonsByAddress(String pAddress) throws ResourceNotFoundException {
-        List<PersonDto> persons = convertToPersonDtoList(this.repository.getAllPersons());
-        List<PersonDto> personsByAddress = new ArrayList<>();
+        List<PersonDto> persons = convertToDtoList(this.repository.getAllPersons());
+        List<PersonDto> personsByAddress;
         personsByAddress = persons.stream().filter(p -> Objects.equals(p.address, pAddress))
                 .collect(Collectors.toList());
+        if (personsByAddress.isEmpty()) {
+            throw new ResourceNotFoundException("These persons don't exist.");
+        }
         return personsByAddress;
     }
 
@@ -133,17 +136,20 @@ public class PersonServiceImpl implements IPersonService {
                 .build();
     }
 
+    // FIXME: Not found exception
     @Override
-    public List<PersonDto> convertToPersonDtoList(List<Person> persons) throws ResourceNotFoundException {
-        if (Objects.isNull(persons)) {
-            throw new ResourceNotFoundException("persons not found exception");
-        }
-        List<PersonDto> personsDto = new ArrayList<>();
-        for (Person person : persons) {
-            PersonDto personDto = this.convertToPersonDto(person);
-            personsDto.add(personDto);
-        }
-        return personsDto;
+    public PersonDto updateCityOfPerson(String city, String firstName, String lastName) throws ResourceNotFoundException, BadResourceException {
+        PersonDto personDto = this.getPersonByFullName(firstName, lastName);
+        PersonDto newPersonDto = new PersonDto.PersonDtoBuilder()
+                .firstName(personDto.firstName)
+                .lastName(personDto.lastName)
+                .address(personDto.address)
+                .city(city)
+                .zip(personDto.zip)
+                .phone(personDto.phone)
+                .email(personDto.email)
+                .build();
+        return convertToPersonDto(this.repository.savePerson(convertToPerson(personDto), convertToPerson(newPersonDto)));
     }
 
     @Override
@@ -213,7 +219,7 @@ public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsExcept
     }
 
     @Override
-    public PersonDto updatePerson(String pAddress, String pFirstName, String pLastName) throws ResourceNotFoundException, BadResourceException {
+    public PersonDto updateAddressOfPerson(String pAddress, String pFirstName, String pLastName) throws Exception {
         PersonDto personDto = this.getPersonByFullName(pFirstName, pLastName);
         if (Objects.isNull(personDto.getFirstName()) || Objects.isNull(personDto.getLastName())) {
             String resource = "person" + " " + pFirstName + " " + pLastName;
@@ -229,7 +235,7 @@ public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsExcept
                 .phone(personDto.phone)
                 .email(personDto.email)
                 .build();
-        updatedPerson = convertToPersonDto(this.repository.updateAddressOfPerson(convertToPerson(personDto), convertToPerson(updatedPerson)));
+        updatedPerson = convertToPersonDto(this.repository.savePerson(convertToPerson(personDto), convertToPerson(updatedPerson)));
 
         return updatedPerson;
     }
@@ -257,12 +263,29 @@ public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsExcept
     }
 
     @Override
-    public List<SimplePersonDto> convertToDtoList(List<Person> pPersons) {
+    public List<SimplePersonDto> convertToSimplePersonDtoList(List<Person> pPersons) {
         List<SimplePersonDto> simplePersonDtos = new ArrayList<>();
         for (Person p : pPersons) {
             simplePersonDtos.add(this.convertToSimplePersonDto(p));
         }
         return simplePersonDtos;
+    }
+
+    @Override
+    public List<PersonDto> convertToDtoList(List<Person> pPersons) {
+        List<PersonDto> personDtos = new ArrayList<>();
+        for (Person p : pPersons) {
+            PersonDto personDto = new PersonDto.PersonDtoBuilder()
+                    .firstName(p.firstName)
+                    .lastName(p.lastName)
+                    .address(p.address)
+                    .city(p.city)
+                    .zip(p.zip)
+                    .email(p.email)
+                    .phone(p.phone).build();
+            personDtos.add(personDto);
+        }
+        return personDtos;
     }
 
 }

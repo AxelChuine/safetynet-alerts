@@ -39,8 +39,8 @@ public class PersonRepositoryTest {
         String updatedAddress = "123 rue du Bonheur";
         Person updatedPerson = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(updatedAddress).email(email).build();
 
-        Mockito.when(this.data.savePersonWithNewAddress(this.person, updatedPerson)).thenReturn(updatedPerson);
-        Person personToCompare = this.repository.updateAddressOfPerson(this.person, updatedPerson);
+        Mockito.when(this.data.savePerson(this.person, updatedPerson)).thenReturn(updatedPerson);
+        Person personToCompare = this.repository.savePerson(this.person, updatedPerson);
 
         Assertions.assertEquals(updatedPerson, personToCompare);
     }

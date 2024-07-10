@@ -22,7 +22,7 @@ public class PersonRepositoryImpl implements IPersonRepository {
     }
 
     @Override
-    public Person updateAddressOfPerson(Person person, Person newPerson) {
-        return this.data.savePersonWithNewAddress(person, newPerson);
+    public Person savePerson(Person person, Person newPerson) {
+        return this.data.savePerson(person, newPerson);
     }
 }

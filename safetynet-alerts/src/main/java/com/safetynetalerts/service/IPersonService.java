@@ -29,14 +29,15 @@ public interface IPersonService {
 
 	PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsException;
 
-	PersonDto updatePerson(String pAddress, String pFirstName, String pLastName) throws IOException, ResourceNotFoundException, BadResourceException;
+	PersonDto updateAddressOfPerson(String pAddress, String pFirstName, String pLastName) throws IOException, ResourceNotFoundException, Exception;
 
 	void deletePerson(String firstName, String lastName) throws ResourceNotFoundException;
 
 	SimplePersonDto convertToSimplePersonDto(Person personToChange);
 
-	List<SimplePersonDto> convertToDtoList (List<Person> pPersons);
+	List<SimplePersonDto> convertToSimplePersonDtoList(List<Person> pPersons);
 
+	List<PersonDto> convertToDtoList(List<Person> pPersons);
 
 	List<PersonDto> getPersonsByAddress(String address) throws ResourceNotFoundException;
 
@@ -47,7 +48,7 @@ public interface IPersonService {
 
 	PersonDto convertToPersonDto(Person person) throws ResourceNotFoundException;
 
-	List<PersonDto> convertToPersonDtoList(List<Person> persons) throws ResourceNotFoundException;
+	PersonDto updateCityOfPerson(String city, String firstName, String lastName) throws ResourceNotFoundException, BadResourceException;
 
 	Person convertToPerson(PersonDto pPersonDto) throws ResourceNotFoundException;
 }
