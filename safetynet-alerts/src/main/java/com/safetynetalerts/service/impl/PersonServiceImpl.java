@@ -168,6 +168,21 @@ public class PersonServiceImpl implements IPersonService {
                 .build();
     }
 
+    @Override
+    public PersonDto updateZipOfPerson(PersonDto personDto, String zip) throws ResourceNotFoundException {
+        PersonDto pDto = new PersonDto.PersonDtoBuilder()
+                .firstName(personDto.firstName)
+                .lastName(personDto.lastName)
+                .address(personDto.address)
+                .city(personDto.city)
+                .zip(zip)
+                .phone(personDto.phone)
+                .email(personDto.email)
+                .build();
+        PersonDto personDtoToReturn = convertToPersonDto(this.repository.savePerson(convertToPerson(personDto), convertToPerson(pDto)));
+        return personDtoToReturn;
+    }
+
 
     @Override
     public List<ChildAlertDto> getChildByAddress(String pAddress) throws IOException, ResourceNotFoundException {
