@@ -9,5 +9,5 @@ public interface IPersonRepository {
 
     List<Person> getAllPersons();
 
-    Person updateAddressOfPerson(Person person, Person newPerson);
+    Person savePerson(Person person, Person newPerson);
 }

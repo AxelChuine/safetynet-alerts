@@ -77,7 +77,7 @@ public class PersonServiceImpl implements IPersonService {
         }
         Person person;
         List<Person> persons = this.repository.getAllPersons();
-        PersonDto personDto = null;
+        PersonDto personDto;
         Optional<Person> personOptional = persons.stream().filter(p -> Objects.equals(p.getFirstName(), pFirstName) && Objects.equals(p.getLastName(), pLastName)).findFirst();
         if (personOptional.isPresent()) {
             person = personOptional.get();
@@ -136,8 +136,9 @@ public class PersonServiceImpl implements IPersonService {
                 .build();
     }
 
+    // FIXME: Not found exception
     @Override
-    public PersonDto updateCityOfPerson(String city, String firstName, String lastName) throws ResourceNotFoundException {
+    public PersonDto updateCityOfPerson(String city, String firstName, String lastName) throws ResourceNotFoundException, BadResourceException {
         PersonDto personDto = this.getPersonByFullName(firstName, lastName);
         PersonDto newPersonDto = new PersonDto.PersonDtoBuilder()
                 .firstName(personDto.firstName)
@@ -148,8 +149,7 @@ public class PersonServiceImpl implements IPersonService {
                 .phone(personDto.phone)
                 .email(personDto.email)
                 .build();
-        PersonDto personToReturn = this.repository.savePerson(personDto, newPersonDto);
-        return null;
+        return convertToPersonDto(this.repository.savePerson(convertToPerson(personDto), convertToPerson(newPersonDto)));
     }
 
     @Override
@@ -235,7 +235,7 @@ public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsExcept
                 .phone(personDto.phone)
                 .email(personDto.email)
                 .build();
-        updatedPerson = convertToPersonDto(this.repository.updateAddressOfPerson(convertToPerson(personDto), convertToPerson(updatedPerson)));
+        updatedPerson = convertToPersonDto(this.repository.savePerson(convertToPerson(personDto), convertToPerson(updatedPerson)));
 
         return updatedPerson;
     }

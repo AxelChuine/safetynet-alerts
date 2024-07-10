@@ -48,8 +48,7 @@ public interface IPersonService {
 
 	PersonDto convertToPersonDto(Person person) throws ResourceNotFoundException;
 
-	PersonDto updateCityOfPerson(String city, String firstName, String lastName) throws ResourceNotFoundException;
-	List<PersonDto> convertToPersonDtoList(List<Person> persons) throws ResourceNotFoundException;
+	PersonDto updateCityOfPerson(String city, String firstName, String lastName) throws ResourceNotFoundException, BadResourceException;
 
 	Person convertToPerson(PersonDto pPersonDto) throws ResourceNotFoundException;
 }

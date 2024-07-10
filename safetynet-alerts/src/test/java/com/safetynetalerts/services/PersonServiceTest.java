@@ -1,11 +1,13 @@
 package com.safetynetalerts.services;
 
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
-import com.safetynetalerts.dto.*;
+import com.safetynetalerts.dto.ChildAlertDto;
+import com.safetynetalerts.dto.PersonDto;
+import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IMedicalRecordService;
-import com.safetynetalerts.service.IPersonService;
+import com.safetynetalerts.service.impl.PersonServiceImpl;
 import com.safetynetalerts.utils.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +29,7 @@ import static org.mockito.Mockito.*;
 class PersonServiceTest {
 
 	@Autowired
-	private IPersonService service;
+	private PersonServiceImpl service;
 
 	@MockBean
 	private Data data;
@@ -105,16 +107,16 @@ class PersonServiceTest {
 	}
 
 	@Test
-	public void updatePersonAddressTest() throws Exception {
+	public void updateAddressOfPersonShouldReturnAPerson() throws Exception {
 		String address = "18 rue Jean Moulin";
-		Person updatedPerson = new Person.PersonBuilder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build();
+		Person updatedPerson = new Person.PersonBuilder().firstName(this.firstName).lastName(this.lastName).address(address).build();
 		List<Person> persons = new ArrayList<>();
 		persons.add(updatedPerson);
-		PersonDto updatedPersonDto = new PersonDto.PersonDtoBuilder().firstName("John").lastName("Boyd").address("1509 Culver St").city("Culver").zip("97451").phone("841-874-6512").email("jaboyd@email.com").build();
+		PersonDto updatedPersonDto = new PersonDto.PersonDtoBuilder().firstName(this.firstName).lastName(this.lastName).address(address).build();
 
 		when(this.repository.getAllPersons()).thenReturn(persons);
-		Mockito.when(this.repository.updateAddressOfPerson(this.person, updatedPerson)).thenReturn(updatedPerson);
-		PersonDto personToCompare = this.service.updatePerson(address, firstName, lastName);
+		Mockito.when(this.repository.savePerson(this.person, updatedPerson)).thenReturn(updatedPerson);
+		PersonDto personToCompare = this.service.updateAddressOfPerson(address, firstName, lastName);
 
 		assertEquals(updatedPersonDto, personToCompare);
 	}
@@ -179,25 +181,10 @@ class PersonServiceTest {
 
 	@Test
 	public void getFamilyMembersTest() {
-		// ARRANGE
-		Person p1 = new Person.
-				PersonBuilder().firstName("John").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
-		Person p2 = new Person.PersonBuilder().firstName("John").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
-		Person p3 = new Person.PersonBuilder().firstName("Lukas").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
-		List<Person> expectedPersons = List.of(p1, p2, p3);
+		when(this.repository.getAllPersons()).thenReturn(this.persons);
+		List<PersonDto> personsToCompare = this.service.getFamilyMembers(this.personDtos, lastName);
 
-
-		PersonDto p1Dto = new PersonDto.PersonDtoBuilder().firstName("John").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
-		PersonDto p2Dto = new PersonDto.PersonDtoBuilder().firstName("Mathias").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
-		PersonDto p3Dto = new PersonDto.PersonDtoBuilder().firstName("Lukas").lastName("Dubois").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
-		List<PersonDto> expectedPersonsDto = List.of(p1Dto, p2Dto, p3Dto);
-		String lastName = "Dubois";
-		// ACT
-		when(this.repository.getAllPersons()).thenReturn(expectedPersons);
-		List<Person> persons = this.repository.getAllPersons();
-		List<PersonDto> personsToCompare = this.service.getFamilyMembers(expectedPersonsDto, lastName);
-		// ASSERT
-		assertEquals(persons, personsToCompare);
+		assertEquals(personDtos, personsToCompare);
 	}
 
 	@Test
@@ -219,22 +206,20 @@ class PersonServiceTest {
 		assertEquals(personsDto, personsToCompare);
 	}
 
-	// FIXME: test qui ne fonctionne pas; changer de branche avant de régler le problème
 	@Test
 	public void getChildByAddressTest () throws IOException, ResourceNotFoundException {
-		String address = "95 rue du maréchal pétain";
 		List<PersonDto> personsByAddress = new ArrayList<>();
-		PersonDto person = new PersonDto.PersonDtoBuilder().firstName("Jean").lastName("Dubois").address(address).build();
-		PersonDto adult = new PersonDto.PersonDtoBuilder().firstName("Marc").lastName("Dubois").address(address).build();
+		PersonDto person = new PersonDto.PersonDtoBuilder().firstName(this.firstName).lastName(this.lastName).address(address).build();
+		PersonDto adult = new PersonDto.PersonDtoBuilder().firstName("Marc").lastName(this.lastName).address(address).build();
 		personsByAddress.add(person);
 		personsByAddress.add(adult);
-		ChildAlertDto childAlertDto = new ChildAlertDto("Jean", "Dubois", 0, personsByAddress);
+		ChildAlertDto childAlertDto = new ChildAlertDto(this.firstName, this.lastName, 0, personsByAddress);
 		List<ChildAlertDto> childAlertDtos = new ArrayList<>();
 		childAlertDtos.add(childAlertDto);
 
 
 		when(this.medicalRecordService.isUnderaged(person.firstName, person.lastName)).thenReturn(true);
-		when(this.service.getPersonsByAddress(address)).thenReturn(personsByAddress);
+		when(this.repository.getAllPersons()).thenReturn(this.persons);
 		List<ChildAlertDto> childAlertDtosToCompare = this.service.getChildByAddress(address);
 
 		assertEquals(childAlertDtos.get(0).getAge(), childAlertDtosToCompare.get(0).getAge());
@@ -275,7 +260,10 @@ class PersonServiceTest {
 
 	@Test
 	public void updateCityOfPersonShouldReturnPersonDtoIfExists() throws Exception {
+		Person updatedPerson = new Person.PersonBuilder().firstName(this.firstName).lastName(this.lastName).address(this.address).city(this.city).build();
+
 		Mockito.when(this.repository.getAllPersons()).thenReturn(this.persons);
+		Mockito.when(this.repository.savePerson(this.person, updatedPerson)).thenReturn(updatedPerson);
 		PersonDto personToCompare = this.service.updateCityOfPerson(city, firstName, lastName);
 
 		Assertions.assertEquals(this.personDto, personToCompare);

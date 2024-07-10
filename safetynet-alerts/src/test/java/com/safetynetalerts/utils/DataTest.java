@@ -109,7 +109,7 @@ public class DataTest {
         String addressToBeUpdated = "28 rue du moulin";
         Person person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).build();
 
-        Person personToCompare = this.data.savePersonWithNewAddress(this.person, person);
+        Person personToCompare = this.data.savePerson(this.person, person);
 
         Assertions.assertNotNull(personToCompare);
     }
