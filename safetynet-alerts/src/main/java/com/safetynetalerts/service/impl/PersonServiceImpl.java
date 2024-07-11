@@ -12,7 +12,6 @@ import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonService;
 import com.safetynetalerts.utils.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -25,15 +24,15 @@ import java.util.stream.Collectors;
 @Service
 public class PersonServiceImpl implements IPersonService {
 
-    @Autowired
-    private Data data;
+    private final Data data;
 
-    @Autowired
-    private IMedicalRecordService medicalRecordService;
+    private final IMedicalRecordService medicalRecordService;
 
     private final IPersonRepository repository;
 
-    public PersonServiceImpl (IPersonRepository repository) {
+    public PersonServiceImpl (Data data, IMedicalRecordService medicalRecordService, IPersonRepository repository) {
+        this.data = data;
+        this.medicalRecordService = medicalRecordService;
         this.repository = repository;
     }
 
@@ -136,22 +135,6 @@ public class PersonServiceImpl implements IPersonService {
                 .build();
     }
 
-    // FIXME: Not found exception
-    @Override
-    public PersonDto updateCityOfPerson(String city, String firstName, String lastName) throws ResourceNotFoundException, BadResourceException {
-        PersonDto personDto = this.getPersonByFullName(firstName, lastName);
-        PersonDto newPersonDto = new PersonDto.PersonDtoBuilder()
-                .firstName(personDto.firstName)
-                .lastName(personDto.lastName)
-                .address(personDto.address)
-                .city(city)
-                .zip(personDto.zip)
-                .phone(personDto.phone)
-                .email(personDto.email)
-                .build();
-        return convertToPersonDto(this.repository.savePerson(convertToPerson(personDto), convertToPerson(newPersonDto)));
-    }
-
     @Override
     public Person convertToPerson(PersonDto pPersonDto) throws ResourceNotFoundException {
         if (Objects.isNull(pPersonDto)) {
@@ -169,18 +152,9 @@ public class PersonServiceImpl implements IPersonService {
     }
 
     @Override
-    public PersonDto updateZipOfPerson(PersonDto personDto, String zip) throws ResourceNotFoundException {
-        PersonDto pDto = new PersonDto.PersonDtoBuilder()
-                .firstName(personDto.firstName)
-                .lastName(personDto.lastName)
-                .address(personDto.address)
-                .city(personDto.city)
-                .zip(zip)
-                .phone(personDto.phone)
-                .email(personDto.email)
-                .build();
-        PersonDto personDtoToReturn = convertToPersonDto(this.repository.savePerson(convertToPerson(personDto), convertToPerson(pDto)));
-        return personDtoToReturn;
+    public PersonDto updatePerson(PersonDto personDto) throws BadResourceException, ResourceNotFoundException {
+        PersonDto personToModify = this.getPersonByFullName(personDto.firstName, personDto.lastName);
+        return convertToPersonDto(this.repository.savePerson(convertToPerson(personToModify), convertToPerson(personDto)));
     }
 
 
@@ -231,28 +205,6 @@ public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsExcept
         Person person = new Person.PersonBuilder().firstName(pPerson.getFirstName()).lastName(pPerson.getLastName()).address(pPerson.getAddress()).city(pPerson.getCity()).zip(pPerson.getZip()).phone(pPerson.getPhone()).email(pPerson.getEmail()).build();
         this.repository.getAllPersons().add(person);
         return pPerson;
-    }
-
-    @Override
-    public PersonDto updateAddressOfPerson(String pAddress, String pFirstName, String pLastName) throws Exception {
-        PersonDto personDto = this.getPersonByFullName(pFirstName, pLastName);
-        if (Objects.isNull(personDto.getFirstName()) || Objects.isNull(personDto.getLastName())) {
-            String resource = "person" + " " + pFirstName + " " + pLastName;
-            throw new ResourceNotFoundException(resource);
-        }
-        PersonDto updatedPerson = new PersonDto
-                .PersonDtoBuilder()
-                .firstName(personDto.firstName)
-                .lastName(personDto.lastName)
-                .address(pAddress)
-                .city(personDto.city)
-                .zip(personDto.zip)
-                .phone(personDto.phone)
-                .email(personDto.email)
-                .build();
-        updatedPerson = convertToPersonDto(this.repository.savePerson(convertToPerson(personDto), convertToPerson(updatedPerson)));
-
-        return updatedPerson;
     }
 
 

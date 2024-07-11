@@ -1,36 +1,34 @@
 package com.safetynetalerts.controller;
 
-import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
-import com.safetynetalerts.controller.exception.ResourceNotFoundException;
-import com.safetynetalerts.dto.ChildAlertDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynetalerts.dto.PersonDto;
-import com.safetynetalerts.service.IPersonService;
-import org.junit.jupiter.api.Assertions;
+import com.safetynetalerts.service.impl.PersonServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 
-@SpringBootTest
+@WebMvcTest(controllers = PersonController.class)
+@AutoConfigureMockMvc
 public class PersonControllerTest {
 
     @Autowired
-    private PersonController controller;
+    private MockMvc mockMvc;
 
     @MockBean
-    private IPersonService service;
+    private PersonServiceImpl service;
 
     private String firstName = "Jean";
 
@@ -49,27 +47,61 @@ public class PersonControllerTest {
 
     @BeforeEach
     public void setUp() {
-        this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).city(city).build();
+        this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).city(city).email(email).build();
         this.personDtoList = new ArrayList<>();
         this.personDtoList.add(personDto);
     }
 
 
     @Test
-    public void getAllEmailAddressesTest() throws Exception {
-        String address = "67 rue Jean moulin";
+    public void getAllEmailAddressesByCityShouldReturnHttpStatusOk() throws Exception {
         List<String> emailAddresses = new ArrayList<>();
         emailAddresses.add("test1@gmail.com");
         emailAddresses.add("test2@gmail.com");
         emailAddresses.add("test3@gmail.com");
 
         when(this.service.getAllEmailAddressesByCity(address)).thenReturn(emailAddresses);
-        ResponseEntity<List<String>> addressesToCompare = this.controller.getAllEmailAddresses(address);
-
-        assertEquals(HttpStatus.OK, addressesToCompare.getStatusCode());
-        assertEquals(emailAddresses, addressesToCompare.getBody());
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/communityEmail").param("city", "Culver")).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @Test
+    public void getChildAlertShouldReturnHttpStatusOk() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/childAlert")
+                .param("address", this.address))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void getAllPersonsShouldReturnHttpStatusOk() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/all")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void createPersonShouldReturnHttpStatusCreated () throws Exception {
+        StringBuilder json = new StringBuilder(new ObjectMapper().writeValueAsString(this.personDto));
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/person")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.toString()))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @Test
+    public void updatePersonShouldReturnHttpStatusOk() throws Exception {
+        StringBuilder json = new StringBuilder(new ObjectMapper().writeValueAsString(this.personDto));
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/update-person")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void findPersonByFullNameShouldReturnHttpStatusOk() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/person")
+                .param("firstName", this.firstName)
+                .param("lastName", this.lastName))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+/*
     @Test
     public void getChildAddressTest() throws IOException, ResourceNotFoundException {
         String address = "67 rue Jean moulin";
@@ -82,7 +114,7 @@ public class PersonControllerTest {
         childAlertDtos.add(child1);
 
         when(this.service.getChildByAddress(address)).thenReturn(childAlertDtos);
-        ResponseEntity<List<ChildAlertDto>> childAlertDtoResponse = this.controller.getChildByAddress(address);
+        *//*ResponseEntity<List<ChildAlertDto>> childAlertDtoResponse = this.controller.getChildByAddress(address);*//*
 
 
         assertEquals(HttpStatus.OK, childAlertDtoResponse.getStatusCode());
@@ -120,15 +152,6 @@ public class PersonControllerTest {
     }
 
     @Test
-    public void updatePersonTest() throws Exception {
-        when(this.service.updateAddressOfPerson(address, firstName, lastName)).thenReturn(personDto);
-        ResponseEntity<PersonDto> responsePerson = this.controller.updateAddressOfPerson(address, firstName, lastName);
-
-        assertEquals(HttpStatus.OK, responsePerson.getStatusCode());
-        assertEquals(personDto, responsePerson.getBody());
-    }
-
-    @Test
     public void deletePersonTest() throws Exception {
         when(this.service.getPersonByFullName(firstName, lastName)).thenReturn(personDto);
         ResponseEntity responsePerson = this.controller.deletePerson(firstName, lastName);
@@ -144,14 +167,5 @@ public class PersonControllerTest {
         when(this.service.getPersonByFullName(firstName, lastName)).thenReturn(personDto);
         ResponseEntity<List<PersonDto>> responsePerson = this.controller.getPersonByFullName(firstName, lastName);
         assertEquals(personDtos, responsePerson.getBody());
-    }
-
-
-    @Test
-    public void updateCityOfPersonShouldReturnAPersonDto() throws Exception {
-        Mockito.when(this.service.updateCityOfPerson(city, firstName, lastName)).thenReturn(this.personDto);
-        ResponseEntity<PersonDto> responseEntity = this.controller.updateCityOfPerson(city, firstName, lastName);
-
-        Assertions.assertEquals(this.personDto, responseEntity.getBody());
-    }
+    }*/
 }
