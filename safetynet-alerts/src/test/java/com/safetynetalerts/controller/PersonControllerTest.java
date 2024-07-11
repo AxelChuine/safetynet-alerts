@@ -94,6 +94,7 @@ public class PersonControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    // FIXME: NullPointerException (???)
     @Test
     public void findPersonByFullNameShouldReturnHttpStatusOk() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/person")
