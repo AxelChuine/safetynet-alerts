@@ -1,5 +1,6 @@
 package com.safetynetalerts.services;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
@@ -106,21 +107,6 @@ class PersonServiceTest {
 		List<PersonDto> peopleToCompare = this.service.getAllPersons();
 
 		assertEquals(persons, peopleToCompare);
-	}
-
-	@Test
-	public void updateAddressOfPersonShouldReturnAPerson() throws Exception {
-		String address = "18 rue Jean Moulin";
-		Person updatedPerson = new Person.PersonBuilder().firstName(this.firstName).lastName(this.lastName).address(address).build();
-		List<Person> persons = new ArrayList<>();
-		persons.add(updatedPerson);
-		PersonDto updatedPersonDto = new PersonDto.PersonDtoBuilder().firstName(this.firstName).lastName(this.lastName).address(address).build();
-
-		when(this.repository.getAllPersons()).thenReturn(persons);
-		Mockito.when(this.repository.savePerson(this.person, updatedPerson)).thenReturn(updatedPerson);
-		PersonDto personToCompare = this.service.updateAddressOfPerson(address, firstName, lastName);
-
-		assertEquals(updatedPersonDto, personToCompare);
 	}
 
 
@@ -261,17 +247,6 @@ class PersonServiceTest {
 	}
 
 	@Test
-	public void updateCityOfPersonShouldReturnPersonDtoIfExists() throws Exception {
-		Person updatedPerson = new Person.PersonBuilder().firstName(this.firstName).lastName(this.lastName).address(this.address).city(this.city).build();
-
-		Mockito.when(this.repository.getAllPersons()).thenReturn(this.persons);
-		Mockito.when(this.repository.savePerson(this.person, updatedPerson)).thenReturn(updatedPerson);
-		PersonDto personToCompare = this.service.updateCityOfPerson(city, firstName, lastName);
-
-		Assertions.assertEquals(this.personDto, personToCompare);
-	}
-
-	@Test
 	public void convertPersonDtoToPersonShouldReturnAPerson() throws ResourceNotFoundException {
 		Person personToCompare = this.service.convertToPerson(this.personDto);
 
@@ -279,14 +254,15 @@ class PersonServiceTest {
 	}
 
 	@Test
-	public void updateZipOfPersonShouldReturnAPerson () throws ResourceNotFoundException {
-		Person updatedPerson = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).city(city).zip(zip).build();
-		PersonDto updatedPersonDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).city(city).zip(zip).build();
+	public void updatePersonShouldReturnAPerson() throws BadResourceException, ResourceNotFoundException {
+		Person updatedPerson = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
+		PersonDto updatedPersonDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
 
+		Mockito.when(this.repository.getAllPersons()).thenReturn(this.persons);
 		Mockito.when(this.repository.savePerson(this.person, updatedPerson)).thenReturn(updatedPerson);
-		PersonDto personToCompare = this.service.updateZipOfPerson(this.personDto, zip);
+		PersonDto personDtoToCompare = this.service.updatePerson(updatedPersonDto);
 
-		Assertions.assertEquals(updatedPersonDto, personToCompare);
+		Assertions.assertEquals(updatedPersonDto, personDtoToCompare);
 	}
 
 }

@@ -29,8 +29,6 @@ public interface IPersonService {
 
 	PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsException;
 
-	PersonDto updateAddressOfPerson(String pAddress, String pFirstName, String pLastName) throws IOException, ResourceNotFoundException, Exception;
-
 	void deletePerson(String firstName, String lastName) throws ResourceNotFoundException;
 
 	SimplePersonDto convertToSimplePersonDto(Person personToChange);
@@ -48,9 +46,7 @@ public interface IPersonService {
 
 	PersonDto convertToPersonDto(Person person) throws ResourceNotFoundException;
 
-	PersonDto updateCityOfPerson(String city, String firstName, String lastName) throws ResourceNotFoundException, BadResourceException;
-
 	Person convertToPerson(PersonDto pPersonDto) throws ResourceNotFoundException;
 
-	PersonDto updateZipOfPerson(PersonDto personDto, String zip) throws ResourceNotFoundException;
+	PersonDto updatePerson(PersonDto personDto) throws BadResourceException, ResourceNotFoundException;
 }

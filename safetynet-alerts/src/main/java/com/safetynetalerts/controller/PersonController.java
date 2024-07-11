@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
@@ -13,10 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+@RestController("/person")
 @Slf4j
-@RestController
 public class PersonController {
 
 	private final IPersonService personService;
@@ -39,7 +41,7 @@ public class PersonController {
 		return new ResponseEntity<>(this.personService.getChildByAddress(address), HttpStatus.OK);
 	}
 
-	@GetMapping("/persons")
+	@GetMapping("/all")
 	public ResponseEntity<List<PersonDto>> getAllPersons() throws IOException {
 		logger.info("launch retrieval of every persons");
 		return new ResponseEntity<>(this.personService.getAllPersons(), HttpStatus.OK);
@@ -58,17 +60,10 @@ public class PersonController {
 		return new ResponseEntity<>(this.personService.addPerson(pPerson), HttpStatus.CREATED);
 	}
 
-
-	@PutMapping("/person")
-	public ResponseEntity<PersonDto> updateAddressOfPerson(@RequestParam("address") String pAddress, @RequestParam("firstName") String pFirstName, @RequestParam("lastName") String pLastName) throws Exception {
-		logger.info("update address of person");
-		return new ResponseEntity<>(this.personService.updateAddressOfPerson(pAddress, pFirstName, pLastName), HttpStatus.OK);
-	}
-
-	@PutMapping("/city")
-	public ResponseEntity<PersonDto> updateCityOfPerson(@RequestParam("city") String city, @RequestParam("first-name") String firstName, @RequestParam("last-name") String lastName) throws Exception {
-		logger.info("update city of person");
-		return new ResponseEntity<>(this.personService.updateCityOfPerson(city, firstName, lastName), HttpStatus.OK);
+	@PutMapping("update-person")
+	public ResponseEntity<PersonDto> updatePerson(@RequestBody PersonDto personDto) throws BadResourceException, ResourceNotFoundException {
+		logger.info("update person");
+		return new ResponseEntity<>(this.personService.updatePerson(personDto), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/person")
@@ -81,6 +76,7 @@ public class PersonController {
   	@GetMapping("/person")
     public ResponseEntity<List<PersonDto>> getPersonByFullName(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws Exception {
 		logger.info("get a person by his full name");
-		return new ResponseEntity<>(List.of(this.personService.getPersonByFullName(firstName, lastName)), HttpStatus.OK);
+		List<PersonDto> personDtos = new ArrayList<>(List.of(this.personService.getPersonByFullName(firstName, lastName)));
+		return new ResponseEntity<>(personDtos, HttpStatus.OK);
     }
 }
