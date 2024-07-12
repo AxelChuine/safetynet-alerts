@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
 import com.safetynetalerts.service.IFireStationService;
@@ -57,13 +58,9 @@ public class FireStationController {
 	}
 
 	@PostMapping("/firestation")
-	public ResponseEntity createFirestation (@RequestBody FireStationDto pFirestation) {
+	public ResponseEntity<FireStationDto> createFirestation (@RequestBody FireStationDto pFirestation) throws ResourceNotFoundException, ResourceAlreadyExistsException, IOException {
 		logger.info("create firestation");
-		this.service.createFirestation(pFirestation);
-		if (Objects.isNull(pFirestation)) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		return new ResponseEntity<>(this.service.createFirestation(pFirestation), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/flood/stations")
@@ -78,6 +75,7 @@ public class FireStationController {
 		return new ResponseEntity<>(this.personMedicalRecordService.getAllConcernedPersonsAndTheirInfosByFire(address), HttpStatus.OK);
 	}
 
+	@PutMapping("/firestation")
 	public ResponseEntity<FireStationDto> updateFirestation(@RequestParam("address") String address, @RequestParam("station-number") String newStationNUmber) throws ResourceNotFoundException, IOException {
 		logger.info("update firestation");
 		return new ResponseEntity<>(this.service.updateFireStationByAddress(address, newStationNUmber), HttpStatus.OK);
