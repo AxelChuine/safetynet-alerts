@@ -1,18 +1,21 @@
 package com.safetynetalerts.services;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.Person;
-import com.safetynetalerts.repository.IFireStationRepository;
 import com.safetynetalerts.repository.IPersonRepository;
-import com.safetynetalerts.service.IFireStationService;
+import com.safetynetalerts.repository.impl.FireStationRepository;
+import com.safetynetalerts.service.impl.FireStationServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.io.IOException;
@@ -24,21 +27,21 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class FireStationServiceTest {
 
-	@Autowired
-	private IFireStationService service;
+	@InjectMocks
+	private FireStationServiceImpl service;
 
     @MockBean
 	private IPersonRepository personRepository;
 
-	@MockBean
-	private IFireStationRepository repository;
+	@Mock
+	private FireStationRepository repository;
 
 	private String address = "18 rue jean moulin";
 
-	private String stationNumber = "17";
+	private String stationNumber = "5";
 
 	private Set<String> addresses;
 
@@ -83,7 +86,7 @@ public class FireStationServiceTest {
 	}
 
 	@Test
-	public void createFirestationTest() {
+	public void createFirestationTest() throws ResourceNotFoundException, ResourceAlreadyExistsException, IOException {
 		// GIVEN
 		FireStationDto fireStationDto = new FireStationDto();
 		fireStationDto.setStationNumber("17");
@@ -96,7 +99,8 @@ public class FireStationServiceTest {
 		firestations.add(fireStation);
 
 		// WHEN
-		when(this.repository.getAllFireStations()).thenReturn(firestations);
+		when(this.repository.getAllFireStations()).thenReturn(this.fireStations);
+		when(this.repository.createFireStation(fireStation)).thenReturn(fireStation);
 		this.service.createFirestation(fireStationDto);
 		// THEN
 		assertEquals(firestations.get(0).getStationNumber(), "17");

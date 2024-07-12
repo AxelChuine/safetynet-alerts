@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireDto;
 import com.safetynetalerts.dto.FireStationDto;
@@ -100,10 +101,14 @@ public class FireStationControllerTest {
 
 
     @Test
-    public void createFireStationTest () {
-        FireStationDto fireStationDto = new FireStationDto();
-        ResponseEntity responseFirestation = this.controller.createFirestation(fireStationDto);
+    public void createFireStationTest () throws ResourceNotFoundException, ResourceAlreadyExistsException, IOException {
+        FireStationDto fireStationDto = new FireStationDto(addresses, stationNumber);
+
+        Mockito.when(this.service.createFirestation(fireStationDto)).thenReturn(fireStationDto);
+        ResponseEntity<FireStationDto> responseFirestation = this.controller.createFirestation(fireStationDto);
+
         assertEquals(HttpStatus.CREATED, responseFirestation.getStatusCode());
+        Assertions.assertEquals(fireStationDto, responseFirestation.getBody());
     }
 
 

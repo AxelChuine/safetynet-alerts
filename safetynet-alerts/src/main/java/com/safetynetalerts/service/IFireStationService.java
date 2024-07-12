@@ -1,5 +1,6 @@
 package com.safetynetalerts.service;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
@@ -15,7 +16,7 @@ public interface IFireStationService {
 
 	List<FireStationDto> getAllFireStations() throws IOException;
 
-	void createFirestation(FireStationDto pFirestation);
+	FireStationDto createFirestation(FireStationDto pFirestation) throws ResourceNotFoundException, IOException, ResourceAlreadyExistsException;
 
 	PersonMedicalRecordDto convertToPersonMedicalRecord(Person pPerson, MedicalRecord pMedicalRecord) throws IOException, ResourceNotFoundException;
 

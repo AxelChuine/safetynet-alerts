@@ -1,5 +1,6 @@
 package com.safetynetalerts.service.impl;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
@@ -48,9 +49,12 @@ public class FireStationServiceImpl implements IFireStationService {
 	}
 
 	//FIXME: erreur à la création
-	public void createFirestation(FireStationDto pFirestation) {
+	public FireStationDto createFirestation(FireStationDto pFirestation) throws ResourceNotFoundException, IOException, ResourceAlreadyExistsException {
+		if (this.getAllFireStations().stream().anyMatch(fs -> Objects.equals(fs.getStationNumber(), pFirestation.getStationNumber()))) {
+			throw new ResourceAlreadyExistsException("this firestation already exists");
+		}
 		FireStation fireStation = new FireStation(new HashSet<>(pFirestation.getAddresses()), pFirestation.getStationNumber());
-		this.repository.createFireStation(fireStation);
+        return convertToDto(this.repository.createFireStation(fireStation));
 	}
 
 
