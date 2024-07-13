@@ -1,5 +1,6 @@
 package com.safetynetalerts.repository.impl;
 
+import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.utils.Data;
@@ -24,5 +25,10 @@ public class PersonRepositoryImpl implements IPersonRepository {
     @Override
     public Person savePerson(Person person, Person newPerson) {
         return this.data.savePerson(person, newPerson);
+    }
+
+    @Override
+    public PersonDto savePerson(PersonDto personDto, PersonDto newPersonDto) {
+        return null;
     }
 }
