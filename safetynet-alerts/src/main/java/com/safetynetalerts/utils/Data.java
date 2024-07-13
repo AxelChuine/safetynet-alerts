@@ -82,4 +82,10 @@ public class Data {
 		this.persons = newPersons;
 		return person1;
 	}
+
+	public void deleteMedicalRecord(MedicalRecord medicalRecord) {
+		List<MedicalRecord> medicalRecords1 = new ArrayList<>(this.medicalRecords);
+		medicalRecords1.remove(medicalRecord);
+		this.medicalRecords = medicalRecords1;
+	}
 }

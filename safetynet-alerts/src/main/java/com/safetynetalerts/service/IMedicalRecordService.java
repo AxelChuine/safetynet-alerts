@@ -33,7 +33,9 @@ public interface IMedicalRecordService {
 
 	MedicalRecordDto createMedicalRecord(MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException, ResourceAlreadyExistsException;
 
-	void deleteMedicalRecordByFullName(String firstName, String lastName);
+	void deleteMedicalRecordByFullName(String firstName, String lastName) throws ResourceNotFoundException;
 
 	List<MedicalRecordDto> getAllMedicalRecordByListOfPersons(List<PersonDto> personDtoList) throws ResourceNotFoundException;
+
+	MedicalRecord convertDtoToModel(MedicalRecordDto medicalRecordByFullName);
 }

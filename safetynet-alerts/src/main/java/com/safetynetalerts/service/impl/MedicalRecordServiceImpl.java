@@ -209,16 +209,19 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	}
 
 	@Override
-	public void deleteMedicalRecordByFullName(String firstName, String lastName) {
-		Integer index = 0;
-		Integer indexOfElement = 0;
-		for (MedicalRecord medicalRecord : this.repository.getAllMedicalRecords()) {
-			if (Objects.equals(medicalRecord.getFirstName(), firstName) && Objects.equals(medicalRecord.getLastName(), lastName)) {
-				indexOfElement = index;
-			}
-			index++;
-		}
-		this.repository.getAllMedicalRecords().remove(indexOfElement);
+	public void deleteMedicalRecordByFullName(String firstName, String lastName) throws ResourceNotFoundException {
+		this.repository.deleteMedicalRecord(convertDtoToModel(this.getMedicalRecordByFullName(firstName, lastName)));
+	}
+
+	@Override
+	public MedicalRecord convertDtoToModel(MedicalRecordDto medicalRecordByFullName) {
+		return new MedicalRecord.MedicalRecordBuilder()
+				.firstName(medicalRecordByFullName.getFirstName())
+				.lastName(medicalRecordByFullName.getLastName())
+				.firstName(medicalRecordByFullName.getBirthDate())
+				.allergies(medicalRecordByFullName.getAllergies())
+				.medications(medicalRecordByFullName.getMedications())
+				.build();
 	}
 
 	@Override

@@ -8,4 +8,6 @@ public interface IMedicalRecordRepository {
     List<MedicalRecord> getAllMedicalRecords();
 
     MedicalRecord createMedicalRecord(MedicalRecord medicalRecord);
+
+    void deleteMedicalRecord(MedicalRecord medicalRecord);
 }

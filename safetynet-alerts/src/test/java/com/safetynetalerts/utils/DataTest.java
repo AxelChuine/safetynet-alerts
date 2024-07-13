@@ -30,7 +30,7 @@ public class DataTest {
 
     private String lastName;
 
-    Person person;
+    private Person person;
 
     private FireStation fireStation;
 
@@ -40,6 +40,10 @@ public class DataTest {
 
     private String stationNumber = "4";
 
+    private String birthDate = "03/05/2000";
+
+    private MedicalRecord medicalRecord;
+
     @BeforeEach
     public void setUp() {
         this.addresses = new HashSet<>();
@@ -48,6 +52,7 @@ public class DataTest {
         this.firstName = "Jean";
         this.lastName = "Melbourne";
         this.person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).build();
+        this.medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
     }
 
     @Test
@@ -126,5 +131,12 @@ public class DataTest {
         Person personToCompare = this.data.savePerson(this.person, person);
 
         Assertions.assertNotNull(personToCompare);
+    }
+
+    @Test
+    public void deleteMedicalRecordShouldCallDeleteMedicalRecord() {
+        this.mockData.deleteMedicalRecord(this.medicalRecord);
+
+        Mockito.verify(this.mockData).deleteMedicalRecord(medicalRecord);
     }
 }
