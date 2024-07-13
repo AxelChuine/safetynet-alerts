@@ -11,9 +11,6 @@ import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IFireStationRepository;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
-import com.safetynetalerts.utils.Data;
-import com.safetynetalerts.utils.Utils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -22,19 +19,13 @@ import java.util.*;
 @Service
 public class FireStationServiceImpl implements IFireStationService {
 
-	@Autowired
-	private Utils utils;
-
-	@Autowired
-	private Data data;
-
-	@Autowired
-	private IMedicalRecordService medicalRecordService;
+	private final IMedicalRecordService medicalRecordService;
 
 	private final IFireStationRepository repository;
 
 
-    public FireStationServiceImpl(IFireStationRepository repository) {
+    public FireStationServiceImpl(IMedicalRecordService medicalRecordService, IFireStationRepository repository) {
+        this.medicalRecordService = medicalRecordService;
         this.repository = repository;
     }
 
@@ -167,5 +158,14 @@ public class FireStationServiceImpl implements IFireStationService {
 		addresses.remove(address);
 		FireStationDto newFireStationDto = new FireStationDto(new HashSet<>(addresses), fireStationDto.getStationNumber());
         return convertToDto(this.save(convertDtoToModel(fireStationDto), convertDtoToModel(newFireStationDto)));
+	}
+
+	@Override
+	public void deleteFirestation(FireStationDto fireStationDto) throws IOException, ResourceNotFoundException {
+		if (this.getAllFireStations().stream().anyMatch(fs -> Objects.equals(fireStationDto.getStationNumber(), fs.getStationNumber()))) {
+			this.repository.deleteFireStation(convertDtoToModel(fireStationDto));
+		} else {
+			throw new ResourceNotFoundException("this firestation doesn't exists");
+		}
 	}
 }

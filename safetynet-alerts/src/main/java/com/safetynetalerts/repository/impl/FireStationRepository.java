@@ -32,4 +32,9 @@ public class FireStationRepository implements IFireStationRepository {
         return this.data.saveFirestation(oldFirestation, newFirestation);
     }
 
+    @Override
+    public void deleteFireStation(FireStation fireStation) {
+        this.data.deleteFireStation(fireStation);
+    }
+
 }
