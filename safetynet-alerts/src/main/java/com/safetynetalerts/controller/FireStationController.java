@@ -80,4 +80,10 @@ public class FireStationController {
 		logger.info("update firestation");
 		return new ResponseEntity<>(this.service.updateFireStationByAddress(address, newStationNUmber), HttpStatus.OK);
 	}
+
+	@DeleteMapping("/firestation")
+	public ResponseEntity deleteFirestation(@RequestBody FireStationDto fireStationDto) throws IOException, ResourceNotFoundException {
+		this.service.deleteFirestation(fireStationDto);
+		return new ResponseEntity(HttpStatus.OK);
+	}
 }

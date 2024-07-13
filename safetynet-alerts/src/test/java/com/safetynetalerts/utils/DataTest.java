@@ -6,18 +6,25 @@ import com.safetynetalerts.models.Person;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class DataTest {
 
-    @Autowired
+    @InjectMocks
     private Data data;
+
+    @Mock
+    private Data mockData;
+
 
     private String firstName;
 
@@ -102,6 +109,13 @@ public class DataTest {
         FireStation firestationToCompare = this.data.saveFirestation(oldFireStation, this.fireStation);
 
         Assertions.assertEquals("17", firestationToCompare.getStationNumber());
+    }
+
+    @Test
+    public void deleteFireStationShouldCallTheMethod () {
+        this.mockData.deleteFireStation(this.fireStation);
+
+        Mockito.verify(this.mockData).deleteFireStation(this.fireStation);
     }
 
     @Test

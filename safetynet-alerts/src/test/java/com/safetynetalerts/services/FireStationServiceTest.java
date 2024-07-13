@@ -204,4 +204,12 @@ public class FireStationServiceTest {
 
 		Assertions.assertEquals(newFireStationDto, fireStationToCompare);
 	}
+
+	@Test
+	public void deleteFireStationShouldDeleteFireStation() throws IOException, ResourceNotFoundException {
+		Mockito.when(this.repository.getAllFireStations()).thenReturn(this.fireStations);
+		this.service.deleteFirestation(this.fireStationDto);
+
+		Mockito.verify(this.repository).deleteFireStation(fireStation);
+	}
 }
