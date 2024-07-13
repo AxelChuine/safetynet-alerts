@@ -9,7 +9,6 @@ import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
-import com.safetynetalerts.repository.IFireStationRepository;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonFirestationService;
@@ -17,10 +16,11 @@ import com.safetynetalerts.service.IPersonMedicalRecordsService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,18 +31,15 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class FireStationControllerTest {
 
 
-    @Autowired
+    @InjectMocks
     private FireStationController controller;
 
     @Mock
     private IFireStationService service;
-
-    @Mock
-    private IFireStationRepository repository;
 
     @MockBean
     private IPersonMedicalRecordsService personMedicalRecordsService;
@@ -81,6 +78,8 @@ public class FireStationControllerTest {
 
    private FireStation fireStation;
 
+   private List<FireStationDto> fireStationDtos;
+
    @BeforeEach
    void setUp() {
        allergies = new ArrayList<>();
@@ -96,6 +95,7 @@ public class FireStationControllerTest {
                .build();
        this.fireStationDto = new FireStationDto(addresses, stationNumber);
        this.fireStation = new FireStation(addresses, stationNumber);
+       this.fireStationDtos = new ArrayList<>(List.of(this.fireStationDto));
    }
 
 
@@ -168,5 +168,13 @@ public class FireStationControllerTest {
 
         assertEquals(HttpStatus.OK, responseFire.getStatusCode());
         Assertions.assertEquals(fireDto, responseFire.getBody());
+    }
+
+    @Test
+    public void deleteFirestationShouldDeleteFireStation() throws IOException, ResourceNotFoundException {
+       ResponseEntity responseEntity = this.controller.deleteFirestation(this.fireStationDto);
+
+       Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+       Mockito.verify(this.service).deleteFirestation(this.fireStationDto);
     }
 }

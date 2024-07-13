@@ -70,4 +70,11 @@ public class FireStationRepositoryTest {
 
         Assertions.assertEquals(this.fireStation, firestationToCompare);
     }
+
+    @Test
+    public void deleteFireStationShouldCallTheDataMethod () {
+        this.repository.deleteFireStation(this.fireStation);
+
+        Mockito.verify(this.data).deleteFireStation(this.fireStation);
+    }
 }

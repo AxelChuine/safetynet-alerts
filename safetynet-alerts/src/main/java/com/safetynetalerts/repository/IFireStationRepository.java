@@ -11,4 +11,6 @@ public interface IFireStationRepository {
     FireStation createFireStation(FireStation fireStation);
 
     FireStation save(FireStation oldFirestation, FireStation newFirestation);
+
+    void deleteFireStation(FireStation fireStation);
 }

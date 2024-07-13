@@ -37,4 +37,6 @@ public interface IFireStationService {
 	FireStation convertDtoToModel(FireStationDto fireStationDto);
 
 	FireStationDto deleteAddressOfFireStation(FireStationDto fireStationDto, String address) throws ResourceNotFoundException;
+
+	void deleteFirestation(FireStationDto fireStationDto) throws IOException, ResourceNotFoundException;
 }
