@@ -217,8 +217,7 @@ public class MedicalRecordServiceTest {
 
 
 	@Test
-	public void deleteMedicalRecordTest() {
-		List<MedicalRecord> medicalRecords = new ArrayList<>();
+	public void deleteMedicalRecordTest() throws ResourceNotFoundException {
 		String firstName = "Jean";
 		String lastName = "Dubois";
 
@@ -233,5 +232,19 @@ public class MedicalRecordServiceTest {
 		List<MedicalRecordDto> medicalRecordsToCompare = this.service.getAllMedicalRecordByListOfPersons(persons);
 
 		Assertions.assertEquals(this.medicalRecordDtos, medicalRecordsToCompare);
+	}
+
+	@Test
+	public void deleteMedicalRecordShouldDeleteMedicalRecord() throws ResourceNotFoundException {
+		this.service.deleteMedicalRecordByFullName(firstName, lastName);
+
+		Mockito.verify(this.repository).deleteMedicalRecord(this.medicalRecord);
+	}
+
+	@Test
+	public void convertDtoToModelShouldConvertDtoToModel() {
+		MedicalRecord medicalRecordToCompare = this.service.convertDtoToModel(this.medicalRecordDto);
+
+		Assertions.assertEquals(this.medicalRecord, medicalRecordToCompare);
 	}
 }

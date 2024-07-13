@@ -26,4 +26,9 @@ public class MedicalRecordRepository implements IMedicalRecordRepository {
     public MedicalRecord createMedicalRecord(MedicalRecord medicalRecord) {
         return this.data.createMedicalRecord(medicalRecord);
     }
+
+    @Override
+    public void deleteMedicalRecord(MedicalRecord medicalRecord) {
+        this.data.deleteMedicalRecord(medicalRecord);
+    }
 }

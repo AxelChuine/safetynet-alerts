@@ -49,4 +49,11 @@ public class MedicalRecordRepositoryTest {
 
         Assertions.assertEquals(medicalRecord, medicalRecordToCompare);
     }
+
+    @Test
+    public void deleteMedicalRecordShouldDeleteMedicalRecord() {
+        this.repository.deleteMedicalRecord(this.medicalRecord);
+
+        Mockito.verify(this.data).deleteMedicalRecord(this.medicalRecord);
+    }
 }
