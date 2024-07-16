@@ -218,7 +218,7 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 		return new MedicalRecord.MedicalRecordBuilder()
 				.firstName(medicalRecordByFullName.getFirstName())
 				.lastName(medicalRecordByFullName.getLastName())
-				.firstName(medicalRecordByFullName.getBirthDate())
+				.birthDate(medicalRecordByFullName.getBirthDate())
 				.allergies(medicalRecordByFullName.getAllergies())
 				.medications(medicalRecordByFullName.getMedications())
 				.build();
