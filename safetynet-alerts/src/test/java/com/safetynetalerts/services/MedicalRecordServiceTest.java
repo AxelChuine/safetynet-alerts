@@ -196,23 +196,11 @@ public class MedicalRecordServiceTest {
 	}
 
 	@Test
-	public void updateMedicalRecordTest () throws IOException, ResourceNotFoundException {
-		String allergie = "lactose";
-		List<String> allergies = new ArrayList<>();
-		allergies.add(allergie);
-		List<String> medications = new ArrayList<>();
-		medications.add("paracétamol");
-		MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName("Jean").lastName("Dubois").birthDate("01/01/2001").medications(medications).allergies(allergies).build();
-		List<MedicalRecord> medicalRecords = new ArrayList<>();
-		medicalRecords.add(medicalRecord);
-
+	public void updateMedicalRecordTest () throws ResourceNotFoundException, IOException {
 		when(this.repository.getAllMedicalRecords()).thenReturn(medicalRecords);
-		MedicalRecord medicalRecordToCompare = new MedicalRecord.MedicalRecordBuilder().firstName("Jean").lastName("Dubois").birthDate("01/01/2001").medications(medications).allergies(allergies).build();
-		this.service.updateMedicalRecord(medicalRecordToCompare.getFirstName(), medicalRecordToCompare.getLastName(), allergie);
+		MedicalRecordDto medicalRecordToCompare = this.service.updateMedicalRecord(this.medicalRecordDto);
 
-		assertEquals(medicalRecord.getFirstName(), medicalRecordToCompare.getFirstName());
-		assertEquals(medicalRecord.getLastName(), medicalRecordToCompare.getLastName());
-		assertEquals(medicalRecord.getAllergies(), medicalRecordToCompare.getAllergies());
+		assertEquals(this.medicalRecordDto, medicalRecordToCompare);
 	}
 
 
@@ -237,5 +225,27 @@ public class MedicalRecordServiceTest {
 		MedicalRecord medicalRecordToCompare = this.service.convertDtoToModel(this.medicalRecordDto);
 
 		Assertions.assertEquals(this.medicalRecord, medicalRecordToCompare);
+	}
+
+	@Test
+	public void convertModelToDtoShouldReturnADtoObject() {
+		MedicalRecordDto medicalRecordToCompare = this.service.convertModelToDto(this.medicalRecord);
+
+		Assertions.assertEquals(this.medicalRecordDto, medicalRecordToCompare);
+	}
+
+	@Test
+	public void updateMedicalRecordShouldUpdateAMedicalRecord() throws IOException, ResourceNotFoundException {
+		MedicalRecord newMedicalRecord = new MedicalRecord.MedicalRecordBuilder()
+				.firstName(firstName)
+				.lastName(lastName)
+				.birthDate(birthDate)
+				.build();
+
+		Mockito.when(this.repository.getAllMedicalRecords()).thenReturn(this.medicalRecords);
+		Mockito.when(this.repository.saveMedicalRecord(medicalRecord, newMedicalRecord)).thenReturn(newMedicalRecord);
+		MedicalRecordDto medicalRecordToCompare = this.service.updateMedicalRecord(medicalRecordDto);
+
+		Assertions.assertEquals(this.medicalRecordDto, medicalRecordToCompare);
 	}
 }

@@ -16,14 +16,17 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+@RestController("medical-record")
 @Slf4j
-@RestController
 public class MedicalRecordController {
 
-    @Autowired
-    private IMedicalRecordService service;
+    private final IMedicalRecordService service;
 
     Logger logger = LoggerFactory.getLogger(MedicalRecordController.class);
+
+    public MedicalRecordController(IMedicalRecordService service) {
+        this.service = service;
+    }
 
     @PostMapping("/medical-record")
     public ResponseEntity<MedicalRecordDto> createMedicalRecord(@RequestBody MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException, ResourceAlreadyExistsException {
@@ -37,14 +40,16 @@ public class MedicalRecordController {
         return ResponseEntity.ok(this.service.getAllMedicalRecords());
     }
 
+    @GetMapping("/by-full-name")
+    public ResponseEntity<MedicalRecordDto> getMedicalRecordByFullName(@RequestParam("first-name") String firstName, @RequestParam("last-name")String lastName) throws IOException, ResourceNotFoundException {
+        logger.info("launch retrieval of by-full-name medical record");
+        return new ResponseEntity<>(this.service.getMedicalRecordByFullName(firstName, lastName), HttpStatus.OK);
+    }
+
     @PutMapping("/medical-record")
-    public ResponseEntity<MedicalRecordDto> updateMedicalRecord (@RequestParam("firstName") String pFirstName, @RequestParam("lastName") String pLastName, @RequestParam("allergie") String pAllergie) throws ResourceNotFoundException {
+    public ResponseEntity<MedicalRecordDto> updateMedicalRecord (@RequestBody MedicalRecordDto medicalRecordDto) throws ResourceNotFoundException, IOException {
         logger.info("launch of update of a medical record");
-        this.service.updateMedicalRecord(pFirstName, pLastName, pAllergie);
-        if (Objects.isNull(this.service.getMedicalRecordByFullName(pFirstName, pLastName))) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        return new ResponseEntity<>(this.service.updateMedicalRecord(medicalRecordDto), HttpStatus.ACCEPTED);
     }
 
 

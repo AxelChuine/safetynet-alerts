@@ -29,7 +29,7 @@ public interface IMedicalRecordService {
 	List<MedicalRecordDto> getAllMedicalRecords() throws IOException;
 
 
-	MedicalRecordDto updateMedicalRecord (String firstName, String lastName, String allergie) throws ResourceNotFoundException;
+	MedicalRecordDto updateMedicalRecord (MedicalRecordDto medicalRecordDto) throws ResourceNotFoundException, IOException;
 
 	MedicalRecordDto createMedicalRecord(MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException, ResourceAlreadyExistsException;
 
@@ -38,4 +38,6 @@ public interface IMedicalRecordService {
 	List<MedicalRecordDto> getAllMedicalRecordByListOfPersons(List<PersonDto> personDtoList) throws ResourceNotFoundException;
 
 	MedicalRecord convertDtoToModel(MedicalRecordDto medicalRecordByFullName);
+
+	MedicalRecordDto convertModelToDto(MedicalRecord medicalRecord);
 }

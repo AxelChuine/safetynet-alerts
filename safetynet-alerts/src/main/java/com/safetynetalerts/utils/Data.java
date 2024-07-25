@@ -88,4 +88,12 @@ public class Data {
 		medicalRecords1.remove(medicalRecord);
 		this.medicalRecords = medicalRecords1;
 	}
+
+	public MedicalRecord saveMedicalRecord(MedicalRecord medicalRecord, MedicalRecord newMedicalRecord) {
+        List<MedicalRecord> medicalRecords = new ArrayList<>(this.medicalRecords);
+		medicalRecords.remove(medicalRecord);
+		medicalRecords.add(newMedicalRecord);
+		this.medicalRecords = medicalRecords;
+		return newMedicalRecord;
+	}
 }
