@@ -39,14 +39,11 @@ public interface IPersonService {
 
 	List<PersonDto> getPersonsByAddress(String address) throws ResourceNotFoundException;
 
-	// FIXME: implémenter la méthode correctement
-	/*PersonInfo getPersonInfo(String lastName);*/
-
-	PersonInfo createPersonInfo(Person person);
-
 	PersonDto convertToPersonDto(Person person) throws ResourceNotFoundException;
 
 	Person convertToPerson(PersonDto pPersonDto) throws ResourceNotFoundException;
 
 	PersonDto updatePerson(PersonDto personDto) throws BadResourceException, ResourceNotFoundException;
+
+	List<PersonDto> getPersonByLastName(String lastName);
 }

@@ -12,5 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class PersonInfo {
-    List<SpecificPersonInfo> specificPersonInfos;
+    private String firstName;
+    private String lastName;
+    private Integer age;
+    private String email;
+    private List<String> allergies;
+    private List<String> medications;
 }
