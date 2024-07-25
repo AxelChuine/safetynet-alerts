@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -68,10 +69,12 @@ public class PersonMedicalRecordServiceTest {
 
     FireStationDto fireStationDto;
 
+    String email = "test@test.com";
+
     @BeforeEach
     public void setUp() {
-        this.person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).build();
-        this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).build();
+        this.person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).email(email).address(address).build();
+        this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).email(email).address(address).build();
         this.persons = List.of(person);
         this.personDtoList = List.of(personDto);
         this.medicalRecord = new MedicalRecord();
@@ -114,5 +117,23 @@ public class PersonMedicalRecordServiceTest {
         List<PersonByFireDto> personByFireDtoToCompare = this.service.convertToPersonByFireDtoList(personDtoList, medicalRecordDtoList);
 
         Assertions.assertEquals(personByFireDtoList, personByFireDtoToCompare);
+    }
+
+    @Test
+    public void getAllPersonInfoShouldReturnSomePersonInfos () throws ResourceNotFoundException, IOException {
+        PersonInfo personInfo = new PersonInfo();
+        personInfo.setFirstName(firstName);
+        personInfo.setLastName(lastName);
+        personInfo.setAge(0);
+        personInfo.setMedications(medications);
+        personInfo.setAllergies(allergies);
+        personInfo.setEmail(email);
+        List<PersonInfo> personInfos = new ArrayList<>(List.of(personInfo));
+
+        Mockito.when(this.personService.getPersonByLastName(this.lastName)).thenReturn(this.personDtoList);
+        Mockito.when(this.medicalRecordService.getAllMedicalRecordByListOfPersons(this.personDtoList)).thenReturn(this.medicalRecordDtoList);
+        List<PersonInfo> personInfoToCompare = this.service.getAllPersonInformations(this.lastName);
+
+        Assertions.assertEquals(personInfos, personInfoToCompare);
     }
 }

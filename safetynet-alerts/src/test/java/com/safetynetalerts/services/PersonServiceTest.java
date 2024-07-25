@@ -265,4 +265,12 @@ class PersonServiceTest {
 		Assertions.assertEquals(updatedPersonDto, personDtoToCompare);
 	}
 
+	@Test
+	public void getPersonByLastNameShouldReturnAListOfPersonHavingTheSameLastName () {
+		Mockito.when(this.repository.getAllPersons()).thenReturn(this.persons);
+		List<PersonDto> personDtoListToCompare = this.service.getPersonByLastName(this.lastName);
+
+		Assertions.assertEquals(this.personDtos, personDtoListToCompare);
+	}
+
 }
