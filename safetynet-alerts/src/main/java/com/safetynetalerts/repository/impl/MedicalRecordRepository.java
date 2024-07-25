@@ -31,4 +31,9 @@ public class MedicalRecordRepository implements IMedicalRecordRepository {
     public void deleteMedicalRecord(MedicalRecord medicalRecord) {
         this.data.deleteMedicalRecord(medicalRecord);
     }
+
+    @Override
+    public MedicalRecord saveMedicalRecord(MedicalRecord medicalRecord, MedicalRecord newMedicalRecord) {
+        return this.data.saveMedicalRecord(medicalRecord, newMedicalRecord);
+    }
 }

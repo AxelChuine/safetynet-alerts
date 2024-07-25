@@ -10,4 +10,6 @@ public interface IMedicalRecordRepository {
     MedicalRecord createMedicalRecord(MedicalRecord medicalRecord);
 
     void deleteMedicalRecord(MedicalRecord medicalRecord);
+
+    MedicalRecord saveMedicalRecord(MedicalRecord medicalRecord, MedicalRecord newMedicalRecord);
 }

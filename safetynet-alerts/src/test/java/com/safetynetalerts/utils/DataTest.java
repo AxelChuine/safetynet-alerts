@@ -139,4 +139,12 @@ public class DataTest {
 
         Mockito.verify(this.mockData).deleteMedicalRecord(medicalRecord);
     }
+
+    @Test
+    public void saveMedicalRecordShouldSaveAMedicalRecord() {
+        MedicalRecord newMedicalRecord = new MedicalRecord();
+        this.mockData.saveMedicalRecord(this.medicalRecord, newMedicalRecord);
+
+        Mockito.verify(this.mockData).saveMedicalRecord(this.medicalRecord, newMedicalRecord);
+    }
 }
