@@ -217,13 +217,11 @@ public class MedicalRecordServiceTest {
 
 
 	@Test
-	public void deleteMedicalRecordTest() throws ResourceNotFoundException {
-		String firstName = "Jean";
-		String lastName = "Dubois";
-
+	public void deleteMedicalRecordShouldDeleteAMedicalRecord() throws ResourceNotFoundException {
+		Mockito.when(this.repository.getAllMedicalRecords()).thenReturn(this.medicalRecords);
 		this.service.deleteMedicalRecordByFullName(firstName, lastName);
 
-		verify(this.repository, times(2)).getAllMedicalRecords();
+		verify(this.repository).deleteMedicalRecord(medicalRecord);
 	}
 
 	@Test
@@ -232,13 +230,6 @@ public class MedicalRecordServiceTest {
 		List<MedicalRecordDto> medicalRecordsToCompare = this.service.getAllMedicalRecordByListOfPersons(persons);
 
 		Assertions.assertEquals(this.medicalRecordDtos, medicalRecordsToCompare);
-	}
-
-	@Test
-	public void deleteMedicalRecordShouldDeleteMedicalRecord() throws ResourceNotFoundException {
-		this.service.deleteMedicalRecordByFullName(firstName, lastName);
-
-		Mockito.verify(this.repository).deleteMedicalRecord(this.medicalRecord);
 	}
 
 	@Test

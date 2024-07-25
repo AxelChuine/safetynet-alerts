@@ -49,7 +49,7 @@ public class MedicalRecordController {
 
 
     @DeleteMapping("/medical-record")
-    public ResponseEntity deleteMedicalRecord(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws IOException, ResourceNotFoundException {
+    public ResponseEntity deleteMedicalRecord(@RequestParam("first-name") String firstName, @RequestParam("last-name") String lastName) throws IOException, ResourceNotFoundException {
         logger.info("launch of deletion of a medical record");
         this.service.deleteMedicalRecordByFullName(firstName, lastName);
         if (Objects.isNull(this.service.getMedicalRecordByFullName(firstName, lastName))) {
