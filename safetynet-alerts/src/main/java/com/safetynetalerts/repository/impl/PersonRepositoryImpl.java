@@ -27,8 +27,4 @@ public class PersonRepositoryImpl implements IPersonRepository {
         return this.data.savePerson(person, newPerson);
     }
 
-    @Override
-    public PersonDto savePerson(PersonDto personDto, PersonDto newPersonDto) {
-        return null;
-    }
 }

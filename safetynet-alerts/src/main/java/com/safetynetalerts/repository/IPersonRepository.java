@@ -10,7 +10,5 @@ public interface IPersonRepository {
 
     List<Person> getAllPersons();
 
-    Person updateAddressOfPerson(Person person, Person newPerson);
-
-    PersonDto savePerson(PersonDto personDto, PersonDto newPersonDto);
+    Person savePerson(Person person, Person newPerson);
 }
