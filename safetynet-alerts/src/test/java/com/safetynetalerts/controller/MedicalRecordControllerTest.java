@@ -100,51 +100,14 @@ public class MedicalRecordControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isAccepted());
     }
 
-    /*@TestordsTest
-    public void getAllMedicalRec() throws IOException {
-        MedicalRecordDto m1 = new MedicalRecordDto.MedicalRecordDtoBuilder().build();
-        MedicalRecordDto m2 = new MedicalRecordDto.MedicalRecordDtoBuilder().build();
-        MedicalRecordDto m3 = new MedicalRecordDto.MedicalRecordDtoBuilder().build();
-        List<MedicalRecordDto> medicalRecordDtos = new ArrayList<>();
-        medicalRecordDtos.add(m1);
-        medicalRecordDtos.add(m2);
-        medicalRecordDtos.add(m3);
-
-        when(this.service.getAllMedicalRecords()).thenReturn(medicalRecordDtos);
-        ResponseEntity<List<MedicalRecordDto>> responseMedicalRecords = this.controller.getAllMedicalRecords();
-
-        assertEquals(HttpStatus.OK, responseMedicalRecords.getStatusCode());
-    }
-
     @Test
-    public void updateMedicalRecordTest () throws IOException, ResourceNotFoundException {
-        List<String> allergies = new ArrayList<>();
-        String allergie = "gluten";
-        allergies.add("lactose");
-        allergies.add("mollusque");
-        allergies.add("noix");
-        List<String> medications = new ArrayList<>();
-        medications.add("paracétamol");
-        Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("94 Rue jean moulin").build();
-        MedicalRecordDto medicalRecord = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName(person.firstName).lastName(person.lastName).medications(medications).allergies(allergies).build();
+    public void deleteMedicalRecordShouldReturnHttpStatusOk () throws Exception {
+        StringBuilder json = new StringBuilder(new ObjectMapper().writeValueAsString(medicalRecordDto));
 
-        when(this.service.getMedicalRecordByFullName(person.firstName, person.lastName)).thenReturn(medicalRecord);
-        ResponseEntity responseMedicalRecord = this.controller.updateMedicalRecord(person.firstName, person.lastName, allergie);
-        assertEquals(HttpStatus.ACCEPTED, responseMedicalRecord.getStatusCode());
+        Mockito.when(this.service.getMedicalRecordByFullName(firstName, lastName)).thenReturn(this.medicalRecordDto);
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/medical-record")
+                .param("first-name", firstName)
+                .param("last-name", lastName))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
-
-    @Test
-    public void deleteMedicalRecordTest () throws IOException, ResourceNotFoundException {
-        List<String> medications = new ArrayList<>();
-        medications.add("paracétamol");
-        List<String> allergies = new ArrayList<>();
-        allergies.add("lactose");
-        MedicalRecordDto medicalRecordDto = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName("Jean").lastName("Dubois").birthDate("01/01/2001").medications(medications).allergies(allergies).build();
-        MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(medicalRecordDto.getFirstName()).lastName(medicalRecordDto.getLastName()).birthDate(medicalRecordDto.getBirthDate()).medications(medicalRecordDto.getMedications()).allergies(medicalRecordDto.getAllergies()).build();
-
-
-        when(this.service.getMedicalRecordByFullName(medicalRecordDto.getFirstName(), medicalRecordDto.getLastName())).thenReturn(medicalRecordDto);
-        ResponseEntity responseMedicalRecord = this.controller.deleteMedicalRecord(medicalRecordDto.getFirstName(), medicalRecordDto.getLastName());
-        assertEquals(HttpStatus.OK, responseMedicalRecord.getStatusCode());
-    }*/
 }
