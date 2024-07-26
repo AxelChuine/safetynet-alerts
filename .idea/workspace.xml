@@ -6,18 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="1e65d790-1a9f-47b6-8c36-db15441c7ca5" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/safetynet-alerts/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/controller/MedicalRecordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/controller/MedicalRecordController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/repository/IMedicalRecordRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/repository/IMedicalRecordRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/repository/impl/MedicalRecordRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/repository/impl/MedicalRecordRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/service/IMedicalRecordService.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/service/IMedicalRecordService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/dto/MedicalRecordDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/dto/MedicalRecordDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/service/impl/MedicalRecordServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/service/impl/MedicalRecordServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/utils/Data.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/utils/Data.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/utils/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/utils/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/test/java/com/safetynetalerts/controller/MedicalRecordControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/test/java/com/safetynetalerts/controller/MedicalRecordControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/test/java/com/safetynetalerts/repositories/MedicalRecordRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/test/java/com/safetynetalerts/repositories/MedicalRecordRepositoryTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/test/java/com/safetynetalerts/services/MedicalRecordServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/test/java/com/safetynetalerts/services/MedicalRecordServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/test/java/com/safetynetalerts/utils/DataTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/test/java/com/safetynetalerts/utils/DataTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,14 +44,18 @@
     "JUnit.MedicalRecordServiceTest.convertModelToDtoShouldReturnADtoObject.executor": "Run",
     "JUnit.MedicalRecordServiceTest.deleteMedicalRecordShouldDeleteAMedicalRecord.executor": "Run",
     "JUnit.MedicalRecordServiceTest.executor": "Run",
+    "JUnit.MedicalRecordServiceTest.getMedicalRecordByFullNameTest.executor": "Run",
     "JUnit.MedicalRecordServiceTest.updateMedicalRecordShouldUpdateAMedicalRecord.executor": "Run",
+    "JUnit.MedicalRecordServiceTest.updateMedicalRecordTest.executor": "Run",
+    "Maven.safetynet-alerts [verify].executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "Spring Boot.App.executor": "Debug",
-    "git-widget-placeholder": "feat/alerts-29",
+    "full.screen.before.presentation.mode": "false",
+    "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
@@ -70,23 +66,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Spring Boot.App">
-    <configuration name="DataTest.saveMedicalRecordShouldSaveAMedicalRecord" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="safetynet-alerts" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.safetynetalerts.utils.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.safetynetalerts.utils" />
-      <option name="MAIN_CLASS_NAME" value="com.safetynetalerts.utils.DataTest" />
-      <option name="METHOD_NAME" value="saveMedicalRecordShouldSaveAMedicalRecord" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.MedicalRecordServiceTest.updateMedicalRecordTest">
     <configuration name="MedicalRecordControllerTest.updateMedicalRecordShouldReturnHttpStatusOk" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="safetynet-alerts" />
       <extension name="coverage">
@@ -98,22 +78,6 @@
       <option name="PACKAGE_NAME" value="com.safetynetalerts.controller" />
       <option name="MAIN_CLASS_NAME" value="com.safetynetalerts.controller.MedicalRecordControllerTest" />
       <option name="METHOD_NAME" value="updateMedicalRecordShouldReturnHttpStatusOk" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MedicalRecordRepositoryTest.saveMedicalRecordShouldCallTheDataLayer" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="safetynet-alerts" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.safetynetalerts.repositories.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.safetynetalerts.repositories" />
-      <option name="MAIN_CLASS_NAME" value="com.safetynetalerts.repositories.MedicalRecordRepositoryTest" />
-      <option name="METHOD_NAME" value="saveMedicalRecordShouldCallTheDataLayer" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -135,6 +99,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="MedicalRecordServiceTest.getMedicalRecordByFullNameTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="safetynet-alerts" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.safetynetalerts.services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.safetynetalerts.services" />
+      <option name="MAIN_CLASS_NAME" value="com.safetynetalerts.services.MedicalRecordServiceTest" />
+      <option name="METHOD_NAME" value="getMedicalRecordByFullNameTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="MedicalRecordServiceTest.updateMedicalRecordShouldUpdateAMedicalRecord" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="safetynet-alerts" />
       <extension name="coverage">
@@ -151,6 +131,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="MedicalRecordServiceTest.updateMedicalRecordTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="safetynet-alerts" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.safetynetalerts.services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.safetynetalerts.services" />
+      <option name="MAIN_CLASS_NAME" value="com.safetynetalerts.services.MedicalRecordServiceTest" />
+      <option name="METHOD_NAME" value="updateMedicalRecordTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="App" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="safetynet-alerts" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.safetynetalerts.App" />
@@ -160,11 +156,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.MedicalRecordServiceTest.updateMedicalRecordTest" />
+        <item itemvalue="JUnit.MedicalRecordServiceTest.getMedicalRecordByFullNameTest" />
         <item itemvalue="JUnit.MedicalRecordControllerTest.updateMedicalRecordShouldReturnHttpStatusOk" />
         <item itemvalue="JUnit.MedicalRecordServiceTest.updateMedicalRecordShouldUpdateAMedicalRecord" />
         <item itemvalue="JUnit.MedicalRecordServiceTest.convertModelToDtoShouldReturnADtoObject" />
-        <item itemvalue="JUnit.MedicalRecordRepositoryTest.saveMedicalRecordShouldCallTheDataLayer" />
-        <item itemvalue="JUnit.DataTest.saveMedicalRecordShouldSaveAMedicalRecord" />
       </list>
     </recent_temporary>
   </component>
@@ -177,10 +173,28 @@
       <option name="presentableId" value="Default" />
       <updated>1721917145803</updated>
       <workItem from="1721917148225" duration="1984000" />
+      <workItem from="1722006855552" duration="183000" />
+      <workItem from="1722007050116" duration="3237000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/service/impl/MedicalRecordServiceImpl.java</url>
+          <line>181</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/service/impl/MedicalRecordServiceImpl.java</url>
+          <line>218</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

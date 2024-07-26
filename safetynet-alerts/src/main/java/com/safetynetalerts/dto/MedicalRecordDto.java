@@ -1,13 +1,12 @@
 package com.safetynetalerts.dto;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@ToString
 @EqualsAndHashCode
 public class MedicalRecordDto {
 

@@ -163,10 +163,18 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 
 	@Override
 	public MedicalRecordDto updateMedicalRecord(MedicalRecordDto medicalRecordDto) throws ResourceNotFoundException, IOException {
-		if (!this.getAllMedicalRecords().stream().anyMatch(mr -> Objects.equals(mr.getFirstName(), medicalRecordDto.getFirstName()) && Objects.equals(mr.getLastName(), medicalRecordDto.getLastName()) && Objects.equals(mr.getBirthDate(), medicalRecordDto.getBirthDate()))) {
-			throw new ResourceNotFoundException("This medical record does not exist");
+		List<MedicalRecord> medicalRecords = this.repository.getAllMedicalRecords();
+		MedicalRecordDto medicalRecordDto1 = new MedicalRecordDto.MedicalRecordDtoBuilder().build();
+		MedicalRecord tempMR = convertDtoToModel(medicalRecordDto);
+		for (MedicalRecord m : medicalRecords) {
+			if (Objects.equals(medicalRecordDto.getFirstName(), m.getFirstName())
+					&& Objects.equals(medicalRecordDto.getLastName(), m.getLastName())) {
+				medicalRecordDto1 = convertModelToDto(this.repository.saveMedicalRecord(m, tempMR));
+			} else {
+				throw new ResourceNotFoundException("this medical record doesn't exist");
+			}
 		}
-		return convertModelToDto(this.repository.saveMedicalRecord(convertDtoToModel(this.getMedicalRecordByFullName(medicalRecordDto.getFirstName(), medicalRecordDto.getLastName())), convertDtoToModel(medicalRecordDto)));
+		return medicalRecordDto1;
 	}
 
 	@Override

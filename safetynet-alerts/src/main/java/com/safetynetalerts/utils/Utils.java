@@ -24,7 +24,7 @@ import java.util.Map;
 @Component
 public class Utils {
 
-	private String path = "./src/main/resources/data/data.json";
+	private String path = "C:\\Users\\axelc\\developpeur\\project\\spring\\safetynet-alerts\\safetynet-alerts\\src\\main\\resources\\data\\data.json";
 
 	private byte[] file;
 

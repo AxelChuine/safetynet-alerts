@@ -59,7 +59,7 @@ public class MedicalRecordServiceTest {
 		this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).build();
 		this.persons = List.of(this.personDto);
 		this.medicalRecords = List.of(medicalRecord);
-		this.medicalRecordDtos = List.of(medicalRecordDto);
+		this.medicalRecordDtos = new ArrayList<>(List.of(medicalRecordDto));
 	}
 
 	@Test
@@ -197,7 +197,14 @@ public class MedicalRecordServiceTest {
 
 	@Test
 	public void updateMedicalRecordTest () throws ResourceNotFoundException, IOException {
+		MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder()
+				.firstName(firstName)
+				.lastName(lastName)
+				.birthDate(birthDate)
+				.build();
+
 		when(this.repository.getAllMedicalRecords()).thenReturn(medicalRecords);
+		when(this.repository.saveMedicalRecord(this.medicalRecord, medicalRecord)).thenReturn(medicalRecord);
 		MedicalRecordDto medicalRecordToCompare = this.service.updateMedicalRecord(this.medicalRecordDto);
 
 		assertEquals(this.medicalRecordDto, medicalRecordToCompare);
