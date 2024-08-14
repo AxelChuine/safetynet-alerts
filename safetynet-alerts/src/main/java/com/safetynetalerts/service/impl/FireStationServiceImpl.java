@@ -85,12 +85,6 @@ public class FireStationServiceImpl implements IFireStationService {
 	}
 
 	@Override
-	public SimplePersonDto createSimplePersonDto(Person pPerson) {
-		SimplePersonDto simplePersonDto = new SimplePersonDto(pPerson.firstName, pPerson.lastName, pPerson.address, pPerson.phone);
-		return simplePersonDto;
-	}
-
-	@Override
 	public String getStationNumberByAddress(String address) throws IOException {
 		String stationNumber = null;
 		List<FireStation> fireStations = this.repository.getAllFireStations();

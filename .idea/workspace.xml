@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1e65d790-1a9f-47b6-8c36-db15441c7ca5" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/dto/MedicalRecordDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/dto/MedicalRecordDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/service/impl/MedicalRecordServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/service/impl/MedicalRecordServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/utils/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/utils/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/test/java/com/safetynetalerts/services/MedicalRecordServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/test/java/com/safetynetalerts/services/MedicalRecordServiceTest.java" afterDir="false" />
-    </list>
+    <list default="true" id="1e65d790-1a9f-47b6-8c36-db15441c7ca5" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,44 +22,73 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "JUnit.DataTest.deleteFireStationShouldDeleteFireStation.executor": "Run",
-    "JUnit.DataTest.executor": "Run",
-    "JUnit.DataTest.saveFirestationShouldSaveFireStation.executor": "Run",
-    "JUnit.DataTest.saveMedicalRecordShouldSaveAMedicalRecord.executor": "Run",
-    "JUnit.MedicalRecordControllerTest.createMedicalRecordTest.executor": "Run",
-    "JUnit.MedicalRecordControllerTest.executor": "Run",
-    "JUnit.MedicalRecordControllerTest.getAllMedicalRecordsShouldReturnHttpStatusOk.executor": "Run",
-    "JUnit.MedicalRecordControllerTest.getMedicalRecordByFullNameShouldReturnHttpStatusOk.executor": "Run",
-    "JUnit.MedicalRecordControllerTest.updateMedicalRecordShouldReturnHttpStatusOk.executor": "Run",
-    "JUnit.MedicalRecordRepositoryTest.executor": "Run",
-    "JUnit.MedicalRecordRepositoryTest.saveMedicalRecordShouldCallTheDataLayer.executor": "Run",
-    "JUnit.MedicalRecordServiceTest.convertModelToDtoShouldReturnADtoObject.executor": "Run",
-    "JUnit.MedicalRecordServiceTest.deleteMedicalRecordShouldDeleteAMedicalRecord.executor": "Run",
-    "JUnit.MedicalRecordServiceTest.executor": "Run",
-    "JUnit.MedicalRecordServiceTest.getMedicalRecordByFullNameTest.executor": "Run",
-    "JUnit.MedicalRecordServiceTest.updateMedicalRecordShouldUpdateAMedicalRecord.executor": "Run",
-    "JUnit.MedicalRecordServiceTest.updateMedicalRecordTest.executor": "Run",
-    "Maven.safetynet-alerts [verify].executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "Spring Boot.App.executor": "Debug",
-    "full.screen.before.presentation.mode": "false",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JUnit.DataTest.deleteFireStationShouldDeleteFireStation.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.DataTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.DataTest.saveFirestationShouldSaveFireStation.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.DataTest.saveMedicalRecordShouldSaveAMedicalRecord.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MedicalRecordControllerTest.createMedicalRecordTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MedicalRecordControllerTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MedicalRecordControllerTest.getAllMedicalRecordsShouldReturnHttpStatusOk.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MedicalRecordControllerTest.getMedicalRecordByFullNameShouldReturnHttpStatusOk.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MedicalRecordControllerTest.updateMedicalRecordShouldReturnHttpStatusOk.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MedicalRecordRepositoryTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MedicalRecordRepositoryTest.saveMedicalRecordShouldCallTheDataLayer.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MedicalRecordServiceTest.convertModelToDtoShouldReturnADtoObject.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MedicalRecordServiceTest.deleteMedicalRecordShouldDeleteAMedicalRecord.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MedicalRecordServiceTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MedicalRecordServiceTest.getMedicalRecordByFullNameTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MedicalRecordServiceTest.updateMedicalRecordShouldUpdateAMedicalRecord.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MedicalRecordServiceTest.updateMedicalRecordTest.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.safetynet-alerts [verify].executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;Spring Boot.App.executor&quot;: &quot;Debug&quot;,
+    &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
+    <layout>
+      <window_info id="Bookmarks" show_stripe_button="false" side_tool="true" />
+      <window_info id="Merge Requests" show_stripe_button="false" />
+      <window_info id="Commit_Guest" show_stripe_button="false" />
+      <window_info id="Pull Requests" show_stripe_button="false" />
+      <window_info id="Learn" show_stripe_button="false" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.32984102" />
+      <window_info id="Commit" order="1" weight="0.25" />
+      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
+      <window_info anchor="bottom" id="TypeScript" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Profiler" show_stripe_button="false" />
+      <window_info anchor="bottom" id="TODO" show_stripe_button="false" />
+      <window_info anchor="bottom" id="File Transfer" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="0" />
+      <window_info anchor="bottom" id="Problems" order="1" />
+      <window_info anchor="bottom" id="Problems View" order="2" weight="0.3303985" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="3" visible="true" weight="0.33014113" />
+      <window_info anchor="bottom" id="Services" order="4" />
+      <window_info anchor="right" id="Endpoints" show_stripe_button="false" />
+      <window_info anchor="right" id="Coverage" show_stripe_button="false" side_tool="true" />
+      <window_info anchor="right" content_ui="combo" id="Notifications" order="0" weight="0.25" />
+      <window_info anchor="right" id="AIAssistant" order="1" weight="0.25" />
+      <window_info anchor="right" id="Database" order="2" weight="0.25" />
+      <window_info anchor="right" id="Gradle" order="3" weight="0.25" />
+      <window_info anchor="right" id="Maven" order="4" weight="0.25" />
+    </layout>
+  </component>
   <component name="RunManager" selected="JUnit.MedicalRecordServiceTest.updateMedicalRecordTest">
     <configuration name="MedicalRecordControllerTest.updateMedicalRecordShouldReturnHttpStatusOk" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="safetynet-alerts" />
@@ -196,5 +219,9 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
