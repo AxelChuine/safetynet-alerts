@@ -118,7 +118,7 @@ public class FireStationControllerTest {
     }
 
     @Test
-    public void getCellNumbersTest () throws IOException {
+    public void getCellNumbersTest () throws Exception {
         String stationNumber = "4";
         PhoneAlertDto cellNumbers = new PhoneAlertDto();
 
@@ -127,6 +127,9 @@ public class FireStationControllerTest {
 
 
         /*assertEquals(HttpStatus.OK, responseCellNumbers.getStatusCode());*/
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/phone-alert")
+                .param("stationNumber", "4"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
