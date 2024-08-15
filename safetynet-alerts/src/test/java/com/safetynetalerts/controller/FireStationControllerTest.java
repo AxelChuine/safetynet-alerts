@@ -10,6 +10,8 @@ import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonFirestationService;
 import com.safetynetalerts.service.IPersonMedicalRecordsService;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +23,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -99,9 +102,17 @@ public class FireStationControllerTest {
 
 
 
+   //FIXME: Bad request for some reason
     @Test
-    public void createFireStationTest () throws ResourceNotFoundException, ResourceAlreadyExistsException, IOException {
-
+    public void createFireStationTest () throws Exception {
+        JSONObject jo = new JSONObject();
+        jo.put("addresses", this.fireStationDto.getAddresses());
+        jo.put("stationNumber", this.fireStationDto.getStationNumber());
+        Mockito.when(this.service.createFirestation(this.fireStationDto)).thenReturn(this.fireStationDto);
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/firestation")
+                .content(String.valueOf(jo))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
 
@@ -146,11 +157,16 @@ public class FireStationControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    @Test
-    public void deleteFirestationShouldDeleteFireStation() throws IOException, ResourceNotFoundException {
-       /*ResponseEntity responseEntity = this.controller.deleteFirestation(this.fireStationDto);
 
-       Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-       Mockito.verify(this.service).deleteFirestation(this.fireStationDto);*/
+    //FIXME: bad request for some reason
+    @Test
+    public void deleteFirestationShouldDeleteFireStation() throws Exception {
+       JSONObject jsonObject = new JSONObject();
+       jsonObject.put("addresses", this.fireStationDto.getAddresses());
+       jsonObject.put("stationNumber", this.fireStationDto.getStationNumber());
+       this.mockMvc.perform(MockMvcRequestBuilders.delete("/firestation")
+               .contentType(MediaType.APPLICATION_JSON)
+               .content(String.valueOf(jsonObject)))
+               .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
