@@ -120,10 +120,6 @@ public class FireStationControllerTest {
         PhoneAlertDto cellNumbers = new PhoneAlertDto();
 
         when(this.personFirestationService.getCellNumbers(stationNumber)).thenReturn(cellNumbers);
-        /*ResponseEntity responseCellNumbers = this.controller.getCellNumbers(stationNumber);*/
-
-
-        /*assertEquals(HttpStatus.OK, responseCellNumbers.getStatusCode());*/
         this.mockMvc.perform(MockMvcRequestBuilders.get("/phone-alert")
                 .param("stationNumber", "4"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -142,14 +138,12 @@ public class FireStationControllerTest {
     }
 
     @Test
-    public void getAllPersonsAndTheirInfosShouldReturnStatusOkAndAListOfPersons () throws IOException, ResourceNotFoundException {
+    public void getAllPersonsAndTheirInfosShouldReturnStatusOkAndAListOfPersons () throws Exception {
        FireDto fireDto = new FireDto();
-
-        /*Mockito.when(this.personMedicalRecordsService.getAllConcernedPersonsAndTheirInfosByFire(address)).thenReturn(fireDto);
-        ResponseEntity<FireDto> responseFire = this.controller.getAllPersonsAndTheirInfosByAddress(address);
-
-        assertEquals(HttpStatus.OK, responseFire.getStatusCode());
-        Assertions.assertEquals(fireDto, responseFire.getBody());*/
+        Mockito.when(this.personMedicalRecordsService.getAllConcernedPersonsAndTheirInfosByFire(this.address)).thenReturn(fireDto);
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/fire")
+                .param("address", address))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
