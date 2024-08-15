@@ -2,10 +2,7 @@ package com.safetynetalerts.controller;
 
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
-import com.safetynetalerts.dto.FireDto;
-import com.safetynetalerts.dto.FireStationDto;
-import com.safetynetalerts.dto.PhoneAlertDto;
-import com.safetynetalerts.dto.StationNumberDto;
+import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
@@ -133,12 +130,15 @@ public class FireStationControllerTest {
     }
 
     @Test
-    public void getAllPersonsAndMedicalRecordByFirestationTest () throws IOException, ResourceNotFoundException {
+    public void getAllPersonsAndMedicalRecordByFirestationTest () throws Exception {
         String station1 = "1";
         List<String> fireStations = new ArrayList<>();
         fireStations.add(station1);
-        /*ResponseEntity responsePersonMedicalRecord = this.controller.getAllPersonsAndMedicalRecordByFirestation(fireStations);*/
-        /*assertEquals(HttpStatus.OK, responsePersonMedicalRecord.getStatusCode());*/
+        List<PersonMedicalRecordDto> personMedicalRecordDtos = new ArrayList<>();
+        Mockito.when(this.personFirestationService.getPersonsAndMedicalRecordsByFirestation(fireStations)).thenReturn(personMedicalRecordDtos);
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/flood/stations")
+                .param("stations", String.valueOf(fireStations)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
