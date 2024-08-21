@@ -102,6 +102,13 @@ public class PersonControllerTest {
                 .param("lastName", this.lastName))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    public void getPersonInfoShouldReturnHttpStatusOk() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/person-info")
+                .param("last-name", this.lastName))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 /*
     @Test
     public void getChildAddressTest() throws IOException, ResourceNotFoundException {

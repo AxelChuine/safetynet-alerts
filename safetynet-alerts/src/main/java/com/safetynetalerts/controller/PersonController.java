@@ -5,6 +5,7 @@ import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
+import com.safetynetalerts.dto.PersonInfo;
 import com.safetynetalerts.service.IPersonService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -57,11 +58,18 @@ public class PersonController {
 	@PostMapping("/person")
 	public ResponseEntity<PersonDto> createPerson(@RequestBody PersonDto pPerson) throws ResourceAlreadyExistsException {
 		logger.info("launch of creation of a person");
-		return new ResponseEntity<>(this.personService.addPerson(pPerson), HttpStatus.CREATED);
+		try {
+			PersonDto person = this.personService.addPerson(pPerson);
+			return new ResponseEntity<>(person, HttpStatus.CREATED);
+		} catch (ResourceAlreadyExistsException e) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		} catch (ResourceNotFoundException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@PutMapping("person")
-	public ResponseEntity<PersonDto> updatePerson(@RequestBody PersonDto personDto) throws BadResourceException, ResourceNotFoundException {
+	public ResponseEntity<PersonDto> updatePerson(@RequestBody PersonDto personDto) throws BadResourceException, ResourceNotFoundException, ResourceAlreadyExistsException {
 		logger.info("update person");
 		return new ResponseEntity<>(this.personService.updatePerson(personDto), HttpStatus.OK);
 	}
@@ -79,4 +87,10 @@ public class PersonController {
 		List<PersonDto> personDtos = new ArrayList<>(List.of(this.personService.getPersonByFullName(firstName, lastName)));
 		return new ResponseEntity<>(personDtos, HttpStatus.OK);
     }
+
+	@GetMapping("/person-info")
+	public ResponseEntity<PersonInfo> getPersonInfoByLastName(@RequestParam("last-name") String lastName) throws Exception {
+		logger.info("get a person informations by his last name");
+		return new ResponseEntity<>(this.personService.getPersonInfo(lastName), HttpStatus.OK);
+	}
 }
