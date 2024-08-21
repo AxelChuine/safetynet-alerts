@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1e65d790-1a9f-47b6-8c36-db15441c7ca5" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/controller/PersonController.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/controller/PersonController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/dto/PersonInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/dto/PersonInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/dto/SpecificPersonInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/service/IPersonMedicalRecordsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/service/IPersonMedicalRecordsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/service/IPersonService.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/service/IPersonService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/service/impl/PersonMedicalRecordsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/service/impl/PersonMedicalRecordsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/service/impl/PersonServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/main/java/com/safetynetalerts/service/impl/PersonServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/test/java/com/safetynetalerts/controller/PersonControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/test/java/com/safetynetalerts/controller/PersonControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/test/java/com/safetynetalerts/services/PersonMedicalRecordServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/test/java/com/safetynetalerts/services/PersonMedicalRecordServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/safetynet-alerts/src/test/java/com/safetynetalerts/services/PersonServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/safetynet-alerts/src/test/java/com/safetynetalerts/services/PersonServiceTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2jk3FGGjoqEHK2WpBPK8lpegaP7" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.DataTest.deleteFireStationShouldDeleteFireStation.executor": "Run",
+    "JUnit.DataTest.executor": "Run",
+    "JUnit.DataTest.saveFirestationShouldSaveFireStation.executor": "Run",
+    "JUnit.DataTest.saveMedicalRecordShouldSaveAMedicalRecord.executor": "Run",
+    "JUnit.MedicalRecordControllerTest.createMedicalRecordTest.executor": "Run",
+    "JUnit.MedicalRecordControllerTest.executor": "Run",
+    "JUnit.MedicalRecordControllerTest.getAllMedicalRecordsShouldReturnHttpStatusOk.executor": "Run",
+    "JUnit.MedicalRecordControllerTest.getMedicalRecordByFullNameShouldReturnHttpStatusOk.executor": "Run",
+    "JUnit.MedicalRecordControllerTest.updateMedicalRecordShouldReturnHttpStatusOk.executor": "Run",
+    "JUnit.MedicalRecordRepositoryTest.executor": "Run",
+    "JUnit.MedicalRecordRepositoryTest.saveMedicalRecordShouldCallTheDataLayer.executor": "Run",
+    "JUnit.MedicalRecordServiceTest.convertModelToDtoShouldReturnADtoObject.executor": "Run",
+    "JUnit.MedicalRecordServiceTest.deleteMedicalRecordShouldDeleteAMedicalRecord.executor": "Run",
+    "JUnit.MedicalRecordServiceTest.executor": "Run",
+    "JUnit.MedicalRecordServiceTest.updateMedicalRecordShouldUpdateAMedicalRecord.executor": "Run",
+    "JUnit.PersonControllerTest.findPersonByFullNameShouldReturnHttpStatusOk.executor": "Run",
+    "JUnit.PersonControllerTest.getPersonInfoShouldReturnHttpStatusOk.executor": "Run",
+    "JUnit.PersonMedicalRecordServiceTest.getAllPersonInfoShouldReturnSomePersonInfos.executor": "Run",
+    "JUnit.PersonServiceTest.getPersonByLastNameShouldReturnAListOfPersonHavingTheSameLastName.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.App.executor": "Debug",
+    "git-widget-placeholder": "feat/alerts-30",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Spring Boot.App">
+    <configuration name="MedicalRecordControllerTest.updateMedicalRecordShouldReturnHttpStatusOk" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="safetynet-alerts" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.safetynetalerts.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.safetynetalerts.controller" />
+      <option name="MAIN_CLASS_NAME" value="com.safetynetalerts.controller.MedicalRecordControllerTest" />
+      <option name="METHOD_NAME" value="updateMedicalRecordShouldReturnHttpStatusOk" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PersonControllerTest.findPersonByFullNameShouldReturnHttpStatusOk" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="safetynet-alerts" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.safetynetalerts.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.safetynetalerts.controller" />
+      <option name="MAIN_CLASS_NAME" value="com.safetynetalerts.controller.PersonControllerTest" />
+      <option name="METHOD_NAME" value="findPersonByFullNameShouldReturnHttpStatusOk" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PersonControllerTest.getPersonInfoShouldReturnHttpStatusOk" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="safetynet-alerts" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.safetynetalerts.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.safetynetalerts.controller" />
+      <option name="MAIN_CLASS_NAME" value="com.safetynetalerts.controller.PersonControllerTest" />
+      <option name="METHOD_NAME" value="getPersonInfoShouldReturnHttpStatusOk" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PersonMedicalRecordServiceTest.getAllPersonInfoShouldReturnSomePersonInfos" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="safetynet-alerts" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.safetynetalerts.services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.safetynetalerts.services" />
+      <option name="MAIN_CLASS_NAME" value="com.safetynetalerts.services.PersonMedicalRecordServiceTest" />
+      <option name="METHOD_NAME" value="getAllPersonInfoShouldReturnSomePersonInfos" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PersonServiceTest.getPersonByLastNameShouldReturnAListOfPersonHavingTheSameLastName" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="safetynet-alerts" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.safetynetalerts.services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.safetynetalerts.services" />
+      <option name="MAIN_CLASS_NAME" value="com.safetynetalerts.services.PersonServiceTest" />
+      <option name="METHOD_NAME" value="getPersonByLastNameShouldReturnAListOfPersonHavingTheSameLastName" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="App" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="safetynet-alerts" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.safetynetalerts.App" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.PersonControllerTest.getPersonInfoShouldReturnHttpStatusOk" />
+        <item itemvalue="JUnit.PersonControllerTest.findPersonByFullNameShouldReturnHttpStatusOk" />
+        <item itemvalue="JUnit.PersonMedicalRecordServiceTest.getAllPersonInfoShouldReturnSomePersonInfos" />
+        <item itemvalue="JUnit.PersonServiceTest.getPersonByLastNameShouldReturnAListOfPersonHavingTheSameLastName" />
+        <item itemvalue="JUnit.MedicalRecordControllerTest.updateMedicalRecordShouldReturnHttpStatusOk" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1e65d790-1a9f-47b6-8c36-db15441c7ca5" name="Changes" comment="" />
+      <created>1721917145803</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1721917145803</updated>
+      <workItem from="1721917148225" duration="1984000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

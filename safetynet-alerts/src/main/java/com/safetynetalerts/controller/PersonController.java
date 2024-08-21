@@ -5,7 +5,6 @@ import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
-import com.safetynetalerts.dto.PersonInfo;
 import com.safetynetalerts.service.IPersonService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -24,10 +23,13 @@ public class PersonController {
 
 	private final IPersonService personService;
 
+	private final IPersonMedicalRecordsService personMedicalRecordsService;
+
 	private final Logger logger = LoggerFactory.getLogger(PersonController.class);
 
-    public PersonController(IPersonService personService) {
+    public PersonController(IPersonService personService, IPersonMedicalRecordsService personMedicalRecordsService) {
         this.personService = personService;
+        this.personMedicalRecordsService = personMedicalRecordsService;
     }
 
     @GetMapping("/communityEmail")
@@ -89,8 +91,8 @@ public class PersonController {
     }
 
 	@GetMapping("/person-info")
-	public ResponseEntity<PersonInfo> getPersonInfoByLastName(@RequestParam("last-name") String lastName) throws Exception {
-		logger.info("get a person informations by his last name");
-		return new ResponseEntity<>(this.personService.getPersonInfo(lastName), HttpStatus.OK);
+	public ResponseEntity<List<PersonInfo>> getAllPersonInfos(@RequestParam("last-name") String lastName) throws Exception {
+		logger.info("get all person infos");
+		return new ResponseEntity<>(this.personMedicalRecordsService.getAllPersonInformations(lastName), HttpStatus.OK);
 	}
 }

@@ -1,10 +1,7 @@
 package com.safetynetalerts.service.impl;
 
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
-import com.safetynetalerts.dto.FireDto;
-import com.safetynetalerts.dto.MedicalRecordDto;
-import com.safetynetalerts.dto.PersonByFireDto;
-import com.safetynetalerts.dto.PersonDto;
+import com.safetynetalerts.dto.*;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonMedicalRecordsService;
@@ -39,6 +36,26 @@ public class PersonMedicalRecordsServiceImpl implements IPersonMedicalRecordsSer
         String stationNumber = this.fireStationService.getStationNumberByAddress(address);
         FireDto fireDto = new FireDto(stationNumber, personByFireDtos);
         return fireDto;
+    }
+
+    @Override
+    public List<PersonInfo> getAllPersonInformations(String lastName) throws ResourceNotFoundException, IOException {
+        List<PersonInfo> personInfos = new ArrayList<>();
+        List<PersonDto> personByLastName = this.personService.getPersonByLastName(lastName);
+        List<MedicalRecordDto> medicalRecordDtosByListOfPerson = this.medicalRecordService.getAllMedicalRecordByListOfPersons(personByLastName);
+        for (PersonDto personDto : personByLastName) {
+            for (MedicalRecordDto medicalDto : medicalRecordDtosByListOfPerson) {
+                PersonInfo personInfo = new PersonInfo();
+                personInfo.setFirstName(personDto.getFirstName());
+                personInfo.setLastName(personDto.getLastName());
+                personInfo.setEmail(personDto.getEmail());
+                personInfo.setAge(this.medicalRecordService.getAgeOfPerson(personDto.firstName, personDto.lastName));
+                personInfo.setMedications(medicalDto.getMedications());
+                personInfo.setAllergies(medicalDto.getAllergies());
+                personInfos.add(personInfo);
+            }
+        }
+        return personInfos;
     }
 
     @Override

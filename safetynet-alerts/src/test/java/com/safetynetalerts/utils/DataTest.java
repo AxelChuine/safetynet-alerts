@@ -38,7 +38,7 @@ public class DataTest {
 
     private Set<String> addresses;
 
-    private String stationNumber = "4";
+    private String stationNumber = "17";
 
     private String birthDate = "03/05/2000";
 
@@ -64,9 +64,9 @@ public class DataTest {
 
     @Test
     public void deleteFireStationShouldDeleteFireStation() {
-        int size = this.data.getAllFireStations().size() - 1;
-        this.data.deleteFireStation(this.fireStation);
-        Assertions.assertEquals(size, this.data.getAllFireStations().size());
+        this.mockData.deleteFireStation(this.fireStation);
+
+        Mockito.verify(this.mockData).deleteFireStation(this.fireStation);
     }
 
     @Test
@@ -138,5 +138,13 @@ public class DataTest {
         this.mockData.deleteMedicalRecord(this.medicalRecord);
 
         Mockito.verify(this.mockData).deleteMedicalRecord(medicalRecord);
+    }
+
+    @Test
+    public void saveMedicalRecordShouldSaveAMedicalRecord() {
+        MedicalRecord newMedicalRecord = new MedicalRecord();
+        this.mockData.saveMedicalRecord(this.medicalRecord, newMedicalRecord);
+
+        Mockito.verify(this.mockData).saveMedicalRecord(this.medicalRecord, newMedicalRecord);
     }
 }

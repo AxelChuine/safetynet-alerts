@@ -162,29 +162,22 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	}
 
 	@Override
-	public MedicalRecordDto updateMedicalRecord(String firstName, String lastName, String allergie) throws ResourceNotFoundException {
-		MedicalRecordDto medicalRecordDto = null;
-		Integer index = 0;
-		Integer indexOfElement = 0;
-		for (MedicalRecord m  : this.repository.getAllMedicalRecords()) {
-			if (Objects.equals(m.getFirstName(), firstName) && Objects.equals(m.getLastName(), lastName)) {
-				m.getAllergies().add(allergie);
-				indexOfElement = index;
-				medicalRecordDto = new MedicalRecordDto.MedicalRecordDtoBuilder()
-						.firstName(m.getFirstName())
-						.lastName(m.getLastName())
-						.birthDate(m.getBirthDate())
-						.medications(m.getMedications())
-						.allergies(m.getAllergies())
-						.build();
-			}
-			if (Objects.isNull(m)) {
-				throw new ResourceNotFoundException("Medical Record not found");
-			}
-			index ++;
+	public MedicalRecordDto updateMedicalRecord(MedicalRecordDto medicalRecordDto) throws ResourceNotFoundException, IOException {
+		if (!this.getAllMedicalRecords().stream().anyMatch(mr -> Objects.equals(mr.getFirstName(), medicalRecordDto.getFirstName()) && Objects.equals(mr.getLastName(), medicalRecordDto.getLastName()) && Objects.equals(mr.getBirthDate(), medicalRecordDto.getBirthDate()))) {
+			throw new ResourceNotFoundException("This medical record does not exist");
 		}
-		this.repository.getAllMedicalRecords().get(indexOfElement).getAllergies().add(allergie);
-		return medicalRecordDto;
+		return convertModelToDto(this.repository.saveMedicalRecord(convertDtoToModel(this.getMedicalRecordByFullName(medicalRecordDto.getFirstName(), medicalRecordDto.getLastName())), convertDtoToModel(medicalRecordDto)));
+	}
+
+	@Override
+	public MedicalRecordDto convertModelToDto(MedicalRecord medicalRecord) {
+		return new MedicalRecordDto.MedicalRecordDtoBuilder()
+				.firstName(medicalRecord.getFirstName())
+				.lastName(medicalRecord.getLastName())
+				.birthDate(medicalRecord.getBirthDate())
+				.allergies(medicalRecord.getAllergies())
+				.medications(medicalRecord.getMedications())
+				.build();
 	}
 
 	@Override

@@ -128,11 +128,6 @@ public class PersonServiceImpl implements IPersonService {
     }
 
     @Override
-    public PersonInfo createPersonInfo(Person person) {
-        return null;
-    }
-
-    @Override
     public PersonDto convertToPersonDto(Person person) throws ResourceNotFoundException {
         if (Objects.isNull(person)) {
             throw new ResourceNotFoundException("person not found exception");
@@ -168,6 +163,11 @@ public class PersonServiceImpl implements IPersonService {
     public PersonDto updatePerson(PersonDto personDto) throws BadResourceException, ResourceNotFoundException, ResourceAlreadyExistsException {
         PersonDto personToModify = this.getPersonByFullName(personDto.firstName, personDto.lastName);
         return convertToPersonDto(this.repository.savePerson(convertToPerson(personToModify), convertToPerson(personDto)));
+    }
+
+    @Override
+    public List<PersonDto> getPersonByLastName(String lastName) {
+        return convertToDtoList(this.repository.getAllPersons().stream().filter(p -> Objects.equals(p.lastName, lastName)).collect(Collectors.toList()));
     }
 
 

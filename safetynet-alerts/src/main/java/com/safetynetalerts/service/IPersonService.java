@@ -41,11 +41,13 @@ public interface IPersonService {
 
 	PersonInfo getPersonInfo(String lastName) throws ResourceNotFoundException, IOException;
 
-	PersonInfo createPersonInfo(Person person);
 
 	PersonDto convertToPersonDto(Person person) throws ResourceNotFoundException;
 
 	Person convertToPerson(PersonDto pPersonDto) throws ResourceNotFoundException;
 
 	PersonDto updatePerson(PersonDto personDto) throws BadResourceException, ResourceNotFoundException, ResourceAlreadyExistsException;
+	PersonDto updatePerson(PersonDto personDto) throws BadResourceException, ResourceNotFoundException;
+
+	List<PersonDto> getPersonByLastName(String lastName);
 }

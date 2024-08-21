@@ -25,11 +25,14 @@ public class MedicalRecordRepositoryTest {
 
     private List<MedicalRecord> medicalRecords;
 
+    private String birthDate = "07/05/2000";
+
+    private String firstName = "John";
+
+    private String lastName = "Doe";
+
     @BeforeEach
     public void setUp() {
-        String firstName = "John";
-        String lastName = "Doe";
-        String birthDate = "07/05/2000";
         medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
         medicalRecords = List.of(medicalRecord);
     }
@@ -55,5 +58,19 @@ public class MedicalRecordRepositoryTest {
         this.repository.deleteMedicalRecord(this.medicalRecord);
 
         Mockito.verify(this.data).deleteMedicalRecord(this.medicalRecord);
+    }
+
+    @Test
+    public void saveMedicalRecordShouldCallTheDataLayer() {
+        MedicalRecord newMedicalRecord = new MedicalRecord.MedicalRecordBuilder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .birthDate(birthDate)
+                .build();
+
+        Mockito.when(this.data.saveMedicalRecord(this.medicalRecord, newMedicalRecord)).thenReturn(newMedicalRecord);
+        MedicalRecord medicalRecordToCompare = this.repository.saveMedicalRecord(this.medicalRecord, newMedicalRecord);
+
+        Assertions.assertEquals(newMedicalRecord, medicalRecordToCompare);
     }
 }
