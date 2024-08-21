@@ -14,7 +14,7 @@ public class ResourceAlreadyExistsException extends Exception {
 
     public ResourceAlreadyExistsException(String message) {
         this.message = message;
-        this.status = HttpStatus.BAD_REQUEST;
+        this.status = HttpStatus.CONFLICT;
     }
 }
 

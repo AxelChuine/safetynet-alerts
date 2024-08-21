@@ -1,5 +1,6 @@
 package com.safetynetalerts.repositories;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.utils.Data;
@@ -35,7 +36,7 @@ public class PersonRepositoryTest {
     }
 
     @Test
-    public void updateAddressOfPersonShouldReturnAPersonWithUpdatedAddress() {
+    public void updateAddressOfPersonShouldReturnAPersonWithUpdatedAddress() throws ResourceAlreadyExistsException {
         String updatedAddress = "123 rue du Bonheur";
         Person updatedPerson = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(updatedAddress).email(email).build();
 

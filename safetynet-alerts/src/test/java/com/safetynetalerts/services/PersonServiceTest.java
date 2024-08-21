@@ -1,10 +1,9 @@
 package com.safetynetalerts.services;
 
 import com.safetynetalerts.controller.exception.BadResourceException;
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
-import com.safetynetalerts.dto.ChildAlertDto;
-import com.safetynetalerts.dto.PersonDto;
-import com.safetynetalerts.dto.SimplePersonDto;
+import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IMedicalRecordService;
@@ -57,16 +56,24 @@ class PersonServiceTest {
 
 	private Person person;
 
+	private String birthDate = "01/01/2009";
+
 	private String address = "18 rue Jean moulin";
+
+	MedicalRecordDto medicalRecordDto;
+
+	private List<MedicalRecordDto> medicalRecordDtos;
 
 
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
-		person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).city(city).build();
+		person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).email("test@gmail.com").city(city).build();
 		persons = List.of(this.person);
-		this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).city(city).build();
+		this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).email("test@gmail.com").city(city).build();
 		personDtos = List.of(this.personDto);
+		this.medicalRecordDto = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
+		this.medicalRecordDtos = new ArrayList<>(List.of(this.medicalRecordDto));
 	}
 
 
@@ -215,20 +222,19 @@ class PersonServiceTest {
 		assertEquals(childAlertDtos.get(0).getLastName(), childAlertDtosToCompare.get(0).getLastName());
 	}
 
-	// FIXME: personinfo à régler sur une autre branche
-	/*@Test
-	public void getPersonInfoShouldReturnAListOfPersonsInfoIfExists() {
+	@Test
+	public void getPersonInfoShouldReturnAListOfPersonsInfoIfExists() throws IOException, ResourceNotFoundException {
 		String lastName = "Dubois";
-		List<String> allergies = List.of("peanut", "milk");
-		List<String> medications = List.of("ventoline");
-		SpecificPersonInfo specificPersonInfo = new SpecificPersonInfo("Jean", "Dubois", 15, "test@gmail.com", medications, allergies);
+		SpecificPersonInfo specificPersonInfo = new SpecificPersonInfo("Jean", "Dubois", 15, "test@gmail.com", null, null);
 		PersonInfo personInfo = new PersonInfo(List.of(specificPersonInfo));
 
 		Mockito.when(this.repository.getAllPersons()).thenReturn(this.persons);
-		*//*PersonInfo personInfoToCompare = this.service.getPersonInfo(lastName);*//*
+		Mockito.when(this.medicalRecordService.getAllMedicalRecordByListOfPersons(this.personDtos)).thenReturn(this.medicalRecordDtos);
+		Mockito.when(this.medicalRecordService.getAgeOfPerson(firstName, lastName)).thenReturn(15);
+		PersonInfo personInfoToCompare = this.service.getPersonInfo(lastName);
 
 		Assertions.assertEquals(personInfo, personInfoToCompare);
-	}*/
+	}
 
 	@Test
 	public void convertToPersonDtoShouldReturnAPersonDto () throws ResourceNotFoundException {
@@ -254,7 +260,7 @@ class PersonServiceTest {
 	}
 
 	@Test
-	public void updatePersonShouldReturnAPerson() throws BadResourceException, ResourceNotFoundException {
+	public void updatePersonShouldReturnAPerson() throws BadResourceException, ResourceNotFoundException, ResourceAlreadyExistsException {
 		Person updatedPerson = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
 		PersonDto updatedPersonDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
 

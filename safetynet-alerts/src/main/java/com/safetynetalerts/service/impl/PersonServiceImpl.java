@@ -3,10 +3,7 @@ package com.safetynetalerts.service.impl;
 import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
-import com.safetynetalerts.dto.ChildAlertDto;
-import com.safetynetalerts.dto.PersonDto;
-import com.safetynetalerts.dto.PersonInfo;
-import com.safetynetalerts.dto.SimplePersonDto;
+import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IMedicalRecordService;
@@ -107,6 +104,29 @@ public class PersonServiceImpl implements IPersonService {
         return personsByAddress;
     }
 
+
+    @Override
+    public PersonInfo getPersonInfo(String lastName) throws ResourceNotFoundException, IOException {
+        List<PersonDto> personDtos = this.getAllPersons().stream().filter(personDto -> Objects.equals(personDto.lastName, lastName)).toList();
+        List<MedicalRecordDto> medicalRecordDtos = medicalRecordService.getAllMedicalRecordByListOfPersons(personDtos);
+        List<SpecificPersonInfo> specificPersonInfos = new ArrayList<>();
+        PersonInfo personInfo = new PersonInfo();
+        for (PersonDto p : personDtos) {
+            for (MedicalRecordDto medicalRecordDto : medicalRecordDtos) {
+                SpecificPersonInfo specificPersonInfo = new SpecificPersonInfo();
+                specificPersonInfo.setFirstName(medicalRecordDto.getFirstName());
+                specificPersonInfo.setLastName(medicalRecordDto.getLastName());
+                specificPersonInfo.setEmail(p.email);
+                specificPersonInfo.setAge(this.medicalRecordService.getAgeOfPerson(medicalRecordDto.getFirstName(), medicalRecordDto.getLastName()));
+                specificPersonInfo.setAllergies(medicalRecordDto.getAllergies());
+                specificPersonInfo.setMedications(medicalRecordDto.getMedications());
+                specificPersonInfos.add(specificPersonInfo);
+            }
+        }
+        personInfo.setSpecificPersonInfos(specificPersonInfos);
+        return personInfo;
+    }
+
     @Override
     public PersonDto convertToPersonDto(Person person) throws ResourceNotFoundException {
         if (Objects.isNull(person)) {
@@ -140,7 +160,7 @@ public class PersonServiceImpl implements IPersonService {
     }
 
     @Override
-    public PersonDto updatePerson(PersonDto personDto) throws BadResourceException, ResourceNotFoundException {
+    public PersonDto updatePerson(PersonDto personDto) throws BadResourceException, ResourceNotFoundException, ResourceAlreadyExistsException {
         PersonDto personToModify = this.getPersonByFullName(personDto.firstName, personDto.lastName);
         return convertToPersonDto(this.repository.savePerson(convertToPerson(personToModify), convertToPerson(personDto)));
     }
@@ -190,14 +210,13 @@ public class PersonServiceImpl implements IPersonService {
     }
 
     @Override
-public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsException {
+public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsException, ResourceNotFoundException {
         PersonDto personDto = pPerson;
-        if (this.repository.getAllPersons().stream().anyMatch(p -> Objects.equals(p.firstName, pPerson.getFirstName()) && Objects.equals(p.lastName, pPerson.getLastName()))) {
-            throw new ResourceAlreadyExistsException("La personne que vous essayez de créer existe déjà.");
+        if (this.repository.getAllPersons().stream().anyMatch(convertToPerson(personDto)::equals)) {
+            throw new ResourceAlreadyExistsException("person already exists");
         }
-        Person person = new Person.PersonBuilder().firstName(pPerson.getFirstName()).lastName(pPerson.getLastName()).address(pPerson.getAddress()).city(pPerson.getCity()).zip(pPerson.getZip()).phone(pPerson.getPhone()).email(pPerson.getEmail()).build();
-        this.repository.getAllPersons().add(person);
-        return pPerson;
+        this.repository.savePerson(convertToPerson(personDto), convertToPerson(pPerson));
+        return personDto;
     }
 
 
