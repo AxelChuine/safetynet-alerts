@@ -99,10 +99,10 @@ public class PersonControllerTest {
 
     @Test
     public void updatePersonShouldReturnHttpStatusOk() throws Exception {
-        StringBuilder json = new StringBuilder(new ObjectMapper().writeValueAsString(this.personDto));
-        this.mockMvc.perform(MockMvcRequestBuilders.put("/update-person")
+        Mockito.when(this.service.updatePerson(this.personDto)).thenReturn(this.personDto);
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/person")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(json.toString()))
+                .content(new ObjectMapper().writeValueAsString(this.personDto)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 

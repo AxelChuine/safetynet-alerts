@@ -72,7 +72,7 @@ public class PersonController {
 		}
 	}
 
-	@PutMapping("person")
+	@PutMapping("/person")
 	public ResponseEntity<PersonDto> updatePerson(@RequestBody PersonDto personDto) throws BadResourceException, ResourceNotFoundException, ResourceAlreadyExistsException {
 		logger.info("update person");
 		return new ResponseEntity<>(this.personService.updatePerson(personDto), HttpStatus.OK);
