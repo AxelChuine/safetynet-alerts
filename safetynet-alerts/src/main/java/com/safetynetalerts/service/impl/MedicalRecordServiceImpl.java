@@ -163,18 +163,13 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 
 	@Override
 	public MedicalRecordDto updateMedicalRecord(MedicalRecordDto medicalRecordDto) throws ResourceNotFoundException, IOException {
-		List<MedicalRecord> medicalRecords = this.repository.getAllMedicalRecords();
-		MedicalRecordDto medicalRecordDto1 = new MedicalRecordDto.MedicalRecordDtoBuilder().build();
-		MedicalRecord tempMR = convertDtoToModel(medicalRecordDto);
-		for (MedicalRecord m : medicalRecords) {
-			if (Objects.equals(medicalRecordDto.getFirstName(), m.getFirstName())
-					&& Objects.equals(medicalRecordDto.getLastName(), m.getLastName())) {
-				medicalRecordDto1 = convertModelToDto(this.repository.saveMedicalRecord(m, tempMR));
-			} else {
-				throw new ResourceNotFoundException("this medical record doesn't exist");
-			}
+		MedicalRecordDto medicalRecordDtoToReturn = this.getMedicalRecordByFullName(medicalRecordDto.getFirstName(), medicalRecordDto.getLastName());
+		if (Objects.equals(medicalRecordDtoToReturn.getFirstName(), medicalRecordDto.getFirstName()) && Objects.equals(medicalRecordDtoToReturn.getLastName(), medicalRecordDto.getLastName())) {
+			medicalRecordDto = convertModelToDto(this.repository.saveMedicalRecord(convertDtoToModel(medicalRecordDtoToReturn), convertDtoToModel(medicalRecordDto)));
+		} else {
+			throw new ResourceNotFoundException("this medical record doesn't exist");
 		}
-		return medicalRecordDto1;
+		return medicalRecordDto;
 	}
 
 	@Override
@@ -190,7 +185,7 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 
 	@Override
 	public MedicalRecordDto createMedicalRecord(MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException, ResourceAlreadyExistsException {
-        MedicalRecord medicalRecord = null;
+        MedicalRecord medicalRecord;
 		if (this.repository.getAllMedicalRecords().stream().anyMatch(m -> Objects.equals(m.getFirstName(), pMedicalRecord.getFirstName()) && Objects.equals(m.getLastName(), pMedicalRecord.getLastName()))) {
 			throw new ResourceAlreadyExistsException("Le dossier médical existe déja");
 		}
