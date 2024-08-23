@@ -85,7 +85,7 @@ public class FireStationServiceTest {
 	}
 
 	@Test
-	public void createFirestationTest() throws ResourceNotFoundException, ResourceAlreadyExistsException, IOException {
+	public void createFirestationAFireStation() throws ResourceNotFoundException, ResourceAlreadyExistsException, IOException {
 		// GIVEN
 		FireStationDto fireStationDto = new FireStationDto();
 		fireStationDto.setStationNumber("17");
