@@ -12,8 +12,6 @@ import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.IPersonFirestationService;
-import com.safetynetalerts.utils.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -24,20 +22,17 @@ import java.util.Map;
 @Service
 public class PersonFirestationServiceImpl implements IPersonFirestationService {
 
-    @Autowired
-    private IFireStationService fireStationService;
+    private final IFireStationService fireStationService;
 
-    @Autowired
-    private Data data;
-
-    @Autowired
-    private IMedicalRecordService medicalRecordService;
+    private final IMedicalRecordService medicalRecordService;
 
     private final IPersonRepository personRepository;
 
     private final IFireStationRepository fireStationRepository;
 
-    public PersonFirestationServiceImpl(IPersonRepository personRepository, IFireStationRepository fireStationRepository) {
+    public PersonFirestationServiceImpl(IFireStationService fireStationService, IMedicalRecordService medicalRecordService, IPersonRepository personRepository, IFireStationRepository fireStationRepository) {
+        this.fireStationService = fireStationService;
+        this.medicalRecordService = medicalRecordService;
         this.personRepository = personRepository;
         this.fireStationRepository = fireStationRepository;
     }
