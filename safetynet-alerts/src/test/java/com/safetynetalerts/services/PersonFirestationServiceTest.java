@@ -13,11 +13,12 @@ import com.safetynetalerts.repository.IFireStationRepository;
 import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
-import com.safetynetalerts.service.IPersonFirestationService;
+import com.safetynetalerts.service.impl.PersonFirestationServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.util.*;
@@ -25,22 +26,22 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class PersonFirestationServiceTest {
 
-    @Autowired
-    private IPersonFirestationService service;
+    @InjectMocks
+    private PersonFirestationServiceImpl service;
 
-    @MockBean
+    @Mock
     private IFireStationService fireStationService;
 
-    @MockBean
+    @Mock
     private IMedicalRecordService medicalRecordService;
 
-    @MockBean
+    @Mock
     private IPersonRepository personRepository;
 
-    @MockBean
+    @Mock
     private IFireStationRepository fireStationRepository;
 
 
