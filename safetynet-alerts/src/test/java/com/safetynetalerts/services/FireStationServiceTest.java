@@ -4,7 +4,6 @@ import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.models.FireStation;
-import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.repository.impl.FireStationRepository;
 import com.safetynetalerts.service.impl.FireStationServiceImpl;
@@ -106,19 +105,6 @@ public class FireStationServiceTest {
 		assertEquals(firestations.get(0).getStationNumber(), "17");
 	}
 
-
-	@Test
-	public void createSimplePersonDtoTest () throws IOException {
-		Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("47 rue du général de Gaulle").phone("04").build();
-		com.safetynetalerts.dto.SimplePersonDto simplePerson = new com.safetynetalerts.dto.SimplePersonDto(person.firstName, person.lastName, person.address, person.phone);
-		List<Person> persons = new ArrayList<>();
-		persons.add(person);
-
-		when(this.personRepository.getAllPersons()).thenReturn(persons);
-		com.safetynetalerts.dto.SimplePersonDto simplePersonToCompare = this.service.createSimplePersonDto(person);
-		assertEquals(simplePerson, simplePersonToCompare);
-	}
-
 	@Test
 	public void getFireStationsByStationNumberTest () throws IOException {
 		String stationNumber = "4";
@@ -162,7 +148,6 @@ public class FireStationServiceTest {
 
 	@Test
 	public void convertToDtoShouldConvertObjectToDto() throws ResourceNotFoundException {
-		Mockito.when(this.repository.getAllFireStations()).thenReturn(this.fireStations);
 		FireStationDto fireStationDtoToCompare = this.service.convertToDto(this.fireStation);
 
 		Assertions.assertEquals(this.fireStationDto, fireStationDtoToCompare);
@@ -198,8 +183,8 @@ public class FireStationServiceTest {
 	@Test
 	public void deleteAnAddressInFireStationAddressesShouldReturnAFireStationWithOneLessAddress() throws ResourceNotFoundException {
 		this.addresses.clear();
-		FireStation newFireStation = new FireStation(this.addresses, "4");
-		FireStationDto newFireStationDto = new FireStationDto(this.addresses, "4");
+		FireStation newFireStation = new FireStation(this.addresses, "5");
+		FireStationDto newFireStationDto = new FireStationDto(this.addresses, "5");
 
 		Mockito.when(this.repository.save(this.fireStation, newFireStation)).thenReturn(newFireStation);
 		FireStationDto fireStationToCompare = this.service.deleteAddressOfFireStation(this.fireStationDto, this.address);
