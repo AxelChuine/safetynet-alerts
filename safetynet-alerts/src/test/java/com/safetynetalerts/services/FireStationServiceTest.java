@@ -4,7 +4,6 @@ import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.models.FireStation;
-import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.repository.impl.FireStationRepository;
 import com.safetynetalerts.service.impl.FireStationServiceImpl;
