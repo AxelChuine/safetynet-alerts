@@ -180,7 +180,6 @@ public class FireStationServiceTest {
 		Assertions.assertEquals(this.fireStation, fireStationToCompare);
 	}
 
-	//FIXME: la firestation à comparer a pour nombre le numéro 5
 	@Test
 	public void deleteAnAddressInFireStationAddressesShouldReturnAFireStationWithOneLessAddress() throws ResourceNotFoundException {
 		this.addresses.clear();
