@@ -5,6 +5,8 @@ import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
+import com.safetynetalerts.dto.PersonInfo;
+import com.safetynetalerts.service.IPersonMedicalRecordsService;
 import com.safetynetalerts.service.IPersonService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
