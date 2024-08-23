@@ -19,7 +19,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController("/person")
+@RestController
+@RequestMapping("/person")
 @Slf4j
 public class PersonController {
 
@@ -59,7 +60,7 @@ public class PersonController {
 	 * @return
 	 * @throws IOException
 	 */
-	@PostMapping("/person")
+	@PostMapping
 	public ResponseEntity<PersonDto> createPerson(@RequestBody PersonDto pPerson) throws ResourceAlreadyExistsException {
 		logger.info("launch of creation of a person");
 		try {
@@ -72,20 +73,20 @@ public class PersonController {
 		}
 	}
 
-	@PutMapping("/person")
+	@PutMapping
 	public ResponseEntity<PersonDto> updatePerson(@RequestBody PersonDto personDto) throws BadResourceException, ResourceNotFoundException, ResourceAlreadyExistsException {
 		logger.info("update person");
 		return new ResponseEntity<>(this.personService.updatePerson(personDto), HttpStatus.OK);
 	}
 
-	@DeleteMapping("/person")
+	@DeleteMapping
 	public ResponseEntity deletePerson(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws ResourceNotFoundException {
 		logger.info("delete person");
 		this.personService.deletePerson(firstName, lastName);
 		return new ResponseEntity(HttpStatus.OK);
 	}
   
-  	@GetMapping("/person")
+  	@GetMapping
     public ResponseEntity<List<PersonDto>> getPersonByFullName(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws Exception {
 		logger.info("get a person by his full name");
 		List<PersonDto> personDtos = new ArrayList<>(List.of(this.personService.getPersonByFullName(firstName, lastName)));
