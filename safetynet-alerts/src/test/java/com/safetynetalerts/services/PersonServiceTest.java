@@ -225,13 +225,13 @@ class PersonServiceTest {
 	@Test
 	public void getPersonInfoShouldReturnAListOfPersonsInfoIfExists() throws IOException, ResourceNotFoundException {
 		String lastName = "Dubois";
-		SpecificPersonInfo specificPersonInfo = new SpecificPersonInfo("Jean", "Dubois", 15, "test@gmail.com", null, null);
-		PersonInfo personInfo = new PersonInfo(List.of(specificPersonInfo));
+		PersonInfo specificPersonInfo = new PersonInfo("Jean", "Dubois", 15, "test@gmail.com", null, null);
+		List<PersonInfo> personInfo = new ArrayList<>(List.of(specificPersonInfo));
 
 		Mockito.when(this.repository.getAllPersons()).thenReturn(this.persons);
 		Mockito.when(this.medicalRecordService.getAllMedicalRecordByListOfPersons(this.personDtos)).thenReturn(this.medicalRecordDtos);
 		Mockito.when(this.medicalRecordService.getAgeOfPerson(firstName, lastName)).thenReturn(15);
-		PersonInfo personInfoToCompare = this.service.getPersonInfo(lastName);
+		List<PersonInfo> personInfoToCompare = this.service.getPersonInfo(lastName);
 
 		Assertions.assertEquals(personInfo, personInfoToCompare);
 	}

@@ -165,7 +165,10 @@ public class FireStationServiceTest {
 	}
 
 	@Test
-	public void updateAddressesByFireStationShouldReturnAFireStation() {
+	public void updateAddressesByFireStationShouldReturnAFireStation() throws ResourceNotFoundException {
+		FireStation newFireStation = new FireStation(this.stationNumber);
+
+		Mockito.when(this.repository.save(this.fireStation, newFireStation)).thenReturn(this.fireStation);
 		FireStationDto fireStationToCompare = this.service.updateAddressesByFireStation(this.fireStationDto, this.address);
 
 		Assertions.assertEquals(this.fireStationDto, fireStationToCompare);

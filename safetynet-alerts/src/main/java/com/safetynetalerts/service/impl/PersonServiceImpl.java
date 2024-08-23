@@ -106,14 +106,13 @@ public class PersonServiceImpl implements IPersonService {
 
 
     @Override
-    public PersonInfo getPersonInfo(String lastName) throws ResourceNotFoundException, IOException {
+    public List<PersonInfo> getPersonInfo(String lastName) throws ResourceNotFoundException, IOException {
         List<PersonDto> personDtos = this.getAllPersons().stream().filter(personDto -> Objects.equals(personDto.lastName, lastName)).toList();
         List<MedicalRecordDto> medicalRecordDtos = medicalRecordService.getAllMedicalRecordByListOfPersons(personDtos);
-        List<SpecificPersonInfo> specificPersonInfos = new ArrayList<>();
-        PersonInfo personInfo = new PersonInfo();
+        List<PersonInfo> specificPersonInfos = new ArrayList<>();
         for (PersonDto p : personDtos) {
             for (MedicalRecordDto medicalRecordDto : medicalRecordDtos) {
-                SpecificPersonInfo specificPersonInfo = new SpecificPersonInfo();
+                PersonInfo specificPersonInfo = new PersonInfo();
                 specificPersonInfo.setFirstName(medicalRecordDto.getFirstName());
                 specificPersonInfo.setLastName(medicalRecordDto.getLastName());
                 specificPersonInfo.setEmail(p.email);
@@ -123,8 +122,7 @@ public class PersonServiceImpl implements IPersonService {
                 specificPersonInfos.add(specificPersonInfo);
             }
         }
-        personInfo.setSpecificPersonInfos(specificPersonInfos);
-        return personInfo;
+        return specificPersonInfos;
     }
 
     @Override
