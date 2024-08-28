@@ -1,6 +1,7 @@
 package com.safetynetalerts.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.dto.PersonInfo;
 import com.safetynetalerts.service.impl.PersonMedicalRecordsServiceImpl;
@@ -78,7 +79,10 @@ public class PersonControllerTest {
 
     @Test
     public void getChildAlertShouldReturnHttpStatusOk() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/childAlert")
+        ChildAlertDto child = new ChildAlertDto();
+
+        Mockito.when(this.service.getChildByAddress(this.address)).thenReturn(List.of(child));
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/person/childAlert")
                 .param("address", this.address))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
