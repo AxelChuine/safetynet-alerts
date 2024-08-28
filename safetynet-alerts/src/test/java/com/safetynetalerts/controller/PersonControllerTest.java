@@ -73,7 +73,7 @@ public class PersonControllerTest {
         emailAddresses.add("test3@gmail.com");
 
         when(this.service.getAllEmailAddressesByCity(address)).thenReturn(emailAddresses);
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/communityEmail").param("city", "Culver")).andExpect(MockMvcResultMatchers.status().isOk());
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/person/communityEmail").param("city", city)).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
