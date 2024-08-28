@@ -85,7 +85,8 @@ public class PersonControllerTest {
 
     @Test
     public void getAllPersonsShouldReturnHttpStatusOk() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/all")).andExpect(MockMvcResultMatchers.status().isOk());
+        Mockito.when(this.service.getAllPersons()).thenReturn(personDtoList);
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/person/all")).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
