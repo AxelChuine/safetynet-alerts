@@ -123,7 +123,7 @@ public class PersonControllerTest {
     @Test
     public void getPersonInfoShouldReturnHttpStatusOk() throws Exception {
         Mockito.when(this.personMedicalRecordsService.getAllPersonInformations(lastName)).thenReturn(personInfoList);
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/person-info")
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/person/person-info")
                 .param("last-name", this.lastName))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
