@@ -1,10 +1,10 @@
 package com.safetynetalerts.service.impl;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
-import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
@@ -110,24 +110,16 @@ public class FireStationServiceImpl implements IFireStationService {
 	}
 
 	@Override
-	public FireStationDto updateFireStationByAddress(String address, String stationNumber) throws ResourceNotFoundException, IOException {
-		Optional<FireStation> optionalFireStation = this.repository.getAllFireStations().stream().filter(fs -> fs.getAddresses().contains(address)).findFirst();
+	public FireStationDto updateFireStationByAddress(FireStationDto fireStationDto) throws ResourceNotFoundException, IOException, BadResourceException {
+		if (Objects.isNull(fireStationDto)) {
+			throw new BadResourceException("No firestation provided");
+		}
+		Optional<FireStation> optionalFireStation = this.repository.getAllFireStations().stream().filter(fs -> Objects.equals(fs.getStationNumber(), fireStationDto.getStationNumber())).findFirst();
 		if (optionalFireStation.isEmpty()) {
 			throw new ResourceNotFoundException("this address is not covered by any firestation");
 		}
 		FireStation oldFirestation = optionalFireStation.get();
-        List<String> addresses = new ArrayList<>(oldFirestation.getAddresses());
-		addresses.remove(address);
-		oldFirestation.setAddresses(new HashSet<>(addresses));
-		FireStation newFirestation = this.getFireStationsByStationNumber(stationNumber);
-		if (Objects.isNull(newFirestation)) {
-			throw new ResourceNotFoundException("this firestation does not exist");
-		}
-		addresses = new ArrayList<>(newFirestation.getAddresses());
-		addresses.add(address);
-		newFirestation.setAddresses(new HashSet<>(addresses));
-		this.repository.save(oldFirestation, newFirestation);
-		return convertToDto(newFirestation);
+        return convertToDto(this.repository.save(oldFirestation, convertDtoToModel(fireStationDto)));
 	}
 
 	@Override

@@ -72,6 +72,7 @@ public class Data {
 		List<FireStation> newFireStations = new ArrayList<>(this.firestations);
 		newFireStations.remove(oldFirestation);
 		newFireStations.add(fireStation);
+		this.firestations = newFireStations;
 		return fireStation;
 	}
 

@@ -1,5 +1,6 @@
 package com.safetynetalerts.services;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireStationDto;
@@ -139,9 +140,14 @@ public class FireStationServiceTest {
 	}
 
 	@Test
-	public void updateFireStationNumberForAddressShouldReturnAFireStation() throws ResourceNotFoundException, IOException {
+	public void updateFireStationNumberForAddressShouldReturnAFireStation() throws ResourceNotFoundException, IOException, BadResourceException {
+		FireStation oldFirestation = this.fireStation;
+		Set<String> addresses =  new HashSet<>(this.fireStation.getAddresses());
+		addresses.add("98 rue du puit");
+		oldFirestation.setAddresses((Set<String>) addresses);
 		Mockito.when(this.repository.getAllFireStations()).thenReturn(this.fireStations);
-		FireStationDto fireStationDtoToCompare = this.service.updateFireStationByAddress(address, stationNumber);
+		Mockito.when(this.repository.save(oldFirestation, this.fireStation)).thenReturn(this.fireStation);
+		FireStationDto fireStationDtoToCompare = this.service.updateFireStationByAddress(fireStationDto);
 
 		Assertions.assertEquals(this.fireStationDto, fireStationDtoToCompare);
 	}

@@ -1,10 +1,10 @@
 package com.safetynetalerts.service;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
-import com.safetynetalerts.dto.SimplePersonDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
@@ -28,7 +28,7 @@ public interface IFireStationService {
 
 	FireStation save(FireStation oldFirestation, FireStation newFirestation) throws ResourceNotFoundException;
 
-	FireStationDto updateFireStationByAddress(String address, String stationNumber) throws ResourceNotFoundException, IOException;
+	FireStationDto updateFireStationByAddress(FireStationDto fireStationDto) throws ResourceNotFoundException, IOException, BadResourceException;
 
 	FireStationDto updateAddressesByFireStation(FireStationDto fireStationDto, String address);
 

@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
@@ -19,6 +20,7 @@ import java.util.Objects;
 
 @Slf4j
 @RestController
+@RequestMapping("/firestation")
 public class FireStationController {
 
 	private final IFireStationService service;
@@ -35,7 +37,7 @@ public class FireStationController {
         this.personMedicalRecordService = personMedicalRecordService;
     }
 
-    @GetMapping("/firestation")
+    @GetMapping
 	public ResponseEntity<StationNumberDto> getHeadCountByFirestation(@RequestParam("stationNumber") String stationNumber) throws IOException {
 		logger.info("get head count by firestation");
 		StationNumberDto persons = this.personFirestationService.getHeadCountByFirestation(stationNumber);
@@ -51,13 +53,13 @@ public class FireStationController {
 		return new ResponseEntity<>(this.personFirestationService.getCellNumbers(stationNumber), HttpStatus.OK);
 	}
 
-	@GetMapping("/firestations")
+	@GetMapping("/all")
 	public ResponseEntity<List<FireStationDto>> getFirestations() throws IOException {
 		logger.info("retrieve all firestations");
 		return ResponseEntity.ok(this.service.getAllFireStations());
 	}
 
-	@PostMapping("/firestation")
+	@PostMapping
 	public ResponseEntity<FireStationDto> createFirestation (@RequestBody FireStationDto pFirestation) throws ResourceNotFoundException, ResourceAlreadyExistsException, IOException {
 		logger.info("create firestation");
 		return new ResponseEntity<>(this.service.createFirestation(pFirestation), HttpStatus.CREATED);
@@ -75,13 +77,13 @@ public class FireStationController {
 		return new ResponseEntity<>(this.personMedicalRecordService.getAllConcernedPersonsAndTheirInfosByFire(address), HttpStatus.OK);
 	}
 
-	@PutMapping("/firestation")
-	public ResponseEntity<FireStationDto> updateFirestation(@RequestParam("address") String address, @RequestParam("station-number") String newStationNUmber) throws ResourceNotFoundException, IOException {
+	@PutMapping
+	public ResponseEntity<FireStationDto> updateFirestation(@RequestBody FireStationDto fireStationDto) throws ResourceNotFoundException, IOException, BadResourceException {
 		logger.info("update firestation");
-		return new ResponseEntity<>(this.service.updateFireStationByAddress(address, newStationNUmber), HttpStatus.OK);
+		return new ResponseEntity<>(this.service.updateFireStationByAddress(fireStationDto), HttpStatus.OK);
 	}
 
-	@DeleteMapping("/firestation")
+	@DeleteMapping
 	public ResponseEntity deleteFirestation(@RequestBody FireStationDto fireStationDto) throws IOException, ResourceNotFoundException {
 		this.service.deleteFirestation(fireStationDto);
 		return new ResponseEntity(HttpStatus.OK);
