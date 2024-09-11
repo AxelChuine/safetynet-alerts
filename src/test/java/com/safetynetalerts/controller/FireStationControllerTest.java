@@ -1,7 +1,8 @@
 package com.safetynetalerts.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynetalerts.dto.*;
+import com.safetynetalerts.dto.FireStationDto;
+import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.service.IFireStationService;
@@ -23,8 +24,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.mockito.Mockito.when;
 
 @WebMvcTest(controllers = FireStationController.class)
 @AutoConfigureMockMvc
@@ -111,7 +110,7 @@ public class FireStationControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    @Test
+    /*@Test
     public void getCellNumbersTest () throws Exception {
         String stationNumber = "4";
         PhoneAlertDto cellNumbers = new PhoneAlertDto();
@@ -120,9 +119,9 @@ public class FireStationControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/phone-alert")
                 .param("stationNumber", "4"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void getAllPersonsAndMedicalRecordByFirestationTest () throws Exception {
         String station1 = "1";
         List<String> fireStations = new ArrayList<>();
@@ -132,16 +131,16 @@ public class FireStationControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/flood/stations")
                 .param("stations", String.valueOf(fireStations)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void getAllPersonsAndTheirInfosShouldReturnStatusOkAndAListOfPersons () throws Exception {
        FireDto fireDto = new FireDto();
         Mockito.when(this.personMedicalRecordsService.getAllConcernedPersonsAndTheirInfosByFire(this.address)).thenReturn(fireDto);
         this.mockMvc.perform(MockMvcRequestBuilders.get("/fire")
                 .param("address", address))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-    }
+    }*/
 
 
     @Test

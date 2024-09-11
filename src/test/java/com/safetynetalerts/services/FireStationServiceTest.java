@@ -141,7 +141,7 @@ public class FireStationServiceTest {
 
 	@Test
 	public void updateFireStationNumberForAddressShouldReturnAFireStation() throws ResourceNotFoundException, IOException, BadResourceException {
-		FireStation oldFirestation = this.fireStation;
+		FireStation oldFirestation = new FireStation(new HashSet<>(this.fireStation.getAddresses()), this.stationNumber);
 		Set<String> addresses =  new HashSet<>(this.fireStation.getAddresses());
 		addresses.add("98 rue du puit");
 		oldFirestation.setAddresses((Set<String>) addresses);
