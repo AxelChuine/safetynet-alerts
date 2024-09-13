@@ -3,7 +3,6 @@ package com.safetynetalerts.controller;
 import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
-import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.dto.PersonInfo;
 import com.safetynetalerts.service.IPersonMedicalRecordsService;
@@ -34,12 +33,6 @@ public class PersonController {
         this.personService = personService;
         this.personMedicalRecordsService = personMedicalRecordsService;
     }
-
-	@GetMapping("/childAlert")
-	public ResponseEntity<List<ChildAlertDto>> getChildByAddress(@RequestParam("address") String address) throws IOException, ResourceNotFoundException {
-		logger.info("launch of retrieval of every child by address");
-		return new ResponseEntity<>(this.personService.getChildByAddress(address), HttpStatus.OK);
-	}
 
 	@GetMapping("/all")
 	public ResponseEntity<List<PersonDto>> getAllPersons() throws IOException {
