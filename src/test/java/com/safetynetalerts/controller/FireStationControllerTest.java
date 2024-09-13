@@ -121,15 +121,6 @@ public class FireStationControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }*/
 
-    /*@Test
-    public void getAllPersonsAndTheirInfosShouldReturnStatusOkAndAListOfPersons () throws Exception {
-       FireDto fireDto = new FireDto();
-        Mockito.when(this.personMedicalRecordsService.getAllConcernedPersonsAndTheirInfosByFire(this.address)).thenReturn(fireDto);
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/fire")
-                .param("address", address))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }*/
-
 
     @Test
     public void deleteFirestationShouldDeleteFireStation() throws Exception {
