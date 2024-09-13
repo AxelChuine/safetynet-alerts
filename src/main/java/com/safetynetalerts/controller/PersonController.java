@@ -35,12 +35,6 @@ public class PersonController {
         this.personMedicalRecordsService = personMedicalRecordsService;
     }
 
-    @GetMapping("/communityEmail")
-	public ResponseEntity<List<String>> getAllEmailAddresses(@RequestParam("city") String pCity) throws Exception {
-		logger.info("launch of retrieval of every email addresses by city");
-		return new ResponseEntity<>(this.personService.getAllEmailAddressesByCity(pCity), HttpStatus.OK);
-	}
-
 	@GetMapping("/childAlert")
 	public ResponseEntity<List<ChildAlertDto>> getChildByAddress(@RequestParam("address") String address) throws IOException, ResourceNotFoundException {
 		logger.info("launch of retrieval of every child by address");
