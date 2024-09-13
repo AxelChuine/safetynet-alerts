@@ -122,18 +122,6 @@ public class FireStationControllerTest {
     }*/
 
     /*@Test
-    public void getAllPersonsAndMedicalRecordByFirestationTest () throws Exception {
-        String station1 = "1";
-        List<String> fireStations = new ArrayList<>();
-        fireStations.add(station1);
-        List<PersonMedicalRecordDto> personMedicalRecordDtos = new ArrayList<>();
-        Mockito.when(this.personFirestationService.getPersonsAndMedicalRecordsByFirestation(fireStations)).thenReturn(personMedicalRecordDtos);
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/flood/stations")
-                .param("stations", String.valueOf(fireStations)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }*/
-
-    /*@Test
     public void getAllPersonsAndTheirInfosShouldReturnStatusOkAndAListOfPersons () throws Exception {
        FireDto fireDto = new FireDto();
         Mockito.when(this.personMedicalRecordsService.getAllConcernedPersonsAndTheirInfosByFire(this.address)).thenReturn(fireDto);

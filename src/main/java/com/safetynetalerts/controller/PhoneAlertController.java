@@ -7,12 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
 @RestController
+@RequestMapping("/phone-alert")
 public class PhoneAlertController {
     private final PersonFirestationServiceImpl personFirestationService;
 
@@ -22,7 +24,7 @@ public class PhoneAlertController {
         this.personFirestationService = personFirestationService;
     }
 
-    @GetMapping("/phone-alert")
+    @GetMapping
     public ResponseEntity<PhoneAlertDto> getCellNumbers(@RequestParam("station-number") String stationNumber) throws IOException {
         logger.info("get cell numbers by station number");
         return new ResponseEntity<>(this.personFirestationService.getCellNumbers(stationNumber), HttpStatus.OK);
