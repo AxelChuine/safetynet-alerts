@@ -202,7 +202,7 @@ class PersonServiceTest {
 	}
 
 	@Test
-	public void getChildByAddressTest () throws IOException, ResourceNotFoundException {
+	public void getChildByAddressTest () throws IOException, ResourceNotFoundException, BadResourceException {
 		List<PersonDto> personsByAddress = new ArrayList<>();
 		PersonDto person = new PersonDto.PersonDtoBuilder().firstName(this.firstName).lastName(this.lastName).address(address).build();
 		PersonDto adult = new PersonDto.PersonDtoBuilder().firstName("Marc").lastName(this.lastName).address(address).build();

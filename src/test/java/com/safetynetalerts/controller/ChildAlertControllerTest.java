@@ -1,5 +1,7 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
+import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.service.impl.PersonServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -32,5 +34,23 @@ public class ChildAlertControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/child-alert")
                 .param("address", address))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void childAlertShouldReturnHttpStatusNotFound() throws Exception {
+        ChildAlertDto childAlertDto = new ChildAlertDto();
+        Mockito.when(this.service.getChildByAddress(address)).thenThrow(new ResourceNotFoundException("No people found for address " + address));
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/child-alert")
+                        .param("address", address))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    public void childAlertShouldReturnHttpStatusBadRequest() throws Exception {
+        Mockito.when(this.service.getChildByAddress(address))
+                .thenThrow(new BadResourceException("address not provided exception"));
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/child-alert")
+                        .param("address", ""))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }

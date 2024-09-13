@@ -170,9 +170,15 @@ public class PersonServiceImpl implements IPersonService {
 
 
     @Override
-    public List<ChildAlertDto> getChildByAddress(String pAddress) throws IOException, ResourceNotFoundException {
+    public List<ChildAlertDto> getChildByAddress(String pAddress) throws IOException, ResourceNotFoundException, BadResourceException {
+        if (Objects.equals(pAddress, "")) {
+            throw new BadResourceException("address not provided exception");
+        }
         List<ChildAlertDto> childrenAlertDto = new ArrayList<>();
         List<PersonDto> peopleByAddress = this.getPersonsByAddress(pAddress);
+        if (peopleByAddress.isEmpty()) {
+            throw new ResourceNotFoundException("No people found for address " + pAddress);
+        }
         for (PersonDto p : peopleByAddress) {
             if (this.medicalRecordService.isUnderaged(p.firstName, p.lastName)) {
                 ChildAlertDto childAlertDto = new ChildAlertDto(p.firstName, p.lastName, this.medicalRecordService.getAgeOfPerson(p.firstName, p.lastName), this.getFamilyMembers(peopleByAddress, p.lastName));

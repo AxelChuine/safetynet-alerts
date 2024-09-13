@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.service.impl.PersonServiceImpl;
@@ -30,6 +31,12 @@ public class ChildAlertController {
     @GetMapping
     public ResponseEntity<List<ChildAlertDto>> getChildByAddress(@RequestParam("address") String address) throws IOException, ResourceNotFoundException {
         logger.info("launch of retrieval of every child by address");
-        return new ResponseEntity<>(this.service.getChildByAddress(address), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(this.service.getChildByAddress(address), HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (BadResourceException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }
