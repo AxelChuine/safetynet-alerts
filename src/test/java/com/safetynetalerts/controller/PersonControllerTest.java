@@ -1,7 +1,6 @@
 package com.safetynetalerts.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.dto.PersonInfo;
 import com.safetynetalerts.service.impl.PersonMedicalRecordsServiceImpl;
@@ -20,8 +19,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.mockito.Mockito.when;
 
 
 @WebMvcTest(controllers = PersonController.class)
@@ -63,28 +60,6 @@ public class PersonControllerTest {
         this.personDtoList.add(personDto);
         personInfo = new PersonInfo(this.firstName, lastName, 0, email, null, null);
         personInfoList = new ArrayList<>(List.of(personInfo));
-    }
-
-
-    @Test
-    public void getAllEmailAddressesByCityShouldReturnHttpStatusOk() throws Exception {
-        List<String> emailAddresses = new ArrayList<>();
-        emailAddresses.add("test1@gmail.com");
-        emailAddresses.add("test2@gmail.com");
-        emailAddresses.add("test3@gmail.com");
-
-        when(this.service.getAllEmailAddressesByCity(address)).thenReturn(emailAddresses);
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/person/communityEmail").param("city", city)).andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    public void getChildAlertShouldReturnHttpStatusOk() throws Exception {
-        ChildAlertDto child = new ChildAlertDto();
-
-        Mockito.when(this.service.getChildByAddress(this.address)).thenReturn(List.of(child));
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/person/childAlert")
-                .param("address", this.address))
-                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test

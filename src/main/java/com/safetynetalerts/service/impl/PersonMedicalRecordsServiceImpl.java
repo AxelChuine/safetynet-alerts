@@ -60,16 +60,15 @@ public class PersonMedicalRecordsServiceImpl implements IPersonMedicalRecordsSer
 
     @Override
     public List<PersonByFireDto> convertToPersonByFireDtoList(List<PersonDto> pPersons, List<MedicalRecordDto> pMedicalRecords) throws IOException, ResourceNotFoundException {
-        List<PersonDto> persons = pPersons;
         List<MedicalRecordDto> medicalRecordDtos = pMedicalRecords;
         List<PersonByFireDto> personByFireDtos = new ArrayList<>();
         for (MedicalRecordDto medicalRecordDto : medicalRecordDtos) {
-            for (PersonDto personDto : persons) {
+            for (PersonDto personDto : pPersons) {
                 if (Objects.equals(personDto.firstName, medicalRecordDto.getFirstName()) && Objects.equals(personDto.lastName, medicalRecordDto.getLastName())) {
                     PersonByFireDto personByFireDto = new PersonByFireDto(personDto.firstName,
                             personDto.lastName,
                             personDto.getPhone(),
-                            this.medicalRecordService.getAgeOfPerson(personDto.firstName, personDto.lastName),
+                            this.medicalRecordService.getAgeOfPerson(medicalRecordDto.getFirstName(), medicalRecordDto.getLastName()),
                             medicalRecordDto.getMedications(),
                             medicalRecordDto.getAllergies());
                     personByFireDtos.add(personByFireDto);

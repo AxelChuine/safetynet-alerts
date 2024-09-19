@@ -39,6 +39,7 @@ public class FloodControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    // FIXME: Renvoie code 200 au lieu de code 400
     @Test
     public void getAllPersonsAndMedicalRecordShouldReturnBadRequestIfNoFirestationsAreProvided ()throws Exception {
         Mockito.when(this.service.getPersonsAndMedicalRecordsByFirestation(null)).thenThrow(new BadResourceException(badRequest));
