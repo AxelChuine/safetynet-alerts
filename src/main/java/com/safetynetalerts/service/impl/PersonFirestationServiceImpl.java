@@ -1,5 +1,6 @@
 package com.safetynetalerts.service.impl;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class PersonFirestationServiceImpl implements IPersonFirestationService {
@@ -70,7 +72,10 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
     }
 
     @Override
-    public List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations) throws IOException, ResourceNotFoundException {
+    public List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations) throws IOException, ResourceNotFoundException, BadResourceException {
+        if (Objects.isNull(stations)) {
+            throw new BadResourceException("No firestation(s) provided");
+        }
         List<FireStation> firestations = this.fireStationRepository.getAllFireStations();
         List<Person> persons = new ArrayList<>();
         List<MedicalRecordDto> medicalRecords = new ArrayList<>();
@@ -80,6 +85,9 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
         }
         for (Person p : persons) {
             medicalRecords.add(this.medicalRecordService.getMedicalRecordByFullName(p.firstName, p.lastName));
+        }
+        if (persons.isEmpty()) {
+            throw new ResourceNotFoundException("No person or medical records found");
         }
         for (Person p : persons) {
             for (MedicalRecordDto m : medicalRecords) {

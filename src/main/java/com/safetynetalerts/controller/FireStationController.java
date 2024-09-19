@@ -66,7 +66,7 @@ public class FireStationController {
 	}
 
 	@GetMapping("/flood/stations")
-	public ResponseEntity<List<PersonMedicalRecordDto>> getAllPersonsAndMedicalRecordByFirestation(@RequestParam("stations") List<String> stations) throws IOException, ResourceNotFoundException {
+	public ResponseEntity<List<PersonMedicalRecordDto>> getAllPersonsAndMedicalRecordByFirestation(@RequestParam("stations") List<String> stations) throws IOException, ResourceNotFoundException, BadResourceException {
 		logger.info("get all persons and associated medical records by firestation");
 		return ResponseEntity.ok(this.personFirestationService.getPersonsAndMedicalRecordsByFirestation(stations));
 	}

@@ -1,5 +1,6 @@
 package com.safetynetalerts.service;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.dto.PhoneAlertDto;
@@ -16,5 +17,5 @@ public interface IPersonFirestationService {
 
     StationNumberDto getHeadCountByFirestation(String pStationNumber) throws IOException;
 
-    List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations) throws IOException, ResourceNotFoundException;
+    List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations) throws IOException, ResourceNotFoundException, BadResourceException;
 }

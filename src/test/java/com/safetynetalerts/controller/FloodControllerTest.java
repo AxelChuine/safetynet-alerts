@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.service.impl.PersonFirestationServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,8 @@ public class FloodControllerTest {
     @MockBean
     private PersonFirestationServiceImpl service;
 
+    String badRequest = "No firestation(s) provided";
+
     @Test
     public void getAllPersonsAndMedicalRecordByFirestationTest () throws Exception {
         String station1 = "1";
@@ -31,8 +34,16 @@ public class FloodControllerTest {
         fireStations.add(station1);
         List<PersonMedicalRecordDto> personMedicalRecordDtos = new ArrayList<>();
         Mockito.when(this.service.getPersonsAndMedicalRecordsByFirestation(fireStations)).thenReturn(personMedicalRecordDtos);
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/flood/stations")
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/flood/station")
                         .param("stations", String.valueOf(fireStations)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void getAllPersonsAndMedicalRecordShouldReturnBadRequestIfNoFirestationsAreProvided ()throws Exception {
+        Mockito.when(this.service.getPersonsAndMedicalRecordsByFirestation(null)).thenThrow(new BadResourceException(badRequest));
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/flood/station")
+                .param("stations", ""))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }

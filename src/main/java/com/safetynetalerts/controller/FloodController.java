@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.service.impl.PersonFirestationServiceImpl;
@@ -27,7 +28,7 @@ public class FloodController {
     }
 
     @GetMapping("/station")
-    public ResponseEntity<List<PersonMedicalRecordDto>> getAllPersonsAndMedicalRecordByFirestation(@RequestParam("stations") List<String> stations) throws IOException, ResourceNotFoundException {
+    public ResponseEntity<List<PersonMedicalRecordDto>> getAllPersonsAndMedicalRecordByFirestation(@RequestParam("stations") List<String> stations) throws IOException, ResourceNotFoundException, BadResourceException {
         logger.info("get all persons and associated medical records by firestation");
         return ResponseEntity.ok(this.service.getPersonsAndMedicalRecordsByFirestation(stations));
     }

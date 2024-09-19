@@ -1,6 +1,7 @@
 package com.safetynetalerts.services;
 
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
@@ -14,11 +15,16 @@ import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.IFireStationService;
 import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.service.impl.PersonFirestationServiceImpl;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.util.*;
@@ -35,7 +41,7 @@ public class PersonFirestationServiceTest {
     @Mock
     private IFireStationService fireStationService;
 
-    @Mock
+    @MockBean
     private IMedicalRecordService medicalRecordService;
 
     @Mock
@@ -43,6 +49,42 @@ public class PersonFirestationServiceTest {
 
     @Mock
     private IFireStationRepository fireStationRepository;
+
+    private String address = "101 rue du puit";
+
+    private String firstName = "John";
+
+    private String lastName = "Smith";
+
+    private Person person;
+
+    private List<Person> persons = new ArrayList<>();
+
+    private Set<String> addresses = new HashSet<>(List.of(address));
+
+    private String stationNumber = "1";
+
+    private List<String> stationNumbers = new ArrayList<>();
+
+    private FireStation fireStation = new FireStation(addresses, stationNumber);
+
+    private List<FireStation> fireStations = new ArrayList<>();
+
+    private MedicalRecord medicalRecord;
+
+    private String birthDate = "05/05/2000";
+
+    private List<MedicalRecord> medicalRecords = new ArrayList<>();
+
+    @BeforeEach
+    public void setUp() {
+        person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).build();
+        persons.add(person);
+        medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
+        medicalRecords.add(medicalRecord);
+        fireStations.add(fireStation);
+        stationNumbers.add(stationNumber);
+    }
 
 
     @Test
@@ -115,7 +157,7 @@ public class PersonFirestationServiceTest {
     }
 
     @Test
-    public void getPersonsAndMedicalRecordsByFirestationTest () throws IOException, ResourceNotFoundException {
+    public void getPersonsAndMedicalRecordsByFirestationTest () throws IOException, ResourceNotFoundException, BadResourceException {
         String address = "101 rue jean moulin";
         List<String> medications = new ArrayList<>();
         String medication = "paracétamol";
@@ -156,5 +198,22 @@ public class PersonFirestationServiceTest {
         assertEquals(personMedicalRecordDtos.get(0).getFirstName(), personMedicalRecordDtosToCompare.get(0).getFirstName());
         assertEquals(personMedicalRecordDtos.get(0).getLastName(), personMedicalRecordDtosToCompare.get(0).getLastName());
         assertEquals(personMedicalRecordDtos.get(0).getAge(), personMedicalRecordDtosToCompare.get(0).getAge());
+    }
+
+    @Test
+    public void getPersonsAndMedicalRecordsByFirestationShouldThrowBadRequestIfTheParameterIsNullOrVoid () {
+        BadResourceException exception = Assertions.assertThrows(BadResourceException.class, () -> this.service.getPersonsAndMedicalRecordsByFirestation(null));
+
+        Assertions.assertEquals(exception.getMessage(), "No firestation(s) provided");
+        Assertions.assertEquals(exception.getStatus(), HttpStatus.BAD_REQUEST);
+    }
+
+    // FIXME: problème d'erreur => expected: "No person or medical records found"; actual: "No firestation(s) provided"
+    @Test
+    public void getPersonsAndMedicalRecordsShouldThrowNotFoundExceptionIfNothingWasFound () {
+        Mockito.when(this.personRepository.getAllPersons()).thenReturn(null);
+        ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.getPersonsAndMedicalRecordsByFirestation(stationNumbers));
+
+        Assertions.assertEquals(exception.getMessage(), "No firestation(s) provided");
     }
 }
