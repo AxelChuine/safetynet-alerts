@@ -47,7 +47,7 @@ public class ChildAlertControllerTest {
 
     @Test
     public void childAlertShouldReturnHttpStatusBadRequest() throws Exception {
-        Mockito.when(this.service.getChildByAddress(address))
+        Mockito.when(this.service.getChildByAddress(""))
                 .thenThrow(new BadResourceException("address not provided exception"));
         this.mockMvc.perform(MockMvcRequestBuilders.get("/child-alert")
                         .param("address", ""))

@@ -29,7 +29,7 @@ public class ChildAlertController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ChildAlertDto>> getChildByAddress(@RequestParam("address") String address) throws IOException, ResourceNotFoundException {
+    public ResponseEntity<List<ChildAlertDto>> getChildByAddress(@RequestParam("address") String address) throws IOException {
         logger.info("launch of retrieval of every child by address");
         try {
             return new ResponseEntity<>(this.service.getChildByAddress(address), HttpStatus.OK);
