@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -211,9 +210,8 @@ public class PersonFirestationServiceTest {
     // FIXME: problème d'erreur => expected: "No person or medical records found"; actual: "No firestation(s) provided"
     @Test
     public void getPersonsAndMedicalRecordsShouldThrowNotFoundExceptionIfNothingWasFound () {
-        Mockito.when(this.personRepository.getAllPersons()).thenReturn(null);
-        ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.getPersonsAndMedicalRecordsByFirestation(stationNumbers));
+        ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.getPersonsAndMedicalRecordsByFirestation(this.stationNumbers));
 
-        Assertions.assertEquals(exception.getMessage(), "No firestation(s) provided");
+        Assertions.assertEquals(exception.getMessage(), "No person or medical records found");
     }
 }

@@ -39,7 +39,6 @@ public class FireStationServiceImpl implements IFireStationService {
 		return fireStationDtos;
 	}
 
-	//FIXME: erreur à la création
 	public FireStationDto createFirestation(FireStationDto pFirestation) throws ResourceNotFoundException, IOException, ResourceAlreadyExistsException {
 		if (this.getAllFireStations().stream().anyMatch(fs -> Objects.equals(fs.getStationNumber(), pFirestation.getStationNumber()))) {
 			throw new ResourceAlreadyExistsException("this firestation already exists");

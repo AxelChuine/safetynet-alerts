@@ -65,12 +65,6 @@ public class FireStationController {
 		return new ResponseEntity<>(this.service.createFirestation(pFirestation), HttpStatus.CREATED);
 	}
 
-	@GetMapping("/flood/stations")
-	public ResponseEntity<List<PersonMedicalRecordDto>> getAllPersonsAndMedicalRecordByFirestation(@RequestParam("stations") List<String> stations) throws IOException, ResourceNotFoundException, BadResourceException {
-		logger.info("get all persons and associated medical records by firestation");
-		return ResponseEntity.ok(this.personFirestationService.getPersonsAndMedicalRecordsByFirestation(stations));
-	}
-
 	@PutMapping
 	public ResponseEntity<FireStationDto> updateFirestation(@RequestBody FireStationDto fireStationDto) throws ResourceNotFoundException, IOException, BadResourceException {
 		logger.info("update firestation");
