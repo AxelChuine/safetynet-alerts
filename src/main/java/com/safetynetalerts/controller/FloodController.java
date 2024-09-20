@@ -34,6 +34,10 @@ public class FloodController {
         if (stations.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
         }
-        return new ResponseEntity<>(this.service.getPersonsAndMedicalRecordsByFirestation(stations), HttpStatus.OK);
+        List<PersonMedicalRecordDto> personMedicalRecordDtos = this.service.getPersonsAndMedicalRecordsByFirestation(stations);
+        if (personMedicalRecordDtos.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(personMedicalRecordDtos, HttpStatus.OK);
     }
 }
