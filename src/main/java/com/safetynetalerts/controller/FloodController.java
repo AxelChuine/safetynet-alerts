@@ -6,6 +6,7 @@ import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.service.impl.PersonFirestationServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,9 @@ public class FloodController {
     @GetMapping("/station")
     public ResponseEntity<List<PersonMedicalRecordDto>> getAllPersonsAndMedicalRecordByFirestation(@RequestParam("stations") List<String> stations) throws IOException, ResourceNotFoundException, BadResourceException {
         logger.info("get all persons and associated medical records by firestation");
-        return ResponseEntity.ok(this.service.getPersonsAndMedicalRecordsByFirestation(stations));
+        if (stations.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
+        }
+        return new ResponseEntity<>(this.service.getPersonsAndMedicalRecordsByFirestation(stations), HttpStatus.OK);
     }
 }

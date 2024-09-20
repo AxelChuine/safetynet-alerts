@@ -207,7 +207,6 @@ public class PersonFirestationServiceTest {
         Assertions.assertEquals(exception.getStatus(), HttpStatus.BAD_REQUEST);
     }
 
-    // FIXME: problème d'erreur => expected: "No person or medical records found"; actual: "No firestation(s) provided"
     @Test
     public void getPersonsAndMedicalRecordsShouldThrowNotFoundExceptionIfNothingWasFound () {
         ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.getPersonsAndMedicalRecordsByFirestation(this.stationNumbers));

@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.service.impl.PersonFirestationServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -38,10 +39,12 @@ public class FloodControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    // FIXME: erreur lance un 200 au lieu du 400
     @Test
     public void getAllPersonsAndMedicalRecordShouldReturnBadRequestIfNoFirestationsAreProvided ()throws Exception {
+        Mockito.when(this.service.getPersonsAndMedicalRecordsByFirestation(List.of())).thenThrow(new BadResourceException());
         this.mockMvc.perform(MockMvcRequestBuilders.get("/flood/station")
                 .param("stations", ""))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                .andExpect(MockMvcResultMatchers.status().isPreconditionFailed());
     }
 }

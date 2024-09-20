@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class PersonFirestationServiceImpl implements IPersonFirestationService {
@@ -73,9 +72,6 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
 
     @Override
     public List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations) throws IOException, ResourceNotFoundException, BadResourceException {
-        if (Objects.isNull(stations)) {
-            throw new BadResourceException("No firestation(s) provided");
-        }
         List<FireStation> firestations = this.fireStationRepository.getAllFireStations();
         List<Person> persons = new ArrayList<>();
         List<MedicalRecordDto> medicalRecords = new ArrayList<>();
