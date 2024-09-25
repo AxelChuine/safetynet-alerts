@@ -6,8 +6,8 @@ import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IPersonRepository;
-import com.safetynetalerts.service.IMedicalRecordService;
-import com.safetynetalerts.service.impl.PersonServiceImpl;
+import com.safetynetalerts.service.MedicalRecordServiceImpl;
+import com.safetynetalerts.service.PersonServiceImpl;
 import com.safetynetalerts.utils.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +35,7 @@ class PersonServiceTest {
 	private Data data;
 
 	@MockBean
-	private IMedicalRecordService medicalRecordService;
+	private MedicalRecordServiceImpl medicalRecordService;
 	
 	@MockBean
 	private IPersonRepository repository;

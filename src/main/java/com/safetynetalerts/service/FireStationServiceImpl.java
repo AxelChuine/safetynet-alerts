@@ -1,4 +1,4 @@
-package com.safetynetalerts.service.impl;
+package com.safetynetalerts.service;
 
 import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
@@ -9,25 +9,23 @@ import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IFireStationRepository;
-import com.safetynetalerts.service.IFireStationService;
-import com.safetynetalerts.service.IMedicalRecordService;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
 
 @Service
-public class FireStationServiceImpl implements IFireStationService {
+public class FireStationServiceImpl {
 
-	private final IMedicalRecordService medicalRecordService;
+	private final MedicalRecordServiceImpl medicalRecordService;
 
 	private final IFireStationRepository repository;
 
-
-    public FireStationServiceImpl(IMedicalRecordService medicalRecordService, IFireStationRepository repository) {
+    public FireStationServiceImpl(MedicalRecordServiceImpl medicalRecordService, IFireStationRepository repository) {
         this.medicalRecordService = medicalRecordService;
         this.repository = repository;
     }
+
 
     public List<FireStationDto> getAllFireStations() throws IOException {
 		List<FireStation> firestationsToConvert = this.repository.getAllFireStations();
@@ -59,7 +57,7 @@ public class FireStationServiceImpl implements IFireStationService {
 	 * @throws IOException
 	 * use the person in parameter and his medical record to create an object personMedicalRecordDto.
 	 */
-	@Override
+	
 	public PersonMedicalRecordDto convertToPersonMedicalRecord(Person pPerson, MedicalRecord pMedicalRecord) throws IOException, ResourceNotFoundException {
 		PersonMedicalRecordDto personMedicalRecordDto = new PersonMedicalRecordDto();
 		personMedicalRecordDto.setFirstName(pPerson.firstName);
@@ -71,7 +69,7 @@ public class FireStationServiceImpl implements IFireStationService {
 		return personMedicalRecordDto;
 	}
 
-	@Override
+	
 	public FireStation getFireStationsByStationNumber(String stationNumber) throws IOException {
 		FireStation fireStation = new FireStation();
 		Optional<FireStation> optionalFireStation = this.repository.getAllFireStations().stream()
@@ -83,7 +81,7 @@ public class FireStationServiceImpl implements IFireStationService {
 		return fireStation;
 	}
 
-	@Override
+	
 	public String getStationNumberByAddress(String address) throws IOException {
 		String stationNumber = null;
 		List<FireStation> fireStations = this.repository.getAllFireStations();
@@ -95,7 +93,7 @@ public class FireStationServiceImpl implements IFireStationService {
 		return stationNumber;
 	}
 
-	@Override
+	
 	public FireStationDto convertToDto(FireStation fireStation) throws ResourceNotFoundException {
 		if (Objects.isNull(fireStation)) {
 			throw new ResourceNotFoundException("this firestation does not exist");
@@ -103,12 +101,12 @@ public class FireStationServiceImpl implements IFireStationService {
 		return new FireStationDto(new HashSet<>(fireStation.getAddresses()), fireStation.getStationNumber());
 	}
 
-	@Override
+	
 	public FireStation save(FireStation oldFirestation, FireStation newFirestation) {
 		return this.repository.save(oldFirestation, newFirestation);
 	}
 
-	@Override
+	
 	public FireStationDto updateFireStationByAddress(FireStationDto fireStationDto) throws ResourceNotFoundException, IOException, BadResourceException {
 		if (Objects.isNull(fireStationDto)) {
 			throw new BadResourceException("No firestation provided");
@@ -121,7 +119,7 @@ public class FireStationServiceImpl implements IFireStationService {
         return convertToDto(this.repository.save(oldFirestation, convertDtoToModel(fireStationDto)));
 	}
 
-	@Override
+	
 	public FireStationDto updateAddressesByFireStation(FireStationDto fireStationDto, String address) {
 		FireStationDto oldFireStation = fireStationDto;
 		List<String> addresses = new ArrayList<>();
@@ -132,12 +130,12 @@ public class FireStationServiceImpl implements IFireStationService {
 		return newFireStation;
 	}
 
-	@Override
+	
 	public FireStation convertDtoToModel(FireStationDto fireStationDto) {
 		return new FireStation(new HashSet<>(fireStationDto.getAddresses()), fireStationDto.getStationNumber());
 	}
 
-	@Override
+	
 	public FireStationDto deleteAddressOfFireStation(FireStationDto fireStationDto, String address) throws ResourceNotFoundException {
         List<String> addresses = new ArrayList<>(fireStationDto.getAddresses());
 		addresses.remove(address);
@@ -145,7 +143,7 @@ public class FireStationServiceImpl implements IFireStationService {
         return convertToDto(this.save(convertDtoToModel(fireStationDto), convertDtoToModel(newFireStationDto)));
 	}
 
-	@Override
+	
 	public void deleteFirestation(FireStationDto fireStationDto) throws IOException, ResourceNotFoundException {
 		if (this.getAllFireStations().stream().anyMatch(fs -> Objects.equals(fireStationDto.getStationNumber(), fs.getStationNumber()))) {
 			this.repository.deleteFireStation(convertDtoToModel(fireStationDto));

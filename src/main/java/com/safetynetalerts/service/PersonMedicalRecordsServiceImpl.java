@@ -1,11 +1,7 @@
-package com.safetynetalerts.service.impl;
+package com.safetynetalerts.service;
 
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
-import com.safetynetalerts.service.IFireStationService;
-import com.safetynetalerts.service.IMedicalRecordService;
-import com.safetynetalerts.service.IPersonMedicalRecordsService;
-import com.safetynetalerts.service.IPersonService;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,21 +10,21 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class PersonMedicalRecordsServiceImpl implements IPersonMedicalRecordsService {
+public class PersonMedicalRecordsServiceImpl {
 
-    private final IMedicalRecordService medicalRecordService;
+    private final MedicalRecordServiceImpl medicalRecordService;
 
-    private final IPersonService personService;
+    private final PersonServiceImpl personService;
 
-    private final IFireStationService fireStationService;
+    private final FireStationServiceImpl fireStationService;
 
-    public PersonMedicalRecordsServiceImpl(IMedicalRecordService medicalRecordService, IPersonService personService, IFireStationService fireStationService) {
+    public PersonMedicalRecordsServiceImpl(MedicalRecordServiceImpl medicalRecordService, PersonServiceImpl personService, FireStationServiceImpl fireStationService) {
         this.medicalRecordService = medicalRecordService;
         this.personService = personService;
         this.fireStationService = fireStationService;
     }
 
-    @Override
+
     public FireDto getAllConcernedPersonsAndTheirInfosByFire(String address) throws ResourceNotFoundException, IOException {
         List<PersonDto> persons = this.personService.getPersonsByAddress(address);
         List<MedicalRecordDto> medicalRecordDtos = this.medicalRecordService.getAllMedicalRecordByListOfPersons(persons);
@@ -38,7 +34,7 @@ public class PersonMedicalRecordsServiceImpl implements IPersonMedicalRecordsSer
         return fireDto;
     }
 
-    @Override
+    
     public List<PersonInfo> getAllPersonInformations(String lastName) throws ResourceNotFoundException, IOException {
         List<PersonInfo> personInfos = new ArrayList<>();
         List<PersonDto> personByLastName = this.personService.getPersonByLastName(lastName);
@@ -58,7 +54,7 @@ public class PersonMedicalRecordsServiceImpl implements IPersonMedicalRecordsSer
         return personInfos;
     }
 
-    @Override
+    
     public List<PersonByFireDto> convertToPersonByFireDtoList(List<PersonDto> pPersons, List<MedicalRecordDto> pMedicalRecords) throws IOException, ResourceNotFoundException {
         List<MedicalRecordDto> medicalRecordDtos = pMedicalRecords;
         List<PersonByFireDto> personByFireDtos = new ArrayList<>();

@@ -3,7 +3,7 @@ package com.safetynetalerts.controller;
 import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
-import com.safetynetalerts.service.impl.PersonFirestationServiceImpl;
+import com.safetynetalerts.service.PersonFirestationServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

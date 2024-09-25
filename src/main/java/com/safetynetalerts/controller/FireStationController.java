@@ -4,9 +4,9 @@ import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
-import com.safetynetalerts.service.IFireStationService;
-import com.safetynetalerts.service.IPersonFirestationService;
-import com.safetynetalerts.service.IPersonMedicalRecordsService;
+import com.safetynetalerts.service.FireStationServiceImpl;
+import com.safetynetalerts.service.PersonFirestationServiceImpl;
+import com.safetynetalerts.service.PersonMedicalRecordsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,19 +23,20 @@ import java.util.Objects;
 @RequestMapping("/firestation")
 public class FireStationController {
 
-	private final IFireStationService service;
+	private final FireStationServiceImpl service;
 
-	private final IPersonFirestationService personFirestationService;
+	private final PersonFirestationServiceImpl personFirestationService;
 
-	private final IPersonMedicalRecordsService personMedicalRecordService;
+	private final PersonMedicalRecordsServiceImpl personMedicalRecordService;
 
 	Logger logger = LoggerFactory.getLogger(FireStationController.class);
 
-    public FireStationController(IFireStationService service, IPersonFirestationService personFirestationService, IPersonMedicalRecordsService personMedicalRecordService) {
+    public FireStationController(FireStationServiceImpl service, PersonFirestationServiceImpl personFirestationService, PersonMedicalRecordsServiceImpl personMedicalRecordService) {
         this.service = service;
         this.personFirestationService = personFirestationService;
         this.personMedicalRecordService = personMedicalRecordService;
     }
+
 
     @GetMapping
 	public ResponseEntity<StationNumberDto> getHeadCountByFirestation(@RequestParam("stationNumber") String stationNumber) throws IOException {

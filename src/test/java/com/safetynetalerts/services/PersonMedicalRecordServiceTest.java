@@ -4,10 +4,10 @@ import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
-import com.safetynetalerts.service.IFireStationService;
-import com.safetynetalerts.service.IMedicalRecordService;
-import com.safetynetalerts.service.IPersonMedicalRecordsService;
-import com.safetynetalerts.service.IPersonService;
+import com.safetynetalerts.service.FireStationServiceImpl;
+import com.safetynetalerts.service.MedicalRecordServiceImpl;
+import com.safetynetalerts.service.PersonMedicalRecordsServiceImpl;
+import com.safetynetalerts.service.PersonServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,16 +24,16 @@ import java.util.Set;
 @SpringBootTest
 public class PersonMedicalRecordServiceTest {
     @Autowired
-    private IPersonMedicalRecordsService service;
+    private PersonMedicalRecordsServiceImpl service;
 
     @Mock
-    private IPersonService personService;
-
-    @MockBean
-    private IMedicalRecordService medicalRecordService;
+    private PersonServiceImpl personService;
 
     @Mock
-    private IFireStationService fireStationService;
+    private MedicalRecordServiceImpl medicalRecordService;
+
+    @Mock
+    private FireStationServiceImpl fireStationService;
 
     private String firstName = "John";
 
@@ -58,7 +57,7 @@ public class PersonMedicalRecordServiceTest {
 
     private List<Person> persons;
 
-    private List<PersonDto> personDtoList;
+    private List<PersonDto> personDtoList = new ArrayList<>();
 
     private List<MedicalRecord> medicalRecordList;
 

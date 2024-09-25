@@ -5,8 +5,8 @@ import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.dto.PersonInfo;
-import com.safetynetalerts.service.IPersonMedicalRecordsService;
-import com.safetynetalerts.service.IPersonService;
+import com.safetynetalerts.service.PersonMedicalRecordsServiceImpl;
+import com.safetynetalerts.service.PersonServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,18 +23,19 @@ import java.util.List;
 @Slf4j
 public class PersonController {
 
-	private final IPersonService personService;
+	private final PersonServiceImpl personService;
 
-	private final IPersonMedicalRecordsService personMedicalRecordsService;
+	private final PersonMedicalRecordsServiceImpl personMedicalRecordsService;
 
 	private final Logger logger = LoggerFactory.getLogger(PersonController.class);
 
-    public PersonController(IPersonService personService, IPersonMedicalRecordsService personMedicalRecordsService) {
+    public PersonController(PersonServiceImpl personService, PersonMedicalRecordsServiceImpl personMedicalRecordsService) {
         this.personService = personService;
         this.personMedicalRecordsService = personMedicalRecordsService;
     }
 
-	@GetMapping("/all")
+
+    @GetMapping("/all")
 	public ResponseEntity<List<PersonDto>> getAllPersons() throws IOException {
 		logger.info("launch retrieval of every persons");
 		return new ResponseEntity<>(this.personService.getAllPersons(), HttpStatus.OK);

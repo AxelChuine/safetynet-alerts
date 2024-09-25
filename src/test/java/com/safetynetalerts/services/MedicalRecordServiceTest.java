@@ -7,7 +7,7 @@ import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IMedicalRecordRepository;
-import com.safetynetalerts.service.IMedicalRecordService;
+import com.safetynetalerts.service.MedicalRecordServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 public class MedicalRecordServiceTest {
 
     @Autowired
-	private IMedicalRecordService service;
+	private MedicalRecordServiceImpl service;
 
     @MockBean
 	private IMedicalRecordRepository repository;

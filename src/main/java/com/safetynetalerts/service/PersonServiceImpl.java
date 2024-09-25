@@ -1,4 +1,4 @@
-package com.safetynetalerts.service.impl;
+package com.safetynetalerts.service;
 
 import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
@@ -6,8 +6,6 @@ import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IPersonRepository;
-import com.safetynetalerts.service.IMedicalRecordService;
-import com.safetynetalerts.service.IPersonService;
 import com.safetynetalerts.utils.Data;
 import org.springframework.stereotype.Service;
 
@@ -19,22 +17,22 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class PersonServiceImpl implements IPersonService {
+public class PersonServiceImpl {
 
     private final Data data;
 
-    private final IMedicalRecordService medicalRecordService;
+    private final MedicalRecordServiceImpl medicalRecordService;
 
     private final IPersonRepository repository;
 
-    public PersonServiceImpl (Data data, IMedicalRecordService medicalRecordService, IPersonRepository repository) {
+    public PersonServiceImpl(Data data, MedicalRecordServiceImpl medicalRecordService, IPersonRepository repository) {
         this.data = data;
         this.medicalRecordService = medicalRecordService;
         this.repository = repository;
     }
 
 
-    @Override
+    
     public List<Person> getAllPersonsByCity(String pCity) throws Exception {
         List<Person> persons = this.repository.getAllPersons();
         List<Person> personsToReturn = new ArrayList<>();
@@ -46,7 +44,7 @@ public class PersonServiceImpl implements IPersonService {
         return personsToReturn;
     }
 
-    @Override
+    
     public List<String> getAllEmailAddressesByCity(String pCity) throws Exception {
         if (Objects.isNull(pCity)) {
             throw new BadResourceException(pCity + " doesn't exist");
@@ -105,7 +103,7 @@ public class PersonServiceImpl implements IPersonService {
     }
 
 
-    @Override
+    
     public List<PersonInfo> getPersonInfo(String lastName) throws ResourceNotFoundException, IOException {
         List<PersonDto> personDtos = this.getAllPersons().stream().filter(personDto -> Objects.equals(personDto.lastName, lastName)).toList();
         List<MedicalRecordDto> medicalRecordDtos = medicalRecordService.getAllMedicalRecordByListOfPersons(personDtos);
@@ -125,7 +123,7 @@ public class PersonServiceImpl implements IPersonService {
         return specificPersonInfos;
     }
 
-    @Override
+    
     public PersonDto convertToPersonDto(Person person) throws ResourceNotFoundException {
         if (Objects.isNull(person)) {
             throw new ResourceNotFoundException("person not found exception");
@@ -141,7 +139,7 @@ public class PersonServiceImpl implements IPersonService {
                 .build();
     }
 
-    @Override
+    
     public Person convertToPerson(PersonDto pPersonDto) throws ResourceNotFoundException {
         if (Objects.isNull(pPersonDto)) {
             throw new ResourceNotFoundException("person not found exception");
@@ -157,19 +155,19 @@ public class PersonServiceImpl implements IPersonService {
                 .build();
     }
 
-    @Override
+    
     public PersonDto updatePerson(PersonDto personDto) throws BadResourceException, ResourceNotFoundException, ResourceAlreadyExistsException {
         PersonDto personToModify = this.getPersonByFullName(personDto.firstName, personDto.lastName);
         return convertToPersonDto(this.repository.savePerson(convertToPerson(personToModify), convertToPerson(personDto)));
     }
 
-    @Override
+    
     public List<PersonDto> getPersonByLastName(String lastName) {
         return convertToDtoList(this.repository.getAllPersons().stream().filter(p -> Objects.equals(p.lastName, lastName)).collect(Collectors.toList()));
     }
 
 
-    @Override
+    
     public List<ChildAlertDto> getChildByAddress(String pAddress) throws IOException, ResourceNotFoundException, BadResourceException {
         if (Objects.equals(pAddress, "")) {
             throw new BadResourceException("address not provided exception");
@@ -193,7 +191,7 @@ public class PersonServiceImpl implements IPersonService {
         return familyMember;
     }
 
-    @Override
+    
     public List<PersonDto> getAllPersons() {
         List<Person> persons = this.repository.getAllPersons();
         List<PersonDto> personsToReturn = new ArrayList<>();
@@ -213,7 +211,7 @@ public class PersonServiceImpl implements IPersonService {
         return personsToReturn;
     }
 
-    @Override
+    
 public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsException, ResourceNotFoundException {
         PersonDto personDto = pPerson;
         if (this.repository.getAllPersons().stream().anyMatch(convertToPerson(personDto)::equals)) {
@@ -224,7 +222,7 @@ public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsExcept
     }
 
 
-    @Override
+    
     public void deletePerson(String firstName, String lastName) throws ResourceNotFoundException {
         List<Person> persons = repository.getAllPersons();
         Person person = null;
@@ -240,12 +238,12 @@ public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsExcept
         data.setPersons(persons);
     }
 
-    @Override
+    
     public SimplePersonDto convertToSimplePersonDto(Person pPerson) {
         return new SimplePersonDto(pPerson.firstName, pPerson.lastName, pPerson.address, pPerson.phone);
     }
 
-    @Override
+    
     public List<SimplePersonDto> convertToSimplePersonDtoList(List<Person> pPersons) {
         List<SimplePersonDto> simplePersonDtos = new ArrayList<>();
         for (Person p : pPersons) {
@@ -254,7 +252,7 @@ public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsExcept
         return simplePersonDtos;
     }
 
-    @Override
+    
     public List<PersonDto> convertToDtoList(List<Person> pPersons) {
         List<PersonDto> personDtos = new ArrayList<>();
         for (Person p : pPersons) {

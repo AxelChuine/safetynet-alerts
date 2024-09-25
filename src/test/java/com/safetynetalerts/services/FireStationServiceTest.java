@@ -7,7 +7,7 @@ import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.repository.impl.FireStationRepository;
-import com.safetynetalerts.service.impl.FireStationServiceImpl;
+import com.safetynetalerts.service.FireStationServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

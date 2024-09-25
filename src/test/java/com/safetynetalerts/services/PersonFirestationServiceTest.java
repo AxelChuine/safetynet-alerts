@@ -12,9 +12,9 @@ import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IFireStationRepository;
 import com.safetynetalerts.repository.IPersonRepository;
-import com.safetynetalerts.service.IFireStationService;
-import com.safetynetalerts.service.IMedicalRecordService;
-import com.safetynetalerts.service.impl.PersonFirestationServiceImpl;
+import com.safetynetalerts.service.FireStationServiceImpl;
+import com.safetynetalerts.service.MedicalRecordServiceImpl;
+import com.safetynetalerts.service.PersonFirestationServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
@@ -38,10 +37,10 @@ public class PersonFirestationServiceTest {
     private PersonFirestationServiceImpl service;
 
     @Mock
-    private IFireStationService fireStationService;
+    private FireStationServiceImpl fireStationService;
 
-    @MockBean
-    private IMedicalRecordService medicalRecordService;
+    @Mock
+    private MedicalRecordServiceImpl medicalRecordService;
 
     @Mock
     private IPersonRepository personRepository;

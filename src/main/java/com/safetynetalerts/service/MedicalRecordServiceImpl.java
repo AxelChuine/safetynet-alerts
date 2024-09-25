@@ -1,4 +1,4 @@
-package com.safetynetalerts.service.impl;
+package com.safetynetalerts.service;
 
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
@@ -7,7 +7,6 @@ import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IMedicalRecordRepository;
-import com.safetynetalerts.service.IMedicalRecordService;
 import com.safetynetalerts.utils.Data;
 import com.safetynetalerts.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
-public class MedicalRecordServiceImpl implements IMedicalRecordService {
+public class MedicalRecordServiceImpl {
 
 	@Autowired
 	private Utils utils;
@@ -35,7 +34,7 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
     }
 
 
-    @Override
+    
 	public boolean isUnderaged(String pBirthDate) {
 		boolean vRet = false;
 		DateTimeFormatter dateOfBirth = DateTimeFormatter.ofPattern("MM/dd/yyyy");
@@ -55,7 +54,7 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	 * @return a map counting the persons underaged and not.
 	 * @throws IOException
 	 */
-	@Override
+	
 	public Map countAllPersons(List<Person> pPersons) throws IOException {
 		Map<String, Integer> persons = new HashMap<>();
 		Integer adults = 0;
@@ -108,7 +107,7 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
-	@Override
+	
 	public Integer getAgeOfPerson(String firstName, String lastName) throws ResourceNotFoundException {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 		LocalDate birthDate = LocalDate.parse(this.getMedicalRecordByFullName(firstName, lastName).getBirthDate(), formatter);
@@ -122,7 +121,7 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	 * @param pLastName
 	 * @return true if the person is underaged
 	 */
-	@Override
+	
 	public boolean isUnderaged(String pFirstName, String pLastName) throws IOException {
 		boolean isUnderaged = false;
 		MedicalRecord medicalRecord = this.getMedicalRecordByUnderage(pFirstName, pLastName);
@@ -135,7 +134,7 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	/**
 	 * @return a medical record of a person if underaged
 	 */
-	@Override
+	
 	public MedicalRecord getMedicalRecordByUnderage(String pFirstName, String pLastName) throws IOException {
 		MedicalRecord medicalRecord = null;
 		Optional<MedicalRecord> medicalRecordOptional = this.repository.getAllMedicalRecords().stream()
@@ -150,7 +149,7 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 	/**
 	 * @return retrieve all medical records
 	 */
-	@Override
+	
 	public List<MedicalRecordDto> getAllMedicalRecords() throws IOException {
 		List<MedicalRecord> medicalRecords = this.repository.getAllMedicalRecords();
 		List<MedicalRecordDto> medicalRecordDtos = new ArrayList<>();
@@ -161,7 +160,7 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 		return medicalRecordDtos;
 	}
 
-	@Override
+	
 	public MedicalRecordDto updateMedicalRecord(MedicalRecordDto medicalRecordDto) throws ResourceNotFoundException, IOException {
 		MedicalRecordDto medicalRecordDtoToReturn = this.getMedicalRecordByFullName(medicalRecordDto.getFirstName(), medicalRecordDto.getLastName());
 		if (Objects.equals(medicalRecordDtoToReturn.getFirstName(), medicalRecordDto.getFirstName()) && Objects.equals(medicalRecordDtoToReturn.getLastName(), medicalRecordDto.getLastName())) {
@@ -172,7 +171,7 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 		return medicalRecordDto;
 	}
 
-	@Override
+	
 	public MedicalRecordDto convertModelToDto(MedicalRecord medicalRecord) {
 		return new MedicalRecordDto.MedicalRecordDtoBuilder()
 				.firstName(medicalRecord.getFirstName())
@@ -183,7 +182,7 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 				.build();
 	}
 
-	@Override
+	
 	public MedicalRecordDto createMedicalRecord(MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException, ResourceAlreadyExistsException {
         MedicalRecord medicalRecord;
 		if (this.repository.getAllMedicalRecords().stream().anyMatch(m -> Objects.equals(m.getFirstName(), pMedicalRecord.getFirstName()) && Objects.equals(m.getLastName(), pMedicalRecord.getLastName()))) {
@@ -204,12 +203,12 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 		return pMedicalRecord;
 	}
 
-	@Override
+	
 	public void deleteMedicalRecordByFullName(String firstName, String lastName) throws ResourceNotFoundException {
 		this.repository.deleteMedicalRecord(convertDtoToModel(this.getMedicalRecordByFullName(firstName, lastName)));
 	}
 
-	@Override
+	
 	public MedicalRecord convertDtoToModel(MedicalRecordDto medicalRecordByFullName) {
 		return new MedicalRecord.MedicalRecordBuilder()
 				.firstName(medicalRecordByFullName.getFirstName())
@@ -220,7 +219,7 @@ public class MedicalRecordServiceImpl implements IMedicalRecordService {
 				.build();
 	}
 
-	@Override
+	
 	public List<MedicalRecordDto> getAllMedicalRecordByListOfPersons(List<PersonDto> personDtoList) throws ResourceNotFoundException {
 		List<MedicalRecordDto> medicalRecordsToReturn = new ArrayList<>();
 		for (PersonDto personDto : personDtoList) {

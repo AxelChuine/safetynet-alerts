@@ -5,9 +5,9 @@ import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
-import com.safetynetalerts.service.IFireStationService;
-import com.safetynetalerts.service.IPersonFirestationService;
-import com.safetynetalerts.service.IPersonMedicalRecordsService;
+import com.safetynetalerts.service.FireStationServiceImpl;
+import com.safetynetalerts.service.PersonFirestationServiceImpl;
+import com.safetynetalerts.service.PersonMedicalRecordsServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -33,13 +33,13 @@ public class FireStationControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private IPersonFirestationService personFirestationService;
+    private PersonFirestationServiceImpl personFirestationService;
 
     @MockBean
-    private IFireStationService service;
+    private FireStationServiceImpl service;
 
     @MockBean
-    private IPersonMedicalRecordsService personMedicalRecordsService;
+    private PersonMedicalRecordsServiceImpl personMedicalRecordsService;
 
    private String address = "48 rue Jean Moulin";
 

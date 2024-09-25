@@ -1,4 +1,4 @@
-package com.safetynetalerts.service.impl;
+package com.safetynetalerts.service;
 
 import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
@@ -10,9 +10,6 @@ import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IFireStationRepository;
 import com.safetynetalerts.repository.IPersonRepository;
-import com.safetynetalerts.service.IFireStationService;
-import com.safetynetalerts.service.IMedicalRecordService;
-import com.safetynetalerts.service.IPersonFirestationService;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,17 +18,17 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class PersonFirestationServiceImpl implements IPersonFirestationService {
+public class PersonFirestationServiceImpl {
 
-    private final IFireStationService fireStationService;
+    private final FireStationServiceImpl fireStationService;
 
-    private final IMedicalRecordService medicalRecordService;
+    private final MedicalRecordServiceImpl medicalRecordService;
 
     private final IPersonRepository personRepository;
 
     private final IFireStationRepository fireStationRepository;
 
-    public PersonFirestationServiceImpl(IFireStationService fireStationService, IMedicalRecordService medicalRecordService, IPersonRepository personRepository, IFireStationRepository fireStationRepository) {
+    public PersonFirestationServiceImpl(FireStationServiceImpl fireStationService, MedicalRecordServiceImpl medicalRecordService, IPersonRepository personRepository, IFireStationRepository fireStationRepository) {
         this.fireStationService = fireStationService;
         this.medicalRecordService = medicalRecordService;
         this.personRepository = personRepository;
@@ -53,7 +50,7 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
         return personsByFirestation;
     }
 
-    @Override
+    
     public PhoneAlertDto getCellNumbers(String stationNumber) throws IOException {
         PhoneAlertDto cellNumbers = new PhoneAlertDto();
         List<Person> persons = this.getAllPersonsByFireStation(stationNumber);
@@ -63,14 +60,14 @@ public class PersonFirestationServiceImpl implements IPersonFirestationService {
         return cellNumbers;
     }
 
-    @Override
+    
     public StationNumberDto getHeadCountByFirestation(String pStationNumber) throws IOException {
         List<Person> persons = this.getAllPersonsByFireStation(pStationNumber);
         Map<String, Integer> mapPersons = this.medicalRecordService.countAllPersons(persons);
         return new StationNumberDto(persons, mapPersons.get("mineurs"), mapPersons.get("majeurs"));
     }
 
-    @Override
+    
     public List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations) throws IOException, ResourceNotFoundException, BadResourceException {
         List<FireStation> firestations = this.fireStationRepository.getAllFireStations();
         List<Person> persons = new ArrayList<>();

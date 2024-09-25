@@ -1,7 +1,7 @@
 package com.safetynetalerts.controller;
 
 import com.safetynetalerts.dto.PhoneAlertDto;
-import com.safetynetalerts.service.impl.PersonFirestationServiceImpl;
+import com.safetynetalerts.service.PersonFirestationServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

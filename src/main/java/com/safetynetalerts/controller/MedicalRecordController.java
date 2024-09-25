@@ -3,7 +3,7 @@ package com.safetynetalerts.controller;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
-import com.safetynetalerts.service.IMedicalRecordService;
+import com.safetynetalerts.service.MedicalRecordServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +19,14 @@ import java.util.Objects;
 @Slf4j
 public class MedicalRecordController {
 
-    private final IMedicalRecordService service;
+    private final MedicalRecordServiceImpl service;
 
     Logger logger = LoggerFactory.getLogger(MedicalRecordController.class);
 
-    public MedicalRecordController(IMedicalRecordService service) {
+    public MedicalRecordController(MedicalRecordServiceImpl service) {
         this.service = service;
     }
+
 
     @PostMapping("/medical-record")
     public ResponseEntity<MedicalRecordDto> createMedicalRecord(@RequestBody MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException, ResourceAlreadyExistsException {

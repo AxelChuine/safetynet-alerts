@@ -1,7 +1,7 @@
 package com.safetynetalerts.controller;
 
 import com.safetynetalerts.dto.FireDto;
-import com.safetynetalerts.service.impl.PersonMedicalRecordsServiceImpl;
+import com.safetynetalerts.service.PersonMedicalRecordsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

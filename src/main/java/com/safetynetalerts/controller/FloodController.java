@@ -3,7 +3,7 @@ package com.safetynetalerts.controller;
 import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
-import com.safetynetalerts.service.impl.PersonFirestationServiceImpl;
+import com.safetynetalerts.service.PersonFirestationServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
