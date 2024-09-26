@@ -69,24 +69,20 @@ public class PersonFirestationServiceImpl {
 
     
     public List<PersonMedicalRecordDto> getPersonsAndMedicalRecordsByFirestation(List<String> stations) throws IOException, ResourceNotFoundException, BadResourceException {
-        List<FireStation> firestations = this.fireStationRepository.getAllFireStations();
+        if (stations.isEmpty()) {
+            throw new BadResourceException("No station number given");
+        }
         List<Person> persons = new ArrayList<>();
         List<MedicalRecordDto> medicalRecords = new ArrayList<>();
         List<PersonMedicalRecordDto> personMedicalRecordDtos = new ArrayList<>();
-        for (FireStation firestation : firestations) {
-            persons = this.getAllPersonsByFireStation(firestation.getStationNumber());
+        for (String stationNumber : stations) {
+            persons = this.getAllPersonsByFireStation(stationNumber);
         }
         for (Person p : persons) {
-            medicalRecords.add(this.medicalRecordService.getMedicalRecordByFullName(p.firstName, p.lastName));
-        }
-        if (persons.isEmpty()) {
-            throw new ResourceNotFoundException("No person or medical records found");
-        }
-        for (Person p : persons) {
-            for (MedicalRecordDto m : medicalRecords) {
-                PersonMedicalRecordDto personMedicalRecordDto = new PersonMedicalRecordDto(p.firstName, p.lastName, p.phone, this.medicalRecordService.getAgeOfPerson(p.firstName, p.lastName), m.getMedications(), m.getAllergies());
-                personMedicalRecordDtos.add(personMedicalRecordDto);
-            }
+            MedicalRecordDto medicalRecordDto = this.medicalRecordService.getMedicalRecordByFullName(p.firstName, p.lastName);
+            medicalRecords.add(medicalRecordDto);
+            PersonMedicalRecordDto personMedicalRecordDto = new PersonMedicalRecordDto(p.firstName, p.lastName, p.phone, this.medicalRecordService.getAgeOfPerson(p.firstName, p.lastName), medicalRecordDto.getMedications(), medicalRecordDto.getAllergies());
+            personMedicalRecordDtos.add(personMedicalRecordDto);
         }
         return personMedicalRecordDtos;
     }

@@ -2,9 +2,12 @@ package com.safetynetalerts.controller;
 
 import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
+import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
+import com.safetynetalerts.service.MedicalRecordServiceImpl;
 import com.safetynetalerts.service.PersonFirestationServiceImpl;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,17 +29,21 @@ public class FloodControllerTest {
     @MockBean
     private PersonFirestationServiceImpl service;
 
+    @Mock
+    private MedicalRecordServiceImpl medicalRecordService;
+
+
     String badRequest = "No firestation(s) provided";
 
     @Test
     public void getAllPersonsAndMedicalRecordByFirestationTest () throws Exception {
-        String station1 = "1";
-        List<String> fireStations = new ArrayList<>();
-        fireStations.add(station1);
+        String station1 = "4";
+        String station2 = "2";
+        List<String> fireStations = List.of(station1, station2);
         List<PersonMedicalRecordDto> personMedicalRecordDtos = new ArrayList<>();
         Mockito.when(this.service.getPersonsAndMedicalRecordsByFirestation(fireStations)).thenReturn(personMedicalRecordDtos);
         this.mockMvc.perform(MockMvcRequestBuilders.get("/flood/station")
-                        .param("stations", String.valueOf(fireStations)))
+                        .param("stations", "4,2"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
