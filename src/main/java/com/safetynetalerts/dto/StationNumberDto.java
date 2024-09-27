@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class StationNumberDto {
 
-	private List<Person> persons = new ArrayList<>();
+	private List<PersonDto> persons = new ArrayList<>();
 
 	private Integer underaged;
 

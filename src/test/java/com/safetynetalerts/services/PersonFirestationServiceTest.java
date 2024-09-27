@@ -1,20 +1,15 @@
 package com.safetynetalerts.services;
-
-
 import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
-import com.safetynetalerts.dto.MedicalRecordDto;
-import com.safetynetalerts.dto.PersonMedicalRecordDto;
-import com.safetynetalerts.dto.PhoneAlertDto;
-import com.safetynetalerts.dto.StationNumberDto;
+import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.IFireStationRepository;
-import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.service.FireStationServiceImpl;
 import com.safetynetalerts.service.MedicalRecordServiceImpl;
 import com.safetynetalerts.service.PersonFirestationServiceImpl;
+import com.safetynetalerts.service.PersonServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,10 +38,7 @@ public class PersonFirestationServiceTest {
     private MedicalRecordServiceImpl medicalRecordService;
 
     @Mock
-    private IPersonRepository personRepository;
-
-    @Mock
-    private IFireStationRepository fireStationRepository;
+    private PersonServiceImpl personService;
 
     private String address = "101 rue du puit";
 
@@ -60,11 +52,11 @@ public class PersonFirestationServiceTest {
 
     private Set<String> addresses = new HashSet<>(List.of(address));
 
-    private String stationNumber = "1";
+    private String stationNumber = "4";
 
     private List<String> stationNumbers = new ArrayList<>();
 
-    private FireStation fireStation = new FireStation(addresses, stationNumber);
+    private FireStation fireStation;
 
     private List<FireStation> fireStations = new ArrayList<>();
 
@@ -78,6 +70,7 @@ public class PersonFirestationServiceTest {
     public void setUp() {
         person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).build();
         persons.add(person);
+        this.fireStation = new FireStation(addresses, stationNumber);
         medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
         medicalRecords.add(medicalRecord);
         fireStations.add(fireStation);
@@ -90,14 +83,14 @@ public class PersonFirestationServiceTest {
         // mocking the firestationService side
         StationNumberDto stationNumberDto = new StationNumberDto();
         String address = "94 rue jean moulin";
-        List<Person> persons = new ArrayList<>();
-        Person p1 = new Person.PersonBuilder().firstName("prenom1").lastName("nom1").address(address).build();
-        Person p2 = new Person.PersonBuilder().firstName("prenom2").lastName("nom2").address(address).build();
-        Person p3 = new Person.PersonBuilder().firstName("prenom3").lastName("nom3").address(address).build();
-        persons.add(p1);
-        persons.add(p2);
-        persons.add(p3);
-        stationNumberDto.setPersons(persons);
+        List<PersonDto> personDtoList = new ArrayList<>();
+        PersonDto p1 = new PersonDto.PersonDtoBuilder().firstName("prenom1").lastName("nom1").address(address).build();
+        PersonDto p2 = new PersonDto.PersonDtoBuilder().firstName("prenom2").lastName("nom2").address(address).build();
+        PersonDto p3 = new PersonDto.PersonDtoBuilder().firstName("prenom3").lastName("nom3").address(address).build();
+        personDtoList.add(p1);
+        personDtoList.add(p2);
+        personDtoList.add(p3);
+        stationNumberDto.setPersons(personDtoList);
         stationNumberDto.setUnderaged(2);
         stationNumberDto.setAdult(1);
 
@@ -123,9 +116,9 @@ public class PersonFirestationServiceTest {
         medicalRecords.add(m3);
 
 
-        when(this.personRepository.getAllPersons()).thenReturn(persons);
+        when(this.personService.getAllPersons()).thenReturn(personDtoList);
         when(this.fireStationService.getFireStationsByStationNumber("4")).thenReturn(fireStation);
-        when(this.medicalRecordService.countAllPersons(persons)).thenReturn(mapPersons);
+        when(this.medicalRecordService.countAllPersons(personDtoList)).thenReturn(mapPersons);
         StationNumberDto stationNumberToCompare = this.service.getHeadCountByFirestation("4");
 
         assertEquals(stationNumberDto.getPersons(), stationNumberToCompare.getPersons());
@@ -138,25 +131,25 @@ public class PersonFirestationServiceTest {
         PhoneAlertDto cellNumbers = new PhoneAlertDto();
         String phone = "04";
         cellNumbers.getCellNumbers().add(phone);
-        List<Person> persons = new ArrayList<>();
+        List<PersonDto> personDtoList = new ArrayList<>();
         String address = "95 rue jean moulin";
-        Person person = new Person.PersonBuilder().address(address).phone(phone).build();
-        persons.add(person);
+        PersonDto personDto = new PersonDto.PersonDtoBuilder().address(address).phone(phone).build();
+        personDtoList.add(personDto);
         Set<String> addresses = new HashSet<>();
         addresses.add(address);
         String stationNumber = "4";
         FireStation fireStation = new FireStation(addresses, stationNumber);
 
         when(this.fireStationService.getFireStationsByStationNumber("4")).thenReturn(fireStation);
-        when(this.personRepository.getAllPersons()).thenReturn(persons);
+        when(this.personService.getAllPersons()).thenReturn(personDtoList);
         PhoneAlertDto cellNumbersToCompare = this.service.getCellNumbers("4");
 
         assertEquals(cellNumbers.getCellNumbers(), cellNumbersToCompare.getCellNumbers());
     }
 
+    // FIXME: test qui échoue
     @Test
     public void getPersonsAndMedicalRecordsByFirestationTest () throws IOException, ResourceNotFoundException, BadResourceException {
-        String address = "101 rue jean moulin";
         List<String> medications = new ArrayList<>();
         String medication = "paracétamol";
         medications.add(medication);
@@ -169,38 +162,25 @@ public class PersonFirestationServiceTest {
         PersonMedicalRecordDto personMedicalRecordDto = new PersonMedicalRecordDto(firstName, lastName, "04", 0, medications, allergies);
         personMedicalRecordDtos.add(personMedicalRecordDto);
 
-        List<Person> persons = new ArrayList<>();
-        Person p1 = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address(address).phone("04").build();
-        persons.add(p1);
+        List<PersonDto> personDtoList = new ArrayList<>();
+        PersonDto p1 = new PersonDto.PersonDtoBuilder().firstName("Jean").lastName("Dubois").address(address).phone("04").build();
+        personDtoList.add(p1);
         MedicalRecord m1 = new MedicalRecord.MedicalRecordBuilder().firstName("Jean").lastName("Dubois").medications(medications).allergies(allergies).birthDate("09/29/1998").build();
-
-        List<FireStation> firestations = new ArrayList<>();
-        String stationNumber = "4";
-        Set<String> addresses = new HashSet<>();
-        addresses.add(address);
-        FireStation firestation = new FireStation(addresses, stationNumber);
-        List<String> stations = new ArrayList<>();
-        stations.add(firestation.getStationNumber());
-        firestations.add(firestation);
 
         String birthDate = "01/01/2001";
         MedicalRecordDto medicalRecord = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).allergies(allergies).medications(medications).build();
 
 
-        when(this.fireStationRepository.getAllFireStations()).thenReturn(firestations);
-        when(this.personRepository.getAllPersons()).thenReturn(persons);
+        when(this.personService.getAllPersons()).thenReturn(personDtoList);
         when(this.medicalRecordService.getMedicalRecordByFullName(firstName, lastName)).thenReturn(medicalRecord);
-        when(this.fireStationService.getFireStationsByStationNumber(stationNumber)).thenReturn(firestation);
-        List<PersonMedicalRecordDto> personMedicalRecordDtosToCompare = this.service.getPersonsAndMedicalRecordsByFirestation(stations);
+        List<PersonMedicalRecordDto> personMedicalRecordDtosToCompare = this.service.getPersonsAndMedicalRecordsByFirestation(this.stationNumbers);
 
-        assertEquals(personMedicalRecordDtos.get(0).getFirstName(), personMedicalRecordDtosToCompare.get(0).getFirstName());
-        assertEquals(personMedicalRecordDtos.get(0).getLastName(), personMedicalRecordDtosToCompare.get(0).getLastName());
-        assertEquals(personMedicalRecordDtos.get(0).getAge(), personMedicalRecordDtosToCompare.get(0).getAge());
+        assertEquals(personMedicalRecordDtos, personMedicalRecordDtosToCompare);
     }
 
     @Test
     public void getPersonsAndMedicalRecordsByFirestationShouldThrowBadRequestIfTheParameterIsNullOrVoid () {
-        BadResourceException exception = Assertions.assertThrows(BadResourceException.class, () -> this.service.getPersonsAndMedicalRecordsByFirestation(null));
+        BadResourceException exception = Assertions.assertThrows(BadResourceException.class, () -> this.service.getPersonsAndMedicalRecordsByFirestation(List.of()));
 
         Assertions.assertEquals(exception.getMessage(), "No firestation(s) provided");
         Assertions.assertEquals(exception.getStatus(), HttpStatus.BAD_REQUEST);

@@ -50,19 +50,19 @@ public class MedicalRecordServiceImpl {
 
 	/**
 	 * @Author Axel
-	 * @param pPersons
+	 * @param personDtoList
 	 * @return a map counting the persons underaged and not.
 	 * @throws IOException
 	 */
 	
-	public Map countAllPersons(List<Person> pPersons) throws IOException {
+	public Map<String, Integer> countAllPersons(List<PersonDto> personDtoList) throws IOException {
 		Map<String, Integer> persons = new HashMap<>();
 		Integer adults = 0;
 		Integer underaged = 0;
 		List<Integer> index = new ArrayList<>();
-		List<MedicalRecord> m1 = this.repository.getAllMedicalRecords();
-		for (Person p : pPersons) {
-			for (MedicalRecord m : m1) {
+		List<MedicalRecordDto> m1 = this.getAllMedicalRecords();
+		for (PersonDto p : personDtoList) {
+			for (MedicalRecordDto m : m1) {
 				if (p.getFirstName().equals(m.getFirstName()) && p.getLastName().equals(m.getLastName())) {
 					if (!this.isUnderaged(m.getBirthDate())) {
 						adults++;

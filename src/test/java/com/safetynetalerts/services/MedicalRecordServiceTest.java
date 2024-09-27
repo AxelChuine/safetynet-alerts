@@ -11,7 +11,11 @@ import com.safetynetalerts.service.MedicalRecordServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,13 +29,13 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class MedicalRecordServiceTest {
 
-    @Autowired
+    @InjectMocks
 	private MedicalRecordServiceImpl service;
 
-    @MockBean
+    @Mock
 	private IMedicalRecordRepository repository;
 
 	private MedicalRecord medicalRecord;
@@ -138,32 +142,31 @@ public class MedicalRecordServiceTest {
 		Map<String, Integer> mapPersons = new HashMap<>();
 		mapPersons.put("mineurs", 1);
 		mapPersons.put("majeurs", 1);
+		String firstName1 = "Marc";
+		String firstName2 = "Jean";
+		String lastName1 = "Dubois";
+		String lastName2 = "Dubois";
+		String birthDate1 = "01/01/2000";
+		String birthDate2 = "01/01/2021";
 
 		// création d'une liste de medicalRecords
-		List<MedicalRecord> medicalRecords = new ArrayList<>();
 
 		//création de medical record et ajout à la liste
-		MedicalRecord m1 = new MedicalRecord();
-		m1.setBirthDate("09/12/2021");
-		m1.setFirstName("Marc");
-		m1.setLastName("Dubois");
-		MedicalRecord m2 = new MedicalRecord();
-		m2.setBirthDate("09/12/2001");
-		m2.setFirstName("Jean");
-		m2.setLastName("Dubois");
-		medicalRecords.add(m1);
-		medicalRecords.add(m2);
+		MedicalRecord medicalRecord1 = new MedicalRecord.MedicalRecordBuilder().firstName(firstName1).lastName(lastName1).birthDate(birthDate1).build();
+		MedicalRecord medicalRecord2 = new MedicalRecord.MedicalRecordBuilder().firstName(firstName2).lastName(lastName2).birthDate(birthDate2).build();
+		MedicalRecordDto m1 = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName(firstName1).lastName(lastName1).birthDate(birthDate1).build();
+		MedicalRecordDto m2 = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName(firstName2).lastName(lastName2).birthDate(birthDate2).build();
+		List<MedicalRecord> medicalRecords = List.of(medicalRecord1, medicalRecord2);
+		List<MedicalRecordDto> medicalRecordDtoList = List.of(m1, m2);
 
 		// création de personnes et ajout à une liste de personnes
-		Person p1 = new Person.PersonBuilder().firstName("Marc").lastName("Dubois").address(address).build();
-		Person p2 = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address(address).build();
-		List<Person> persons = new ArrayList<>();
-		persons.add(p1);
-		persons.add(p2);
+		PersonDto p1 = new PersonDto.PersonDtoBuilder().firstName("Marc").lastName("Dubois").address(address).build();
+		PersonDto p2 = new PersonDto.PersonDtoBuilder().firstName("Jean").lastName("Dubois").address(address).build();
+		List<PersonDto> personDtoList = List.of(p1, p2);
 
 
-		when(this.repository.getAllMedicalRecords()).thenReturn(medicalRecords);
-		Map<String, Integer> mapPersonsToCompare = this.service.countAllPersons(persons);
+		Mockito.when(this.repository.getAllMedicalRecords()).thenReturn(medicalRecords);
+		Map<String, Integer> mapPersonsToCompare = this.service.countAllPersons(personDtoList);
 
 		assertEquals(mapPersons, mapPersonsToCompare);
 	}
