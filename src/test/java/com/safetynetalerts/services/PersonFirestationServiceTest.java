@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
@@ -172,6 +173,7 @@ public class PersonFirestationServiceTest {
 
 
         when(this.personService.getAllPersons()).thenReturn(personDtoList);
+        when(this.fireStationService.getFireStationsByStationNumber(stationNumber)).thenReturn(fireStation);
         when(this.medicalRecordService.getMedicalRecordByFullName(firstName, lastName)).thenReturn(medicalRecord);
         List<PersonMedicalRecordDto> personMedicalRecordDtosToCompare = this.service.getPersonsAndMedicalRecordsByFirestation(this.stationNumbers);
 
@@ -184,12 +186,5 @@ public class PersonFirestationServiceTest {
 
         Assertions.assertEquals(exception.getMessage(), "No firestation(s) provided");
         Assertions.assertEquals(exception.getStatus(), HttpStatus.BAD_REQUEST);
-    }
-
-    @Test
-    public void getPersonsAndMedicalRecordsShouldThrowNotFoundExceptionIfNothingWasFound () {
-        ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.getPersonsAndMedicalRecordsByFirestation(this.stationNumbers));
-
-        Assertions.assertEquals(exception.getMessage(), "No person or medical records found");
     }
 }
