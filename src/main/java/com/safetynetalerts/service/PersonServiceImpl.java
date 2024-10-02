@@ -214,9 +214,6 @@ public class PersonServiceImpl {
     
 public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsException, ResourceNotFoundException {
         PersonDto personDto = pPerson;
-        if (this.repository.getAllPersons().stream().anyMatch(convertToPerson(personDto)::equals)) {
-            throw new ResourceAlreadyExistsException("person already exists");
-        }
         this.repository.savePerson(convertToPerson(personDto), convertToPerson(pPerson));
         return personDto;
     }

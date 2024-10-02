@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -90,7 +91,7 @@ class PersonServiceTest {
 	}
 
 	@Test
-	void getAllEmailAddressesByCity() throws Exception {
+	void getAllEmailAddressesByCityShouldReturnAListOfEmailAddress() throws Exception {
 		String vCity = "Culver";
 		String email1 = "test@gmail.com";
 		String email2 = "test2@gmail.com";
@@ -104,6 +105,15 @@ class PersonServiceTest {
 
 		assertEquals(emailAddresses, emailAddressesToCompare);
 	}
+
+	@Test
+	public void getAllEmailAddressesByCityShouldThrowBadResourceException() throws Exception {
+		BadResourceException exception = Assertions.assertThrows(BadResourceException.class, () -> this.service.getAllEmailAddressesByCity(null), "null doesn't exist");
+
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.BAD_REQUEST);
+		Assertions.assertEquals(exception.getMessage(), "null doesn't exist");
+	}
+
 
 	@Test
 	void getAllPersonsTest() throws IOException {
@@ -278,5 +288,16 @@ class PersonServiceTest {
 
 		Assertions.assertEquals(this.personDtos, personDtoListToCompare);
 	}
+
+	/*@Test
+	public void addPersonShouldReturnAPersonDto() throws ResourceAlreadyExistsException, ResourceNotFoundException {
+		Person newPerson = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
+		PersonDto newPersonDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
+
+		Mockito.when(this.repository.savePerson(this.person, newPerson));
+		PersonDto personToCompare = this.service.addPerson(newPersonDto);
+
+		Assertions.assertEquals(newPerson, personToCompare);
+	}*/
 
 }
