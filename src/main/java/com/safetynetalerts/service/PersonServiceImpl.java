@@ -45,22 +45,22 @@ public class PersonServiceImpl {
     }
 
     
-    public List<String> getAllEmailAddressesByCity(String pCity) throws Exception {
-        if (Objects.isNull(pCity)) {
-            throw new BadResourceException(pCity + " doesn't exist");
+    public List<String> getAllEmailAddressesByCity(String city) throws Exception {
+        if (Objects.isNull(city)) {
+            throw new BadResourceException("this city doesn't exist");
         }
-        List<Person> persons = this.getAllPersonsByCity(pCity);
-        if (Objects.isNull(persons)) {
-            throw new ResourceNotFoundException("People not found");
-        }
+        List<Person> persons = this.getAllPersonsByCity(city);
         List<String> emailAddresses = new ArrayList<>();
         for (Person p : persons) {
-            if (Objects.equals(p.city, pCity)) {
+            if (Objects.equals(p.city, city)) {
                 Optional<String> optionalEmail = emailAddresses.stream().filter(e -> Objects.equals(e, p.email)).findFirst();
                 if (!optionalEmail.isPresent()) {
                     emailAddresses.add(p.email);
                 }
             }
+        }
+        if (emailAddresses.isEmpty()) {
+            throw new ResourceNotFoundException("No email address found");
         }
         return emailAddresses;
     }

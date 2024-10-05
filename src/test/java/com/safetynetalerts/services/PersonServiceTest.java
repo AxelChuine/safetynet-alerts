@@ -108,10 +108,22 @@ class PersonServiceTest {
 
 	@Test
 	public void getAllEmailAddressesByCityShouldThrowBadResourceException() throws Exception {
-		BadResourceException exception = Assertions.assertThrows(BadResourceException.class, () -> this.service.getAllEmailAddressesByCity(null), "null doesn't exist");
+		String message = "this city doesn't exist";
 
-		Assertions.assertEquals(exception.getStatus(), HttpStatus.BAD_REQUEST);
-		Assertions.assertEquals(exception.getMessage(), "null doesn't exist");
+		BadResourceException exceptionToCompare = Assertions.assertThrows(BadResourceException.class, () -> this.service.getAllEmailAddressesByCity(null), message);
+
+		Assertions.assertEquals(exceptionToCompare.getStatus(), HttpStatus.BAD_REQUEST);
+		Assertions.assertEquals(exceptionToCompare.getMessage(), message);
+	}
+
+	@Test
+	public void getAllEmailAddressesShouldThrowResourceNotFoundException() throws Exception {
+		String message = "No email address found";
+
+		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.getAllEmailAddressesByCity("Paris"), message);
+
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.NOT_FOUND);
+		Assertions.assertEquals(exception.getMessage(), message);
 	}
 
 
@@ -128,7 +140,7 @@ class PersonServiceTest {
 
 
 	@Test
-	void getPersonByFullNameTest () throws Exception {
+	public void getPersonByFullNameShouldReturnAPersonDto() throws Exception {
 		String firstName = "Jean";
 		String lastName = "Dubois";
 		List<Person> persons = List.of(new Person.PersonBuilder().firstName(firstName).lastName(lastName).build(), new Person.PersonBuilder().build());
