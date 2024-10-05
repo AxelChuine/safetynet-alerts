@@ -91,13 +91,16 @@ public class PersonServiceImpl {
         return personDto;
     }
 
-    public List<PersonDto> getPersonsByAddress(String pAddress) throws ResourceNotFoundException {
+    public List<PersonDto> getPersonsByAddress(String address) throws ResourceNotFoundException, BadResourceException {
+        if (Objects.isNull(address)) {
+            throw new BadResourceException("No person found at this address");
+        }
         List<PersonDto> persons = convertToDtoList(this.repository.getAllPersons());
         List<PersonDto> personsByAddress;
-        personsByAddress = persons.stream().filter(p -> Objects.equals(p.address, pAddress))
+        personsByAddress = persons.stream().filter(p -> Objects.equals(p.address, address))
                 .collect(Collectors.toList());
         if (personsByAddress.isEmpty()) {
-            throw new ResourceNotFoundException("These persons don't exist.");
+            throw new ResourceNotFoundException("The people you are looking for don't exist.");
         }
         return personsByAddress;
     }

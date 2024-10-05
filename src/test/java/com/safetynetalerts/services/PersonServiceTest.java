@@ -197,11 +197,32 @@ class PersonServiceTest {
 	}
 
 	@Test
-	public void getPersonByAddressShouldReturnAListOfPersonDto() throws ResourceNotFoundException {
+	public void getPersonByAddressShouldReturnAListOfPersonDto() throws ResourceNotFoundException, BadResourceException {
 		when(this.repository.getAllPersons()).thenReturn(this.persons);
 		List<PersonDto> persons = this.service.getPersonsByAddress(this.address);
 
 		assertEquals(this.personDtos, persons);
+	}
+
+	@Test
+	public void getPersonByAddressShouldThrowBadRequest() {
+		String message = "No person found at this address";
+
+		BadResourceException exception = Assertions.assertThrows(BadResourceException.class, () -> this.service.getPersonsByAddress(null), message);
+
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.BAD_REQUEST);
+		Assertions.assertEquals(exception.getMessage(), exception.getMessage());
+	}
+
+	@Test
+	public void getPersonByAddressShouldThrowResourceNotFoundException() {
+		String message = "The people you are looking for don't exist.";
+
+		Mockito.when(this.repository.getAllPersons()).thenReturn(List.of());
+		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.getPersonsByAddress(address), message);
+
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.NOT_FOUND);
+		Assertions.assertEquals(exception.getMessage(), message);
 	}
 
 	@Test

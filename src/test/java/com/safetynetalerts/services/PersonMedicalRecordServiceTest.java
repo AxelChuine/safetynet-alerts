@@ -1,5 +1,6 @@
 package com.safetynetalerts.services;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.MedicalRecord;
@@ -88,7 +89,7 @@ public class PersonMedicalRecordServiceTest {
     }
 
     @Test
-    public void getAllConcernedPersonsAndTheirInfosByFireShouldReturnAFireDtoObject () throws ResourceNotFoundException, IOException {
+    public void getAllConcernedPersonsAndTheirInfosByFireShouldReturnAFireDtoObject () throws ResourceNotFoundException, IOException, BadResourceException {
         Integer age = 0;
         PersonByFireDto personByFireDto = new PersonByFireDto();
         personByFireDto.setFirstName(firstName);

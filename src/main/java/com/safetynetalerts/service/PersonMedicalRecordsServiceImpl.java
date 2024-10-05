@@ -1,5 +1,6 @@
 package com.safetynetalerts.service;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class PersonMedicalRecordsServiceImpl {
     }
 
 
-    public FireDto getAllConcernedPersonsAndTheirInfosByFire(String address) throws ResourceNotFoundException, IOException {
+    public FireDto getAllConcernedPersonsAndTheirInfosByFire(String address) throws ResourceNotFoundException, IOException, BadResourceException {
         List<PersonDto> persons = this.personService.getPersonsByAddress(address);
         List<MedicalRecordDto> medicalRecordDtos = this.medicalRecordService.getAllMedicalRecordByListOfPersons(persons);
         List<PersonByFireDto> personByFireDtos = this.convertToPersonByFireDtoList(persons, medicalRecordDtos);

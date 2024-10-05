@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireDto;
 import com.safetynetalerts.service.PersonMedicalRecordsServiceImpl;
@@ -27,7 +28,7 @@ public class FireController {
     }
 
     @GetMapping
-    public ResponseEntity<FireDto> getAllPersonsAndTheirInfosByAddress(@RequestParam("address") String address) throws IOException, ResourceNotFoundException {
+    public ResponseEntity<FireDto> getAllPersonsAndTheirInfosByAddress(@RequestParam("address") String address) throws IOException, ResourceNotFoundException, BadResourceException {
         logger.info("get all persons and associated medical records by address");
         return new ResponseEntity<>(this.service.getAllConcernedPersonsAndTheirInfosByFire(address), HttpStatus.OK);
     }
