@@ -242,7 +242,7 @@ class PersonServiceTest {
 	}
 
 	@Test
-	public void convertToDtoListTest () {
+	public void convertToDtoListShouldReturnAListOfPersonDto () {
 		List<Person> persons = new ArrayList<>();
 		Person p1 = new Person.PersonBuilder().build();
 		Person p2 = new Person.PersonBuilder().build();
@@ -324,6 +324,16 @@ class PersonServiceTest {
 		PersonDto personToCompare = this.service.convertToPersonDto(this.person);
 
 		Assertions.assertEquals(this.personDto, personToCompare);
+	}
+
+	@Test
+	public void convertToPersonDtoShouldThrowResourceNotFoundException () throws ResourceNotFoundException {
+		String message = "person not found exception";
+
+		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.convertToPersonDto(null), message);
+
+		Assertions.assertEquals(exception.getMessage(), message);
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.NOT_FOUND);
 	}
 
 	@Test
