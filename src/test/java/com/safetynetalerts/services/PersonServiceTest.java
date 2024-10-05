@@ -197,10 +197,10 @@ class PersonServiceTest {
 	}
 
 	@Test
-	public void getPersonByAddressTest() throws ResourceNotFoundException {
+	public void getPersonByAddressShouldReturnAListOfPersonDto() throws ResourceNotFoundException {
 		when(this.repository.getAllPersons()).thenReturn(this.persons);
 		List<PersonDto> persons = this.service.getPersonsByAddress(this.address);
-		// ASSERT
+
 		assertEquals(this.personDtos, persons);
 	}
 
@@ -240,7 +240,7 @@ class PersonServiceTest {
 	}
 
 	@Test
-	public void getChildByAddressTest () throws IOException, ResourceNotFoundException, BadResourceException {
+	public void getChildByAddressShouldReturnAListOfChildAlertDto () throws IOException, ResourceNotFoundException, BadResourceException {
 		List<PersonDto> personsByAddress = new ArrayList<>();
 		PersonDto person = new PersonDto.PersonDtoBuilder().firstName(this.firstName).lastName(this.lastName).address(address).build();
 		PersonDto adult = new PersonDto.PersonDtoBuilder().firstName("Marc").lastName(this.lastName).address(address).build();
@@ -259,6 +259,29 @@ class PersonServiceTest {
 		assertEquals(childAlertDtos.get(0).getFirstName(), childAlertDtosToCompare.get(0).getFirstName());
 		assertEquals(childAlertDtos.get(0).getLastName(), childAlertDtosToCompare.get(0).getLastName());
 	}
+
+	@Test
+	public void getChildByAddressShouldThrowBadRequestException () {
+		String message = "address not provided exception";
+
+		BadResourceException exception = Assertions.assertThrows(BadResourceException.class, () -> this.service.getChildByAddress(null), message);
+
+		Assertions.assertEquals(exception.getMessage(), message);
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.BAD_REQUEST);
+	}
+
+	@Test
+	public void getChildByAddressShouldThrowResourceNotFoundException () throws IOException {
+		String message = "No child at this address found";
+
+		when(this.repository.getAllPersons()).thenReturn(this.persons);
+		when(this.medicalRecordService.isUnderaged(person.firstName, person.lastName)).thenReturn(false);
+		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.getChildByAddress(address), message);
+
+		Assertions.assertEquals(exception.getMessage(), message);
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.NOT_FOUND);
+	}
+
 
 	@Test
 	public void getPersonInfoShouldReturnAListOfPersonsInfoIfExists() throws IOException, ResourceNotFoundException {
