@@ -141,14 +141,30 @@ class PersonServiceTest {
 
 	@Test
 	public void getPersonByFullNameShouldReturnAPersonDto() throws Exception {
-		String firstName = "Jean";
-		String lastName = "Dubois";
-		List<Person> persons = List.of(new Person.PersonBuilder().firstName(firstName).lastName(lastName).build(), new Person.PersonBuilder().build());
-
-		when(this.repository.getAllPersons()).thenReturn(persons);
+		when(this.repository.getAllPersons()).thenReturn(this.persons);
 		PersonDto person = this.service.getPersonByFullName(firstName, lastName);
 
-		verify(this.repository).getAllPersons();
+		Assertions.assertEquals(this.personDto, person);
+	}
+
+	@Test
+	public void getPersonByFullNameShouldThrowBadResourceException() throws Exception {
+		String message = "One or two parameter(s) is are missing";
+
+		BadResourceException exception = Assertions.assertThrows(BadResourceException.class, () -> this.service.getPersonByFullName(null, lastName), message);
+
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.BAD_REQUEST);
+		Assertions.assertEquals(exception.getMessage(), message);
+	}
+
+	@Test
+	public void getPersonByFullNameShouldThrowResourceNotFoundException() throws Exception {
+		String message = "La personne s'appelant " + firstName + " " + lastName + " n'existe pas.";
+
+		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.getPersonByFullName(firstName, lastName), message);
+
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.NOT_FOUND);
+		Assertions.assertEquals(exception.getMessage(), message);
 	}
 
 	@Test

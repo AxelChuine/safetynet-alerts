@@ -67,7 +67,7 @@ public class PersonServiceImpl {
 
     public PersonDto getPersonByFullName(String pFirstName, String pLastName) throws ResourceNotFoundException, BadResourceException {
         if (Objects.isNull(pFirstName) || Objects.isNull(pLastName)) {
-            throw new BadResourceException("One or two parameter(s) is / are missing");
+            throw new BadResourceException("One or two parameter(s) is are missing");
         }
         Person person;
         List<Person> persons = this.repository.getAllPersons();
