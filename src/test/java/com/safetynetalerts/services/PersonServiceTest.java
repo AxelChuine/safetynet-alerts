@@ -317,15 +317,15 @@ class PersonServiceTest {
 		Assertions.assertEquals(this.personDtos, personDtoListToCompare);
 	}
 
-	/*@Test
+	@Test
 	public void addPersonShouldReturnAPersonDto() throws ResourceAlreadyExistsException, ResourceNotFoundException {
 		Person newPerson = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
 		PersonDto newPersonDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
 
-		Mockito.when(this.repository.savePerson(this.person, newPerson));
+		Mockito.when(this.repository.savePerson(this.person, newPerson)).thenReturn(this.person);
 		PersonDto personToCompare = this.service.addPerson(newPersonDto);
 
-		Assertions.assertEquals(newPerson, personToCompare);
-	}*/
+		Assertions.assertEquals(newPersonDto, personToCompare);
+	}
 
 }
