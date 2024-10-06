@@ -276,4 +276,11 @@ public class MedicalRecordServiceTest {
 
 		Assertions.assertEquals(this.medicalRecordDto, medicalRecordToCompare);
 	}
+
+	@Test
+	public void toDtoListShouldReturnAListOfDto() {
+		List<MedicalRecordDto> medicalRecordToCompare = this.service.toDtoList(this.medicalRecords);
+
+		Assertions.assertEquals(this.medicalRecordDtos, medicalRecordToCompare);
+	}
 }
