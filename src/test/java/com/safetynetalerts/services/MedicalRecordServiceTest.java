@@ -216,6 +216,21 @@ public class MedicalRecordServiceTest {
 	}
 
 	@Test
+	public void createMedicalRecordShouldThrowResourceAlreadyExistsExceptionIfTheMedicalRecordExists() {
+		ResourceAlreadyExistsException resourceException = new ResourceAlreadyExistsException();
+		String message = "Le dossier médical existe déjà";
+		resourceException.setMessage(message);
+		resourceException.setStatus(HttpStatus.CONFLICT);
+
+		Mockito.when(this.repository.getAllMedicalRecords()).thenReturn(this.medicalRecords);
+		ResourceAlreadyExistsException exception = Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> this.service.createMedicalRecord(this.medicalRecordDto), message);
+
+		Assertions.assertEquals(resourceException, exception);
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.CONFLICT);
+		Assertions.assertEquals(exception.getMessage(), message);
+	}
+
+	@Test
 	public void updateMedicalRecordShouldReturnAOfMedicalRecordDto () throws ResourceNotFoundException, IOException, BadResourceException {
 		MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder()
 				.firstName(firstName)

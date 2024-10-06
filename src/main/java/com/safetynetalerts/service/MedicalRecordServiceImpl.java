@@ -150,7 +150,7 @@ public class MedicalRecordServiceImpl {
 	public MedicalRecordDto createMedicalRecord(MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException, ResourceAlreadyExistsException {
         MedicalRecord medicalRecord;
 		if (this.repository.getAllMedicalRecords().stream().anyMatch(m -> Objects.equals(m.getFirstName(), pMedicalRecord.getFirstName()) && Objects.equals(m.getLastName(), pMedicalRecord.getLastName()))) {
-			throw new ResourceAlreadyExistsException("Le dossier médical existe déja");
+			throw new ResourceAlreadyExistsException("Le dossier médical existe déjà");
 		}
 		if (Objects.nonNull(pMedicalRecord)) {
 			medicalRecord = new MedicalRecord
