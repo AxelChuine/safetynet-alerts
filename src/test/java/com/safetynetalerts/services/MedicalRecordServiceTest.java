@@ -223,9 +223,10 @@ public class MedicalRecordServiceTest {
 	@Test
 	public void updateMedicalRecordShouldThrowResourceNotFoundException () throws ResourceNotFoundException {
 		String message = "this medical record doesn't exist";
+		MedicalRecordDto mr = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName("Bertrand").lastName("Dubois").birthDate("05/05/1989").build();
 
 		when(this.repository.getAllMedicalRecords()).thenReturn(this.medicalRecords);
-		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.updateMedicalRecord(this.medicalRecordDto), message);
+		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.updateMedicalRecord(mr), message);
 
 		Assertions.assertEquals(message, exception.getMessage());
 		Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());

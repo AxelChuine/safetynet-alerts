@@ -9,6 +9,7 @@ import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.repository.MedicalRecordRepository;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
@@ -63,20 +64,9 @@ public class MedicalRecordServiceImpl {
 		if (Objects.isNull(firstName) || Objects.isNull(lastName)) {
 			throw new BadResourceException("The parameters provided are incorrect");
 		}
-		List<MedicalRecord> records = this.repository.getAllMedicalRecords();
-		MedicalRecordDto medicalRecord = new MedicalRecordDto.MedicalRecordDtoBuilder().build();
-		for (MedicalRecordDto medicalRecordDto : toDtoList(records)) {
-			if (medicalRecordDto.getFirstName().equals(firstName)
-					&& medicalRecordDto.getLastName().equals(lastName)) {
-				medicalRecord.setFirstName(medicalRecordDto.getFirstName());
-				medicalRecord.setLastName(medicalRecordDto.getLastName());
-				medicalRecord.setBirthDate(medicalRecordDto.getBirthDate());
-				medicalRecord.setMedications(medicalRecordDto.getMedications());
-				medicalRecord.setAllergies(medicalRecordDto.getAllergies());
-			}
-		}
-		return medicalRecord;
-	}
+		Optional<MedicalRecord> optionalMedicalRecord = this.repository.getAllMedicalRecords().stream().filter(mr -> mr.getFirstName().equals(firstName) && mr.getLastName().equals(lastName)).findFirst();
+        return optionalMedicalRecord.map(this::convertModelToDto).orElse(null);
+    }
 
 	public List<MedicalRecordDto> toDtoList(List<MedicalRecord> records) {
 		List<MedicalRecordDto> medicalRecordDtos = new ArrayList<>();
