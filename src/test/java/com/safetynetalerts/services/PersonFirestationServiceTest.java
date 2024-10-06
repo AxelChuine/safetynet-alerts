@@ -5,7 +5,6 @@ import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
-import com.safetynetalerts.repository.IFireStationRepository;
 import com.safetynetalerts.service.FireStationServiceImpl;
 import com.safetynetalerts.service.MedicalRecordServiceImpl;
 import com.safetynetalerts.service.PersonFirestationServiceImpl;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 

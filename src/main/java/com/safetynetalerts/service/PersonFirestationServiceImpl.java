@@ -4,9 +4,7 @@ import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.FireStation;
-import com.safetynetalerts.models.Person;
-import com.safetynetalerts.repository.IFireStationRepository;
-import com.safetynetalerts.repository.IPersonRepository;
+import com.safetynetalerts.repository.FireStationRepository;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -23,9 +21,9 @@ public class PersonFirestationServiceImpl {
 
     private final PersonServiceImpl personService;
 
-    private final IFireStationRepository fireStationRepository;
+    private final FireStationRepository fireStationRepository;
 
-    public PersonFirestationServiceImpl(FireStationServiceImpl fireStationService, MedicalRecordServiceImpl medicalRecordService, PersonServiceImpl personService, IFireStationRepository fireStationRepository) {
+    public PersonFirestationServiceImpl(FireStationServiceImpl fireStationService, MedicalRecordServiceImpl medicalRecordService, PersonServiceImpl personService, FireStationRepository fireStationRepository) {
         this.fireStationService = fireStationService;
         this.medicalRecordService = medicalRecordService;
         this.personService = personService;

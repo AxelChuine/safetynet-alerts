@@ -36,7 +36,10 @@ public class PersonMedicalRecordsServiceImpl {
     }
 
     
-    public List<PersonInfo> getAllPersonInformations(String lastName) throws ResourceNotFoundException, IOException {
+    public List<PersonInfo> getAllPersonInformations(String lastName) throws ResourceNotFoundException, BadResourceException {
+        if (Objects.isNull(lastName)) {
+            throw new BadResourceException("The last name is null");
+        }
         List<PersonInfo> personInfos = new ArrayList<>();
         List<PersonDto> personByLastName = this.personService.getPersonByLastName(lastName);
         List<MedicalRecordDto> medicalRecordDtosByListOfPerson = this.medicalRecordService.getAllMedicalRecordByListOfPersons(personByLastName);
@@ -56,7 +59,7 @@ public class PersonMedicalRecordsServiceImpl {
     }
 
     
-    public List<PersonByFireDto> convertToPersonByFireDtoList(List<PersonDto> pPersons, List<MedicalRecordDto> pMedicalRecords) throws IOException, ResourceNotFoundException {
+    public List<PersonByFireDto> convertToPersonByFireDtoList(List<PersonDto> pPersons, List<MedicalRecordDto> pMedicalRecords) throws IOException, ResourceNotFoundException, BadResourceException {
         List<MedicalRecordDto> medicalRecordDtos = pMedicalRecords;
         List<PersonByFireDto> personByFireDtos = new ArrayList<>();
         for (MedicalRecordDto medicalRecordDto : medicalRecordDtos) {

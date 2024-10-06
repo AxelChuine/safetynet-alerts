@@ -2,17 +2,14 @@ package com.safetynetalerts.controller;
 
 import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
-import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.service.MedicalRecordServiceImpl;
 import com.safetynetalerts.service.PersonFirestationServiceImpl;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;

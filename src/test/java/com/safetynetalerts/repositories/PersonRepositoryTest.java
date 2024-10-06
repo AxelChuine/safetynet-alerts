@@ -2,7 +2,7 @@ package com.safetynetalerts.repositories;
 
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.models.Person;
-import com.safetynetalerts.repository.IPersonRepository;
+import com.safetynetalerts.repository.PersonRepositoryImpl;
 import com.safetynetalerts.utils.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class PersonRepositoryTest {
     @Autowired
-    private IPersonRepository repository;
+    private PersonRepositoryImpl repository;
 
     @Mock
     private Data data;

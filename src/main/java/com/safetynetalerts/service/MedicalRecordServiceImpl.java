@@ -1,15 +1,12 @@
 package com.safetynetalerts.service;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.MedicalRecord;
-import com.safetynetalerts.models.Person;
-import com.safetynetalerts.repository.IMedicalRecordRepository;
-import com.safetynetalerts.utils.Data;
-import com.safetynetalerts.utils.Utils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.safetynetalerts.repository.MedicalRecordRepository;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,15 +18,9 @@ import java.util.*;
 @Service
 public class MedicalRecordServiceImpl {
 
-	@Autowired
-	private Utils utils;
+	private final MedicalRecordRepository repository;
 
-	@Autowired
-	private Data data;
-	
-	private final IMedicalRecordRepository repository;
-
-    public MedicalRecordServiceImpl(IMedicalRecordRepository repository) {
+    public MedicalRecordServiceImpl(MedicalRecordRepository repository) {
         this.repository = repository;
     }
 
@@ -46,20 +37,11 @@ public class MedicalRecordServiceImpl {
 		}
 		return vRet;
 	}
-
-
-	/**
-	 * @Author Axel
-	 * @param personDtoList
-	 * @return a map counting the persons underaged and not.
-	 * @throws IOException
-	 */
 	
 	public Map<String, Integer> countAllPersons(List<PersonDto> personDtoList) throws IOException {
 		Map<String, Integer> persons = new HashMap<>();
 		Integer adults = 0;
 		Integer underaged = 0;
-		List<Integer> index = new ArrayList<>();
 		List<MedicalRecordDto> m1 = this.getAllMedicalRecords();
 		for (PersonDto p : personDtoList) {
 			for (MedicalRecordDto m : m1) {
@@ -77,54 +59,45 @@ public class MedicalRecordServiceImpl {
 		return persons;
 	}
 
-	/**
-	 * @param pFirstName
-	 * @param pLastName
-	 * @return a list of medical records according to the parameters
-	 */
-	public MedicalRecordDto getMedicalRecordByFullName(String pFirstName, String pLastName) throws ResourceNotFoundException {
+	public MedicalRecordDto getMedicalRecordByFullName(String firstName, String lastName) throws ResourceNotFoundException, BadResourceException {
+		if (Objects.isNull(firstName) || Objects.isNull(lastName)) {
+			throw new BadResourceException("The parameters provided are incorrect");
+		}
 		List<MedicalRecord> records = this.repository.getAllMedicalRecords();
 		MedicalRecordDto medicalRecord = new MedicalRecordDto.MedicalRecordDtoBuilder().build();
-		int count = 0;
-		while (count < records.size()) {
-			if (records.get(count).getFirstName().equals(pFirstName)
-					&& records.get(count).getLastName().equals(pLastName)) {
-				medicalRecord.setFirstName(records.get(count).getFirstName());
-				medicalRecord.setLastName(records.get(count).getLastName());
-				medicalRecord.setBirthDate(records.get(count).getBirthDate());
-				medicalRecord.setMedications(records.get(count).getMedications());
-				medicalRecord.setAllergies(records.get(count).getAllergies());
+		for (MedicalRecordDto medicalRecordDto : toDtoList(records)) {
+			if (medicalRecordDto.getFirstName().equals(firstName)
+					&& medicalRecordDto.getLastName().equals(lastName)) {
+				medicalRecord.setFirstName(medicalRecordDto.getFirstName());
+				medicalRecord.setLastName(medicalRecordDto.getLastName());
+				medicalRecord.setBirthDate(medicalRecordDto.getBirthDate());
+				medicalRecord.setMedications(medicalRecordDto.getMedications());
+				medicalRecord.setAllergies(medicalRecordDto.getAllergies());
 			}
-			count++;
 		}
 		return medicalRecord;
 	}
 
-	/**
-	 *
-	 * @param firstName
-	 * @param lastName
-	 * @return
-	 * @throws ResourceNotFoundException
-	 */
+	public List<MedicalRecordDto> toDtoList(List<MedicalRecord> records) {
+		List<MedicalRecordDto> medicalRecordDtos = new ArrayList<>();
+		for (MedicalRecord record : records) {
+			MedicalRecordDto medicalRecordDto = this.convertModelToDto(record);
+			medicalRecordDtos.add(medicalRecordDto);
+		}
+		return medicalRecordDtos;
+	}
 	
-	public Integer getAgeOfPerson(String firstName, String lastName) throws ResourceNotFoundException {
+	public Integer getAgeOfPerson(String firstName, String lastName) throws ResourceNotFoundException, BadResourceException {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 		LocalDate birthDate = LocalDate.parse(this.getMedicalRecordByFullName(firstName, lastName).getBirthDate(), formatter);
 		LocalDate instant = LocalDate.now();
-		Integer age = Period.between(birthDate, instant).getYears();
-		return age;
+		return  Period.between(birthDate, instant).getYears();
 	}
 
-	/**
-	 * @param pFirstName
-	 * @param pLastName
-	 * @return true if the person is underaged
-	 */
-	
-	public boolean isUnderaged(String pFirstName, String pLastName) throws IOException {
+
+	public boolean isUnderaged(String firstName, String lastName) throws IOException {
 		boolean isUnderaged = false;
-		MedicalRecord medicalRecord = this.getMedicalRecordByUnderage(pFirstName, pLastName);
+		MedicalRecord medicalRecord = this.getMedicalRecordByUnderage(firstName, lastName);
 		if (this.isUnderaged(medicalRecord.getBirthDate())) {
 			isUnderaged = true;
 		}
@@ -135,7 +108,7 @@ public class MedicalRecordServiceImpl {
 	 * @return a medical record of a person if underaged
 	 */
 	
-	public MedicalRecord getMedicalRecordByUnderage(String pFirstName, String pLastName) throws IOException {
+	public MedicalRecord getMedicalRecordByUnderage(String pFirstName, String pLastName) {
 		MedicalRecord medicalRecord = null;
 		Optional<MedicalRecord> medicalRecordOptional = this.repository.getAllMedicalRecords().stream()
 				.filter(m -> Objects.equals(m.getFirstName(), pFirstName) && Objects.equals(m.getLastName(), pLastName))
@@ -161,14 +134,15 @@ public class MedicalRecordServiceImpl {
 	}
 
 	
-	public MedicalRecordDto updateMedicalRecord(MedicalRecordDto medicalRecordDto) throws ResourceNotFoundException, IOException {
+	public MedicalRecordDto updateMedicalRecord(MedicalRecordDto medicalRecordDto) throws ResourceNotFoundException, IOException, BadResourceException {
+		if (Objects.isNull(medicalRecordDto)) {
+			throw new BadResourceException("The medical record is not provided");
+		}
 		MedicalRecordDto medicalRecordDtoToReturn = this.getMedicalRecordByFullName(medicalRecordDto.getFirstName(), medicalRecordDto.getLastName());
-		if (Objects.equals(medicalRecordDtoToReturn.getFirstName(), medicalRecordDto.getFirstName()) && Objects.equals(medicalRecordDtoToReturn.getLastName(), medicalRecordDto.getLastName())) {
-			medicalRecordDto = convertModelToDto(this.repository.saveMedicalRecord(convertDtoToModel(medicalRecordDtoToReturn), convertDtoToModel(medicalRecordDto)));
-		} else {
+		if (Objects.isNull(medicalRecordDtoToReturn)) {
 			throw new ResourceNotFoundException("this medical record doesn't exist");
 		}
-		return medicalRecordDto;
+		return this.convertModelToDto(this.repository.saveMedicalRecord(convertDtoToModel(medicalRecordDtoToReturn), convertDtoToModel(medicalRecordDto)));
 	}
 
 	
@@ -204,7 +178,7 @@ public class MedicalRecordServiceImpl {
 	}
 
 	
-	public void deleteMedicalRecordByFullName(String firstName, String lastName) throws ResourceNotFoundException {
+	public void deleteMedicalRecordByFullName(String firstName, String lastName) throws ResourceNotFoundException, BadResourceException {
 		this.repository.deleteMedicalRecord(convertDtoToModel(this.getMedicalRecordByFullName(firstName, lastName)));
 	}
 
@@ -220,7 +194,7 @@ public class MedicalRecordServiceImpl {
 	}
 
 	
-	public List<MedicalRecordDto> getAllMedicalRecordByListOfPersons(List<PersonDto> personDtoList) throws ResourceNotFoundException {
+	public List<MedicalRecordDto> getAllMedicalRecordByListOfPersons(List<PersonDto> personDtoList) throws ResourceNotFoundException, BadResourceException {
 		List<MedicalRecordDto> medicalRecordsToReturn = new ArrayList<>();
 		for (PersonDto personDto : personDtoList) {
 			MedicalRecordDto medicalRecordDto = this.getMedicalRecordByFullName(personDto.firstName, personDto.lastName);

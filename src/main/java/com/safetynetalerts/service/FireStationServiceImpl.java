@@ -8,7 +8,7 @@ import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
-import com.safetynetalerts.repository.IFireStationRepository;
+import com.safetynetalerts.repository.FireStationRepository;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,9 +19,9 @@ public class FireStationServiceImpl {
 
 	private final MedicalRecordServiceImpl medicalRecordService;
 
-	private final IFireStationRepository repository;
+	private final FireStationRepository repository;
 
-    public FireStationServiceImpl(MedicalRecordServiceImpl medicalRecordService, IFireStationRepository repository) {
+    public FireStationServiceImpl(MedicalRecordServiceImpl medicalRecordService, FireStationRepository repository) {
         this.medicalRecordService = medicalRecordService;
         this.repository = repository;
     }
@@ -58,7 +58,7 @@ public class FireStationServiceImpl {
 	 * use the person in parameter and his medical record to create an object personMedicalRecordDto.
 	 */
 	
-	public PersonMedicalRecordDto convertToPersonMedicalRecord(Person pPerson, MedicalRecord pMedicalRecord) throws IOException, ResourceNotFoundException {
+	public PersonMedicalRecordDto convertToPersonMedicalRecord(Person pPerson, MedicalRecord pMedicalRecord) throws IOException, ResourceNotFoundException, BadResourceException {
 		PersonMedicalRecordDto personMedicalRecordDto = new PersonMedicalRecordDto();
 		personMedicalRecordDto.setFirstName(pPerson.firstName);
 		personMedicalRecordDto.setLastName(pPerson.lastName);

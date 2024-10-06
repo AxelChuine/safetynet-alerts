@@ -1,7 +1,7 @@
 package com.safetynetalerts.repositories;
 
 import com.safetynetalerts.models.FireStation;
-import com.safetynetalerts.repository.impl.FireStationRepository;
+import com.safetynetalerts.repository.FireStationRepository;
 import com.safetynetalerts.utils.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

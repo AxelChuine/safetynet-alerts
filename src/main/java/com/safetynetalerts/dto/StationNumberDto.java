@@ -1,6 +1,5 @@
 package com.safetynetalerts.dto;
 
-import com.safetynetalerts.models.Person;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

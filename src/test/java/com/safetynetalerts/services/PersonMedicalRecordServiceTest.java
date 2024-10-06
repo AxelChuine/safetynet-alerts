@@ -17,8 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -107,7 +105,7 @@ public class PersonMedicalRecordServiceTest {
     }
 
     @Test
-    public void convertListOfPersonsAndMedicalRecordsToPersonsByFireDtosShouldReturnAListOfPersonByFireDtoObject () throws ResourceNotFoundException, IOException {
+    public void convertListOfPersonsAndMedicalRecordsToPersonsByFireDtosShouldReturnAListOfPersonByFireDtoObject () throws ResourceNotFoundException, IOException, BadResourceException {
         Integer age = 1;
         PersonByFireDto personByFireDto = new PersonByFireDto();
         personByFireDto.setFirstName(firstName);
@@ -124,7 +122,7 @@ public class PersonMedicalRecordServiceTest {
     }
 
     @Test
-    public void getAllPersonInfoShouldReturnSomePersonInfos () throws ResourceNotFoundException, IOException {
+    public void getAllPersonInfoShouldReturnSomePersonInfos () throws ResourceNotFoundException, IOException, BadResourceException {
         PersonInfo personInfo = new PersonInfo();
         personInfo.setFirstName(firstName);
         personInfo.setLastName(lastName);

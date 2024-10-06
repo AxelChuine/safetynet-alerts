@@ -5,7 +5,7 @@ import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.Person;
-import com.safetynetalerts.repository.IPersonRepository;
+import com.safetynetalerts.repository.PersonRepositoryImpl;
 import com.safetynetalerts.utils.Data;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +23,9 @@ public class PersonServiceImpl {
 
     private final MedicalRecordServiceImpl medicalRecordService;
 
-    private final IPersonRepository repository;
+    private final PersonRepositoryImpl repository;
 
-    public PersonServiceImpl(Data data, MedicalRecordServiceImpl medicalRecordService, IPersonRepository repository) {
+    public PersonServiceImpl(Data data, MedicalRecordServiceImpl medicalRecordService, PersonRepositoryImpl repository) {
         this.data = data;
         this.medicalRecordService = medicalRecordService;
         this.repository = repository;
@@ -107,7 +107,7 @@ public class PersonServiceImpl {
 
 
     
-    public List<PersonInfo> getPersonInfo(String lastName) throws ResourceNotFoundException, IOException {
+    public List<PersonInfo> getPersonInfo(String lastName) throws ResourceNotFoundException, IOException, BadResourceException {
         List<PersonDto> personDtos = this.getAllPersons().stream().filter(personDto -> Objects.equals(personDto.lastName, lastName)).toList();
         List<MedicalRecordDto> medicalRecordDtos = medicalRecordService.getAllMedicalRecordByListOfPersons(personDtos);
         List<PersonInfo> specificPersonInfos = new ArrayList<>();

@@ -1,12 +1,12 @@
 package com.safetynetalerts.services;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.MedicalRecord;
-import com.safetynetalerts.models.Person;
-import com.safetynetalerts.repository.IMedicalRecordRepository;
+import com.safetynetalerts.repository.MedicalRecordRepository;
 import com.safetynetalerts.service.MedicalRecordServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,9 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class MedicalRecordServiceTest {
@@ -36,21 +35,19 @@ public class MedicalRecordServiceTest {
 	private MedicalRecordServiceImpl service;
 
     @Mock
-	private IMedicalRecordRepository repository;
+	private MedicalRecordRepository repository;
 
 	private MedicalRecord medicalRecord;
 
 	private MedicalRecordDto medicalRecordDto;
 
-	private PersonDto personDto;
+    private List<PersonDto> persons;
 
-	private List<PersonDto> persons;
+	private final String firstName = "Jean";
 
-	private String firstName = "Jean";
+	private final String lastName = "Doe";
 
-	private String lastName = "Doe";
-
-	private String birthDate = "04/05/2000";
+	private final String birthDate = "04/05/2000";
 
 	private List<MedicalRecord> medicalRecords;
 
@@ -60,14 +57,14 @@ public class MedicalRecordServiceTest {
 	public void setUp() {
 		medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
 		medicalRecordDto = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
-		this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).build();
-		this.persons = List.of(this.personDto);
+        PersonDto personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).build();
+		this.persons = List.of(personDto);
 		this.medicalRecords = List.of(medicalRecord);
 		this.medicalRecordDtos = new ArrayList<>(List.of(medicalRecordDto));
 	}
 
 	@Test
-	void getMedicalRecordByFullNameTest() throws IOException, ResourceNotFoundException {
+	void getMedicalRecordByFullNameTest() throws IOException, ResourceNotFoundException, BadResourceException {
 		String vFirstName = "John";
 		String vLastName = "Boyd";
 		List<String> medications = new ArrayList<>();
@@ -86,7 +83,7 @@ public class MedicalRecordServiceTest {
 	}
 
 	@Test
-	void getAgeOfPersonTest() throws IOException, ResourceNotFoundException {
+	void getAgeOfPersonTest() throws IOException, ResourceNotFoundException, BadResourceException {
 		MedicalRecord medicalRecord = new MedicalRecord();
 		medicalRecord.setFirstName("John");
 		medicalRecord.setLastName("Dubois");
@@ -199,7 +196,7 @@ public class MedicalRecordServiceTest {
 	}
 
 	@Test
-	public void updateMedicalRecordTest () throws ResourceNotFoundException, IOException {
+	public void updateMedicalRecordShouldReturnAOfMedicalRecordDto () throws ResourceNotFoundException, IOException, BadResourceException {
 		MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder()
 				.firstName(firstName)
 				.lastName(lastName)
@@ -213,9 +210,30 @@ public class MedicalRecordServiceTest {
 		assertEquals(this.medicalRecordDto, medicalRecordToCompare);
 	}
 
+	@Test
+	public void updateMedicalRecordShouldThrowBadResourceException () throws ResourceNotFoundException {
+		String message = "The medical record is not provided";
+
+		BadResourceException exception = Assertions.assertThrows(BadResourceException.class, () -> this.service.updateMedicalRecord(null), message);
+
+		Assertions.assertEquals(message, exception.getMessage());
+		Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+	}
 
 	@Test
-	public void deleteMedicalRecordShouldDeleteAMedicalRecord() throws ResourceNotFoundException {
+	public void updateMedicalRecordShouldThrowResourceNotFoundException () throws ResourceNotFoundException {
+		String message = "this medical record doesn't exist";
+
+		when(this.repository.getAllMedicalRecords()).thenReturn(this.medicalRecords);
+		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.updateMedicalRecord(this.medicalRecordDto), message);
+
+		Assertions.assertEquals(message, exception.getMessage());
+		Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+	}
+
+
+	@Test
+	public void deleteMedicalRecordShouldDeleteAMedicalRecord() throws ResourceNotFoundException, BadResourceException {
 		Mockito.when(this.repository.getAllMedicalRecords()).thenReturn(this.medicalRecords);
 		this.service.deleteMedicalRecordByFullName(firstName, lastName);
 
@@ -223,7 +241,7 @@ public class MedicalRecordServiceTest {
 	}
 
 	@Test
-	public void getAllMedicalRecordByListOfPersonsShouldReturnAListOfMedicalRecordsDto () throws ResourceNotFoundException {
+	public void getAllMedicalRecordByListOfPersonsShouldReturnAListOfMedicalRecordsDto () throws ResourceNotFoundException, BadResourceException {
 		Mockito.when(this.repository.getAllMedicalRecords()).thenReturn(this.medicalRecords);
 		List<MedicalRecordDto> medicalRecordsToCompare = this.service.getAllMedicalRecordByListOfPersons(persons);
 
@@ -245,7 +263,7 @@ public class MedicalRecordServiceTest {
 	}
 
 	@Test
-	public void updateMedicalRecordShouldUpdateAMedicalRecord() throws IOException, ResourceNotFoundException {
+	public void updateMedicalRecordShouldUpdateAMedicalRecord() throws IOException, ResourceNotFoundException, BadResourceException {
 		MedicalRecord newMedicalRecord = new MedicalRecord.MedicalRecordBuilder()
 				.firstName(firstName)
 				.lastName(lastName)

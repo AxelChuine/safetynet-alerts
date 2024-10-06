@@ -5,8 +5,8 @@ import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.models.FireStation;
-import com.safetynetalerts.repository.IPersonRepository;
-import com.safetynetalerts.repository.impl.FireStationRepository;
+import com.safetynetalerts.repository.FireStationRepository;
+import com.safetynetalerts.repository.PersonRepositoryImpl;
 import com.safetynetalerts.service.FireStationServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +34,7 @@ public class FireStationServiceTest {
 	private FireStationServiceImpl service;
 
     @MockBean
-	private IPersonRepository personRepository;
+	private PersonRepositoryImpl personRepository;
 
 	@Mock
 	private FireStationRepository repository;

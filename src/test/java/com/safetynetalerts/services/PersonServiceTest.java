@@ -5,7 +5,7 @@ import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.Person;
-import com.safetynetalerts.repository.IPersonRepository;
+import com.safetynetalerts.repository.PersonRepositoryImpl;
 import com.safetynetalerts.service.MedicalRecordServiceImpl;
 import com.safetynetalerts.service.PersonServiceImpl;
 import com.safetynetalerts.utils.Data;
@@ -39,7 +39,7 @@ class PersonServiceTest {
 	private MedicalRecordServiceImpl medicalRecordService;
 	
 	@MockBean
-	private IPersonRepository repository;
+	private PersonRepositoryImpl repository;
 
 	private List<Person> persons;
 
@@ -305,7 +305,7 @@ class PersonServiceTest {
 
 
 	@Test
-	public void getPersonInfoShouldReturnAListOfPersonsInfoIfExists() throws IOException, ResourceNotFoundException {
+	public void getPersonInfoShouldReturnAListOfPersonsInfoIfExists() throws IOException, ResourceNotFoundException, BadResourceException {
 		String lastName = "Dubois";
 		PersonInfo specificPersonInfo = new PersonInfo("Jean", "Dubois", 15, "test@gmail.com", null, null);
 		List<PersonInfo> personInfo = new ArrayList<>(List.of(specificPersonInfo));
@@ -349,6 +349,16 @@ class PersonServiceTest {
 		Person personToCompare = this.service.convertToPerson(this.personDto);
 
 		Assertions.assertEquals(this.person, personToCompare);
+	}
+
+	@Test
+	public void toModelShouldThrowResourceNotFoundException() throws ResourceNotFoundException {
+		String message = "person not found exception";
+
+		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.convertToPerson(null), message);
+
+		Assertions.assertEquals(exception.getMessage(), message);
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.NOT_FOUND);
 	}
 
 	@Test

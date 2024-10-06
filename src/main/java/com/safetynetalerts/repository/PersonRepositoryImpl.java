@@ -1,15 +1,13 @@
-package com.safetynetalerts.repository.impl;
+package com.safetynetalerts.repository;
 
-import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.Person;
-import com.safetynetalerts.repository.IPersonRepository;
 import com.safetynetalerts.utils.Data;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class PersonRepositoryImpl implements IPersonRepository {
+public class PersonRepositoryImpl {
 
     private final Data data;
 
@@ -17,12 +15,12 @@ public class PersonRepositoryImpl implements IPersonRepository {
         this.data = data;
     }
 
-    @Override
+    
     public List<Person> getAllPersons() {
         return this.data.getPersons();
     }
 
-    @Override
+    
     public Person savePerson(Person person, Person newPerson) {
         return this.data.savePerson(person, newPerson);
     }

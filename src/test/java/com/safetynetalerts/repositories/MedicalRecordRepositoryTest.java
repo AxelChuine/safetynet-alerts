@@ -1,7 +1,7 @@
 package com.safetynetalerts.repositories;
 
 import com.safetynetalerts.models.MedicalRecord;
-import com.safetynetalerts.repository.impl.MedicalRecordRepository;
+import com.safetynetalerts.repository.MedicalRecordRepository;
 import com.safetynetalerts.utils.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

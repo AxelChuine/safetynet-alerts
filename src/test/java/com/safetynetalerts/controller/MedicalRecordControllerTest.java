@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(controllers = MedicalRecordController.class)

@@ -1,7 +1,6 @@
-package com.safetynetalerts.repository.impl;
+package com.safetynetalerts.repository;
 
 import com.safetynetalerts.models.MedicalRecord;
-import com.safetynetalerts.repository.IMedicalRecordRepository;
 import com.safetynetalerts.utils.Data;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class MedicalRecordRepository implements IMedicalRecordRepository {
+public class MedicalRecordRepository {
 
     private final Data data;
 
@@ -17,22 +16,22 @@ public class MedicalRecordRepository implements IMedicalRecordRepository {
         this.data = data;
     }
 
-    @Override
+    
     public List<MedicalRecord> getAllMedicalRecords() {
         return new ArrayList<>(this.data.getAllMedicalRecords());
     }
 
-    @Override
+    
     public MedicalRecord createMedicalRecord(MedicalRecord medicalRecord) {
         return this.data.createMedicalRecord(medicalRecord);
     }
 
-    @Override
+    
     public void deleteMedicalRecord(MedicalRecord medicalRecord) {
         this.data.deleteMedicalRecord(medicalRecord);
     }
 
-    @Override
+    
     public MedicalRecord saveMedicalRecord(MedicalRecord medicalRecord, MedicalRecord newMedicalRecord) {
         return this.data.saveMedicalRecord(medicalRecord, newMedicalRecord);
     }

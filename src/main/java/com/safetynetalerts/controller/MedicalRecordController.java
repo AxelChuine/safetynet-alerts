@@ -1,5 +1,6 @@
 package com.safetynetalerts.controller;
 
+import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
@@ -41,20 +42,20 @@ public class MedicalRecordController {
     }
 
     @GetMapping("/by-full-name")
-    public ResponseEntity<MedicalRecordDto> getMedicalRecordByFullName(@RequestParam("first-name") String firstName, @RequestParam("last-name")String lastName) throws IOException, ResourceNotFoundException {
+    public ResponseEntity<MedicalRecordDto> getMedicalRecordByFullName(@RequestParam("first-name") String firstName, @RequestParam("last-name")String lastName) throws IOException, ResourceNotFoundException, BadResourceException {
         logger.info("launch retrieval of by-full-name medical record");
         return new ResponseEntity<>(this.service.getMedicalRecordByFullName(firstName, lastName), HttpStatus.OK);
     }
 
     @PutMapping("/medical-record")
-    public ResponseEntity<MedicalRecordDto> updateMedicalRecord (@RequestBody MedicalRecordDto medicalRecordDto) throws ResourceNotFoundException, IOException {
+    public ResponseEntity<MedicalRecordDto> updateMedicalRecord (@RequestBody MedicalRecordDto medicalRecordDto) throws ResourceNotFoundException, IOException, BadResourceException {
         logger.info("launch of update of a medical record");
         return new ResponseEntity<>(this.service.updateMedicalRecord(medicalRecordDto), HttpStatus.ACCEPTED);
     }
 
 
     @DeleteMapping("/medical-record")
-    public ResponseEntity deleteMedicalRecord(@RequestParam("first-name") String firstName, @RequestParam("last-name") String lastName) throws IOException, ResourceNotFoundException {
+    public ResponseEntity deleteMedicalRecord(@RequestParam("first-name") String firstName, @RequestParam("last-name") String lastName) throws IOException, ResourceNotFoundException, BadResourceException {
         logger.info("launch of deletion of a medical record");
         this.service.deleteMedicalRecordByFullName(firstName, lastName);
         if (Objects.isNull(this.service.getMedicalRecordByFullName(firstName, lastName))) {
