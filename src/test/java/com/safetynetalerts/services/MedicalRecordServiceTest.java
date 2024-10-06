@@ -64,7 +64,7 @@ public class MedicalRecordServiceTest {
 	}
 
 	@Test
-	void getMedicalRecordByFullNameTest() throws IOException, ResourceNotFoundException, BadResourceException {
+	void getMedicalRecordByFullNameShouldReturnAMedicalRecordDto() throws IOException, ResourceNotFoundException, BadResourceException {
 		String vFirstName = "John";
 		String vLastName = "Boyd";
 		List<String> medications = new ArrayList<>();
@@ -80,6 +80,13 @@ public class MedicalRecordServiceTest {
 
 		assertEquals(medicalRecord.getFirstName(), medicalRecordsToCompare.getFirstName());
 		assertEquals(medicalRecord.getLastName(), medicalRecordsToCompare.getLastName());
+	}
+
+	@Test
+	public void getMedicalRecordByFullNameShouldThrowBadResourceException() throws ResourceNotFoundException, BadResourceException {
+		BadResourceException badResourceException = Assertions.assertThrows(BadResourceException.class, () -> this.service.getMedicalRecordByFullName(null, lastName));
+
+		Assertions.assertEquals(HttpStatus.BAD_REQUEST, badResourceException.getStatus());
 	}
 
 	@Test
@@ -188,11 +195,24 @@ public class MedicalRecordServiceTest {
 	}
 
 	@Test
-	public void createMedicalRecordTest () throws ResourceNotFoundException, ResourceAlreadyExistsException {
+	public void createMedicalRecordShouldCreateAMedicalRecord () throws ResourceNotFoundException, ResourceAlreadyExistsException {
 		when(this.repository.createMedicalRecord(medicalRecord)).thenReturn(medicalRecord);
 		MedicalRecordDto medicalRecordToCompare = this.service.createMedicalRecord(medicalRecordDto);
 
 		assertEquals(medicalRecordDto, medicalRecordToCompare);
+	}
+
+	@Test
+	public void createMedicalRecordShouldThrowBadResourceExceptionIfTheMedicalRecordIsNotProvided() {
+		ResourceNotFoundException resourceException = new ResourceNotFoundException();
+		String message = "Medical record not found";
+		resourceException.setMessage(message);
+		resourceException.setStatus(HttpStatus.NOT_FOUND);
+
+		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.createMedicalRecord(null), message);
+
+		Assertions.assertEquals(resourceException, exception);
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.NOT_FOUND);
 	}
 
 	@Test
