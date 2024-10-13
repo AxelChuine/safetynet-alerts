@@ -50,16 +50,10 @@ public class FireStationController {
 		return new ResponseEntity<>(persons, HttpStatus.OK);
 	}
 
-	@GetMapping("/phone-alert")
-	public ResponseEntity<PhoneAlertDto> getCellNumbers(@RequestParam("stationNumber") String stationNumber) throws IOException {
-		logger.info("get cell numbers by station number");
-		return new ResponseEntity<>(this.personFirestationService.getCellNumbers(stationNumber), HttpStatus.OK);
-	}
-
 	@GetMapping("/all")
 	public ResponseEntity<List<FireStationDto>> getFirestations() throws IOException {
 		logger.info("retrieve all firestations");
-		return ResponseEntity.ok(this.service.getAllFireStations());
+		return new ResponseEntity<>(this.service.getAllFireStations(), HttpStatus.OK);
 	}
 
 	@PostMapping

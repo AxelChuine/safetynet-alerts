@@ -110,23 +110,24 @@ public class FireStationControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    /*@Test
-    public void getCellNumbersTest () throws Exception {
-        String stationNumber = "4";
-        PhoneAlertDto cellNumbers = new PhoneAlertDto();
-
-        when(this.personFirestationService.getCellNumbers(stationNumber)).thenReturn(cellNumbers);
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/phone-alert")
-                .param("stationNumber", "4"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }*/
-
-
     @Test
     public void deleteFirestationShouldDeleteFireStation() throws Exception {
        this.mockMvc.perform(MockMvcRequestBuilders.delete("/firestation")
                .contentType(MediaType.APPLICATION_JSON)
                .content(String.valueOf(new ObjectMapper().writeValueAsString(this.fireStationDto))))
                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void getAllFirestationsShouldReturnHttpStatusOk() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/firestation/all")).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void updateFirestationShouldReturnHttpStatusOk() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.put("/firestation")
+                .content(new ObjectMapper().writeValueAsString(this.fireStationDto))
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
