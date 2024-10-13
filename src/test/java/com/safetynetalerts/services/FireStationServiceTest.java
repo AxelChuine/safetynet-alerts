@@ -4,10 +4,14 @@ import com.safetynetalerts.controller.exception.BadResourceException;
 import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.controller.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireStationDto;
+import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.models.FireStation;
+import com.safetynetalerts.models.MedicalRecord;
+import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.FireStationRepository;
 import com.safetynetalerts.repository.PersonRepositoryImpl;
 import com.safetynetalerts.service.FireStationServiceImpl;
+import com.safetynetalerts.service.MedicalRecordServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,6 +43,9 @@ public class FireStationServiceTest {
 
 	@Mock
 	private FireStationRepository repository;
+
+	@Mock
+	private MedicalRecordServiceImpl medicalRecordService;
 
 	private String address = "18 rue jean moulin";
 
@@ -107,6 +115,17 @@ public class FireStationServiceTest {
 	}
 
 	@Test
+	public void createFirestationShouldThrowResourceAlreadyExistsException() throws ResourceNotFoundException, ResourceAlreadyExistsException, IOException {
+		String message = "this firestation already exists";
+
+		Mockito.when(this.repository.getAllFireStations()).thenReturn(this.fireStations);
+		ResourceAlreadyExistsException exception = Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> this.service.createFirestation(this.fireStationDto), message);
+
+		Assertions.assertEquals(message, exception.getMessage());
+		Assertions.assertEquals(HttpStatus.CONFLICT, exception.getStatus());
+	}
+
+	@Test
 	public void getFireStationsByStationNumberTest () throws IOException {
 		String stationNumber = "4";
 		Set<String> addresses = new HashSet<>();
@@ -153,10 +172,40 @@ public class FireStationServiceTest {
 	}
 
 	@Test
+	public void updateFirestationShouldThrowBadResourceException () throws BadResourceException {
+		String message = "No firestation provided";
+
+		BadResourceException exception = Assertions.assertThrows(BadResourceException.class, () -> this.service.updateFireStationByAddress(null), message);
+
+		Assertions.assertEquals(message, exception.getMessage());
+		Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+	}
+
+	@Test
+	public void updateFirestationShouldThrowResourceNotFoundException () throws ResourceNotFoundException {
+		String message = "this address is not covered by any firestation";
+
+		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.updateFireStationByAddress(this.fireStationDto), message);
+
+		Assertions.assertEquals(message, exception.getMessage());
+		Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+	}
+
+	@Test
 	public void convertToDtoShouldConvertObjectToDto() throws ResourceNotFoundException {
 		FireStationDto fireStationDtoToCompare = this.service.convertToDto(this.fireStation);
 
 		Assertions.assertEquals(this.fireStationDto, fireStationDtoToCompare);
+	}
+
+	@Test
+	public void convertToDtoShouldThrowResourceNotFoundException() throws ResourceNotFoundException {
+		String message = "this firestation does not exist";
+
+		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.convertToDto(null), message);
+
+		Assertions.assertEquals(message, exception.getMessage());
+		Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
 	}
 
 	@Test
@@ -204,5 +253,30 @@ public class FireStationServiceTest {
 		this.service.deleteFirestation(this.fireStationDto);
 
 		Mockito.verify(this.repository).deleteFireStation(fireStation);
+	}
+
+	@Test
+	public void convertToPersonMedicalRecordShouldReturnAPersonMedicalRecordDto() throws BadResourceException, IOException, ResourceNotFoundException {
+		String firstName = "Jean";
+		String lastName = "Smith";
+		String birthDate = "05/05/2000";
+		Person person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).phone("04").build();
+		MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
+		PersonMedicalRecordDto personMedicalRecordDto = new PersonMedicalRecordDto(firstName, lastName, "04", 24, null, null);
+
+		Mockito.when(this.medicalRecordService.getAgeOfPerson(firstName, lastName)).thenReturn(24);
+		PersonMedicalRecordDto personMRToCompare = this.service.convertToPersonMedicalRecord(person, medicalRecord);
+
+		Assertions.assertEquals(personMedicalRecordDto, personMRToCompare);
+	}
+
+	@Test
+	public void deleteFirestationShouldThrowResourceNotFoundException() {
+		String message = "this firestation doesn't exists";
+
+		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.deleteFirestation(this.fireStationDto), message);
+
+		Assertions.assertEquals(message, exception.getMessage());
+		Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
 	}
 }

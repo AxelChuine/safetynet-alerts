@@ -217,15 +217,11 @@ public class MedicalRecordServiceTest {
 
 	@Test
 	public void createMedicalRecordShouldThrowResourceAlreadyExistsExceptionIfTheMedicalRecordExists() {
-		ResourceAlreadyExistsException resourceException = new ResourceAlreadyExistsException();
 		String message = "Le dossier médical existe déjà";
-		resourceException.setMessage(message);
-		resourceException.setStatus(HttpStatus.CONFLICT);
 
 		Mockito.when(this.repository.getAllMedicalRecords()).thenReturn(this.medicalRecords);
 		ResourceAlreadyExistsException exception = Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> this.service.createMedicalRecord(this.medicalRecordDto), message);
 
-		Assertions.assertEquals(resourceException, exception);
 		Assertions.assertEquals(exception.getStatus(), HttpStatus.CONFLICT);
 		Assertions.assertEquals(exception.getMessage(), message);
 	}
@@ -277,11 +273,34 @@ public class MedicalRecordServiceTest {
 	}
 
 	@Test
-	public void getAllMedicalRecordByListOfPersonsShouldReturnAListOfMedicalRecordsDto () throws ResourceNotFoundException, BadResourceException {
+	public void getAllMedicalRecordByListOfPersonsShouldReturnAListOfMedicalRecordsDto () throws ResourceNotFoundException, BadResourceException, IOException {
 		Mockito.when(this.repository.getAllMedicalRecords()).thenReturn(this.medicalRecords);
 		List<MedicalRecordDto> medicalRecordsToCompare = this.service.getAllMedicalRecordByListOfPersons(persons);
 
 		Assertions.assertEquals(this.medicalRecordDtos, medicalRecordsToCompare);
+	}
+
+	@Test
+	public void getAllMedicalRecordsByListOfPersonsShouldThrowBadResourceException () throws BadResourceException {
+		String message = "The medical records are not provided";
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+
+		BadResourceException exception = Assertions.assertThrows(BadResourceException.class, () -> this.service.getAllMedicalRecordByListOfPersons(null), message);
+
+		Assertions.assertEquals(exception.getStatus(), status);
+		Assertions.assertEquals(message, exception.getMessage());
+	}
+
+	@Test
+	public void getAllMedicalRecordsByListOfPersonsShouldThrowResourceNotFoundException () throws ResourceNotFoundException {
+		String message = "Medical Record not found";
+		HttpStatus status = HttpStatus.NOT_FOUND;
+
+		Mockito.when(this.repository.getAllMedicalRecords()).thenReturn(List.of());
+		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.getAllMedicalRecordByListOfPersons(this.persons), message);
+
+		Assertions.assertEquals(exception.getStatus(), status);
+		Assertions.assertEquals(message, exception.getMessage());
 	}
 
 	@Test

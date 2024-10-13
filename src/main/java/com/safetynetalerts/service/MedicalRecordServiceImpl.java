@@ -184,15 +184,22 @@ public class MedicalRecordServiceImpl {
 	}
 
 	
-	public List<MedicalRecordDto> getAllMedicalRecordByListOfPersons(List<PersonDto> personDtoList) throws ResourceNotFoundException, BadResourceException {
-		List<MedicalRecordDto> medicalRecordsToReturn = new ArrayList<>();
-		for (PersonDto personDto : personDtoList) {
-			MedicalRecordDto medicalRecordDto = this.getMedicalRecordByFullName(personDto.firstName, personDto.lastName);
-			medicalRecordsToReturn.add(medicalRecordDto);
+	public List<MedicalRecordDto> getAllMedicalRecordByListOfPersons(List<PersonDto> personDtoList) throws ResourceNotFoundException, BadResourceException, IOException {
+		if (Objects.isNull(personDtoList)) {
+			throw new BadResourceException("The medical records are not provided");
 		}
-		if (medicalRecordsToReturn.isEmpty()) {
+		List<MedicalRecordDto> medicalRecordDtoList = this.getAllMedicalRecords();
+		List<MedicalRecordDto> medicalRecordDtoListToReturn = new ArrayList<>();
+		for (PersonDto personDto : personDtoList) {
+			Optional<MedicalRecordDto> optionalMedicalRecordDto = medicalRecordDtoList.stream().filter(mr -> Objects.equals(mr.getFirstName(), personDto.getFirstName()) && Objects.equals(mr.getLastName(), personDto.getLastName())).findFirst();
+			if (optionalMedicalRecordDto.isPresent()) {
+				MedicalRecordDto medicalRecordDto = optionalMedicalRecordDto.get();
+				medicalRecordDtoListToReturn.add(medicalRecordDto);
+			}
+		}
+		if (medicalRecordDtoListToReturn.isEmpty()) {
 			throw new ResourceNotFoundException("Medical Record not found");
 		}
-        return medicalRecordsToReturn;
+        return medicalRecordDtoListToReturn;
 	}
 }

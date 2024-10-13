@@ -36,7 +36,7 @@ public class PersonMedicalRecordsServiceImpl {
     }
 
     
-    public List<PersonInfo> getAllPersonInformations(String lastName) throws ResourceNotFoundException, BadResourceException {
+    public List<PersonInfo> getAllPersonInformations(String lastName) throws ResourceNotFoundException, BadResourceException, IOException {
         if (Objects.isNull(lastName)) {
             throw new BadResourceException("The last name is null");
         }

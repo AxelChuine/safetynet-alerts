@@ -57,7 +57,7 @@ public class DataTest {
 
     @Test
     public void getAllFirestationsShouldReturnAllFirestations() {
-        List<FireStation> fireStations = this.data.getFirestations();
+        List<FireStation> fireStations = this.data.getAllFireStations().stream().toList();
 
         Assertions.assertNotNull(fireStations);
     }

@@ -12,8 +12,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class UtilsTest {
@@ -60,6 +59,8 @@ public class UtilsTest {
 
                 assertTrue(personOptional.isPresent());
                 assertEquals(person, personOptional.get());
+                assertNotNull(persons);
+                assertNotNull(persons.get(0));
         }
 
 }
