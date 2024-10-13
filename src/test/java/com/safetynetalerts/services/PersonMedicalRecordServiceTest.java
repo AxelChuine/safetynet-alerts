@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -137,5 +138,27 @@ public class PersonMedicalRecordServiceTest {
         List<PersonInfo> personInfoToCompare = this.service.getAllPersonInformations(this.lastName);
 
         Assertions.assertEquals(personInfos, personInfoToCompare);
+    }
+
+    @Test
+    public void getAllPersonsInformationsShouldThrowBadResourceException () throws BadResourceException {
+        String message = "The last name is null";
+
+        BadResourceException exception = Assertions.assertThrows(BadResourceException.class, () -> this.service.getAllPersonInformations(null), message);
+
+        Assertions.assertEquals(exception.getMessage(), message);
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+    }
+
+    @Test
+    public void convertToPersonsByFireDtoListShouldThrowResourceNotFoundException () throws ResourceNotFoundException, BadResourceException {
+        String message = "No person found";
+        MedicalRecordDto medicalRecordDto1 = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
+        List<MedicalRecordDto> medicalRecordDtoList = List.of(medicalRecordDto1);
+
+        ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.convertToPersonByFireDtoList(List.of(), medicalRecordDtoList), message);
+
+        Assertions.assertEquals(exception.getMessage(), message);
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
     }
 }
