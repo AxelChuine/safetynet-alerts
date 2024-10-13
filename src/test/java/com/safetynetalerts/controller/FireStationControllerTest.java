@@ -130,4 +130,13 @@ public class FireStationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isOk());
     }
+
+    @Test
+    public void getHeadCountByFirestationShouldReturnHttpStatusNotFound() throws Exception {
+       Mockito.when(this.personFirestationService.getHeadCountByFirestation("4")).thenReturn(null);
+       this.mockMvc.perform(MockMvcRequestBuilders.get("/firestation")
+               .param("stationNumber", "4"))
+               .andExpect(MockMvcResultMatchers.status().isNotFound());
+
+    }
 }
