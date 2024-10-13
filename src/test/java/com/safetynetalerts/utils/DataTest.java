@@ -34,13 +34,9 @@ public class DataTest {
 
     private FireStation fireStation;
 
-    private String address = "17 rue du moulin";
+    private final String address = "17 rue du moulin";
 
     private Set<String> addresses;
-
-    private String stationNumber = "17";
-
-    private String birthDate = "03/05/2000";
 
     private MedicalRecord medicalRecord;
 
@@ -48,10 +44,12 @@ public class DataTest {
     public void setUp() {
         this.addresses = new HashSet<>();
         this.addresses.add(address);
+        String stationNumber = "17";
         fireStation = new FireStation(this.addresses, stationNumber);
         this.firstName = "Jean";
         this.lastName = "Melbourne";
         this.person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).build();
+        String birthDate = "03/05/2000";
         this.medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
     }
 

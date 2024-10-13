@@ -17,7 +17,7 @@ public class PersonRepositoryImpl {
 
     
     public List<Person> getAllPersons() {
-        return this.data.getPersons();
+        return this.data.getAllPersons();
     }
 
     

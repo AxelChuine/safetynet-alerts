@@ -7,32 +7,40 @@ import com.safetynetalerts.utils.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+import java.util.ArrayList;
+import java.util.List;
+
+@ExtendWith(MockitoExtension.class)
 public class PersonRepositoryTest {
-    @Autowired
+    @InjectMocks
     private PersonRepositoryImpl repository;
 
     @Mock
     private Data data;
 
-    private String firstName = "Jean";
+    private final String firstName = "Jean";
 
-    private String lastName = "Smith";
+    private final String lastName = "Smith";
 
-    private String address = "158 rue de la place";
-
-    private String email = "jean.smith@gmail.com";
+    private final String email = "jean.smith@gmail.com";
 
     private Person person;
 
+    private List<Person> personList = new ArrayList<>();
+
     @BeforeEach
     public void setUp() {
+        String address = "158 rue de la place";
         this.person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).email(email).build();
+        this.personList = List.of(person);
     }
 
     @Test
@@ -44,5 +52,13 @@ public class PersonRepositoryTest {
         Person personToCompare = this.repository.savePerson(this.person, updatedPerson);
 
         Assertions.assertEquals(updatedPerson, personToCompare);
+    }
+
+    @Test
+    public void getAllPersonShouldReturnAListOfPerson() {
+        Mockito.when(this.data.getAllPersons()).thenReturn(this.personList);
+        List<Person> personListToCompare = this.repository.getAllPersons();
+
+        Assertions.assertEquals(personList, personListToCompare);
     }
 }

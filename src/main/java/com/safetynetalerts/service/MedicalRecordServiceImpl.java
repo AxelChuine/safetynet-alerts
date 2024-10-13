@@ -93,10 +93,6 @@ public class MedicalRecordServiceImpl {
 		}
 		return isUnderaged;
 	}
-
-	/**
-	 * @return a medical record of a person if underaged
-	 */
 	
 	public MedicalRecord getMedicalRecordByUnderage(String pFirstName, String pLastName) {
 		MedicalRecord medicalRecord = null;
