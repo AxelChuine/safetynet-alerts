@@ -1,13 +1,16 @@
 package com.safetynetalerts.utils;
 
+import com.jsoniter.any.Any;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -61,6 +64,14 @@ public class UtilsTest {
                 assertEquals(person, personOptional.get());
                 assertNotNull(persons);
                 assertNotNull(persons.get(0));
+        }
+
+        @Test
+        public void readFileShouldReturnAFile() throws IOException {
+                String path = "src/main/resources/data/data.json";
+                Any any = this.utils.readFile(path);
+
+                Assertions.assertNotNull(any);
         }
 
 }

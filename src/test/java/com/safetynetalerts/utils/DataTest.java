@@ -64,9 +64,10 @@ public class DataTest {
 
     @Test
     public void deleteFireStationShouldDeleteFireStation() {
-        this.mockData.deleteFireStation(this.fireStation);
+        Integer count = this.data.getAllFireStations().size();
+        this.data.deleteFireStation(this.fireStation);
 
-        Mockito.verify(this.mockData).deleteFireStation(this.fireStation);
+        Assertions.assertEquals(count, data.getAllFireStations().size());
     }
 
     @Test
@@ -135,16 +136,20 @@ public class DataTest {
 
     @Test
     public void deleteMedicalRecordShouldCallDeleteMedicalRecord() {
-        this.mockData.deleteMedicalRecord(this.medicalRecord);
+        Integer count = this.data.getAllMedicalRecords().size();
 
-        Mockito.verify(this.mockData).deleteMedicalRecord(medicalRecord);
+        this.data.deleteMedicalRecord(this.medicalRecord);
+
+        Assertions.assertEquals(count, data.getAllMedicalRecords().size());
     }
 
     @Test
     public void saveMedicalRecordShouldSaveAMedicalRecord() {
-        MedicalRecord newMedicalRecord = new MedicalRecord();
-        this.mockData.saveMedicalRecord(this.medicalRecord, newMedicalRecord);
+        Integer count = this.data.getAllMedicalRecords().size();
 
-        Mockito.verify(this.mockData).saveMedicalRecord(this.medicalRecord, newMedicalRecord);
+        MedicalRecord newMedicalRecord = new MedicalRecord();
+        this.data.saveMedicalRecord(this.medicalRecord, newMedicalRecord);
+
+        Assertions.assertEquals(count + 1, data.getAllMedicalRecords().size());
     }
 }

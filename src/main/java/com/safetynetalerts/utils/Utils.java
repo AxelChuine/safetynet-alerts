@@ -6,7 +6,6 @@ import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -20,29 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 @Getter
-@Setter
 @Component
 public class Utils {
-
-	private String path = "src/main/resources/data/data.json";
-
-	private byte[] file;
-
-	private JsonIterator iter;
-
-	private Any any;
-
-	private Any personAny;
-
-	private Any fireStationAny;
-
-	private Map<String, FireStation> firestationMap;
-
-	private Any medicalAny;
-
-	private Any medications;
-
-	private Any allergies;
 
 	private final Data data;
 
@@ -52,14 +30,13 @@ public class Utils {
 
 
     public final List<FireStation> getAllFirestations() throws IOException {
-		List<FireStation> fireStations = new ArrayList<>();
-		this.file = Files.readAllBytes(new File(path).toPath());
-		this.iter = JsonIterator.parse(file);
-		this.any = iter.readAny();
+		String path = "src/main/resources/data/data.json";
+		List<FireStation> fireStations;
+		Any any = this.readFile(path);
 
-		this.firestationMap = new HashMap<>();
-		this.fireStationAny = any.get("firestations");
-		this.fireStationAny.forEach(anyStation -> {
+		Map<String, FireStation> firestationMap = new HashMap<>();
+		Any fireStationAny = any.get("firestations");
+		fireStationAny.forEach(anyStation -> {
 			firestationMap.compute(anyStation.get("station").toString(),
 					(k, v) -> v == null
 							? new FireStation(anyStation.get("station").toString())
@@ -73,13 +50,12 @@ public class Utils {
 
 
 	public final List<Person> getAllPeople() throws IOException {
+		String path = "src/main/resources/data/data.json";
 		List<Person> persons = new ArrayList<>();
-		this.file = Files.readAllBytes(new File(path).toPath());
-		this.iter = JsonIterator.parse(file);
-		this.any = iter.readAny();
+		Any any = this.readFile(path);
 
-		this.personAny = any.get("persons");
-		this.personAny.forEach(a -> persons.add(new Person.PersonBuilder().firstName(a.get("firstName").toString())
+		Any personAny = any.get("persons");
+		personAny.forEach(a -> persons.add(new Person.PersonBuilder().firstName(a.get("firstName").toString())
 				.address(a.get("address").toString()).city(a.get("city").toString())
 				.lastName(a.get("lastName").toString()).phone(a.get("phone").toString()).zip(a.get("zip").toString())
 				.email(a.get("email").toString()).build()));
@@ -90,10 +66,9 @@ public class Utils {
 	}
 
 	public final List<MedicalRecord> getAllMedicalRecords() throws IOException {
+		String path = "src/main/resources/data/data.json";
 		List<MedicalRecord> medicalRecords = new ArrayList<>();
-		this.file = Files.readAllBytes(new File(path).toPath());
-		this.iter = JsonIterator.parse(file);
-		this.any = iter.readAny();
+		Any any = this.readFile(path);
 
 		Any medicalAny = any.get("medicalrecords");
 
@@ -121,5 +96,11 @@ public class Utils {
 		data.setPersons(this.getAllPeople());
 		data.setFirestations(this.getAllFirestations());
 		data.setMedicalRecords(this.getAllMedicalRecords());
+	}
+
+	public Any readFile(String path) throws IOException {
+		byte[] file = Files.readAllBytes(new File(path).toPath());
+		JsonIterator iter = JsonIterator.parse(file);
+		return iter.readAny();
 	}
 }
