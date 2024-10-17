@@ -78,6 +78,14 @@ public class PersonControllerTest {
     }
 
     @Test
+    public void createPersonShouldReturnHttpStatusBadRequest () throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/person")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(""))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
     public void updatePersonShouldReturnHttpStatusOk() throws Exception {
         Mockito.when(this.service.updatePerson(this.personDto)).thenReturn(this.personDto);
         this.mockMvc.perform(MockMvcRequestBuilders.put("/person")

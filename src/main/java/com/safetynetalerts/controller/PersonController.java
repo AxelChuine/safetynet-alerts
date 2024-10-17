@@ -52,8 +52,7 @@ public class PersonController {
 	public ResponseEntity<PersonDto> createPerson(@RequestBody PersonDto pPerson) throws ResourceAlreadyExistsException {
 		logger.info("launch of creation of a person");
 		try {
-			PersonDto person = this.personService.addPerson(pPerson);
-			return new ResponseEntity<>(person, HttpStatus.CREATED);
+			return new ResponseEntity<>(this.personService.addPerson(pPerson), HttpStatus.CREATED);
 		} catch (ResourceAlreadyExistsException e) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} catch (ResourceNotFoundException e) {

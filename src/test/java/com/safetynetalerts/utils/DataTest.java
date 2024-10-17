@@ -150,4 +150,15 @@ public class DataTest {
 
         Assertions.assertEquals(count + 1, data.getAllMedicalRecords().size());
     }
+
+    @Test
+    public void saveListOfPersonShouldReturnTheListOfPerson() {
+        Person person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).build();
+        List<Person> personList = List.of(person);
+
+        List<Person> personListToCompare = this.data.save(personList);
+
+        Assertions.assertNotNull(personListToCompare);
+        Assertions.assertEquals(personList, personListToCompare);
+    }
 }

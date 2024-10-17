@@ -97,4 +97,8 @@ public class Data {
 		this.medicalRecords = medicalRecords;
 		return newMedicalRecord;
 	}
+
+	public List<Person> save(List<Person> persons) {
+		return this.persons = persons;
+	}
 }

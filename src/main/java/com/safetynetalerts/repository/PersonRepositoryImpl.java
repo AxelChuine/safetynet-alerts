@@ -1,5 +1,6 @@
 package com.safetynetalerts.repository;
 
+import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.utils.Data;
 import org.springframework.stereotype.Repository;
@@ -21,8 +22,11 @@ public class PersonRepositoryImpl {
     }
 
     
-    public Person savePerson(Person person, Person newPerson) {
+    public Person savePerson(Person person, Person newPerson) throws ResourceAlreadyExistsException {
         return this.data.savePerson(person, newPerson);
     }
 
+    public List<Person> save(List<Person> persons) {
+        return this.data.save(persons);
+    }
 }

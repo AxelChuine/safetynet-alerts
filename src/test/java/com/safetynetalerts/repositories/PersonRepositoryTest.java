@@ -61,4 +61,12 @@ public class PersonRepositoryTest {
 
         Assertions.assertEquals(personList, personListToCompare);
     }
+
+    @Test
+    public void savePersonListShouldReturnAListOfPerson() {
+        Mockito.when(this.data.save(this.personList)).thenReturn(this.personList);
+        List<Person> personListToCompare = this.repository.save(this.personList);
+
+        Assertions.assertEquals(personList, personListToCompare);
+    }
 }

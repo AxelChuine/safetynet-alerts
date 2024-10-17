@@ -8,15 +8,15 @@ import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.PersonRepositoryImpl;
 import com.safetynetalerts.service.MedicalRecordServiceImpl;
 import com.safetynetalerts.service.PersonServiceImpl;
-import com.safetynetalerts.utils.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
@@ -26,19 +26,16 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class PersonServiceTest {
 
-	@Autowired
+	@InjectMocks
 	private PersonServiceImpl service;
 
-	@MockBean
-	private Data data;
-
-	@MockBean
+	@Mock
 	private MedicalRecordServiceImpl medicalRecordService;
-	
-	@MockBean
+
+	@Mock
 	private PersonRepositoryImpl repository;
 
 	private List<Person> persons;
@@ -180,7 +177,7 @@ class PersonServiceTest {
 		this.service.deletePerson("Jean", "Dubois");
 
 		// ASSERT
-		verify(this.data, times(1)).setPersons(persons);
+		verify(this.repository).save(persons);
 	}
 
 	@Test
@@ -390,6 +387,20 @@ class PersonServiceTest {
 		PersonDto personToCompare = this.service.addPerson(newPersonDto);
 
 		Assertions.assertEquals(newPersonDto, personToCompare);
+	}
+
+	@Test
+	public void addPersonShouldThrowResourceAlreadyExistsExceptionIfAlreadyExists() {
+		String message = "person already exists.";
+		Person person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
+		PersonDto personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
+		List<Person> personList = List.of(person);
+
+		Mockito.when(this.repository.getAllPersons()).thenReturn(personList);
+		ResourceAlreadyExistsException exception = Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> this.service.addPerson(personDto), message);
+
+		Assertions.assertEquals(exception.getMessage(), message);
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.CONFLICT);
 	}
 
 }

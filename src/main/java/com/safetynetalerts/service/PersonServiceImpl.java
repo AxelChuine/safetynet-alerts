@@ -19,14 +19,11 @@ import java.util.stream.Collectors;
 @Service
 public class PersonServiceImpl {
 
-    private final Data data;
-
     private final MedicalRecordServiceImpl medicalRecordService;
 
     private final PersonRepositoryImpl repository;
 
-    public PersonServiceImpl(Data data, MedicalRecordServiceImpl medicalRecordService, PersonRepositoryImpl repository) {
-        this.data = data;
+    public PersonServiceImpl(MedicalRecordServiceImpl medicalRecordService, PersonRepositoryImpl repository) {
         this.medicalRecordService = medicalRecordService;
         this.repository = repository;
     }
@@ -215,10 +212,12 @@ public class PersonServiceImpl {
     }
 
     
-public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsException, ResourceNotFoundException {
-        PersonDto personDto = pPerson;
-        this.repository.savePerson(convertToPerson(personDto), convertToPerson(pPerson));
-        return personDto;
+public PersonDto addPerson(PersonDto person) throws ResourceAlreadyExistsException, ResourceNotFoundException {
+    if (this.repository.getAllPersons().contains(convertToPerson(person))) {
+        throw new ResourceAlreadyExistsException("Person already exists.");
+    }
+    this.repository.savePerson(convertToPerson(person), convertToPerson(person));
+        return person;
     }
 
 
@@ -235,7 +234,7 @@ public PersonDto addPerson(PersonDto pPerson) throws ResourceAlreadyExistsExcept
             throw new ResourceNotFoundException("La personne " + firstName + " " + lastName +" n'existe pas.");
         }
         persons.remove(person);
-        data.setPersons(persons);
+        this.repository.save(persons);
     }
 
     
