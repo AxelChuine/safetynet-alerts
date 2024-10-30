@@ -65,7 +65,6 @@ class PersonServiceTest {
 
 	@BeforeEach
 	public void setUp() {
-		MockitoAnnotations.openMocks(this);
 		person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).email("test@gmail.com").city(city).build();
 		persons = List.of(this.person);
 		this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).email("test@gmail.com").city(city).build();
@@ -232,7 +231,6 @@ class PersonServiceTest {
 
 	@Test
 	public void getFamilyMembersTest() {
-		when(this.repository.getAllPersons()).thenReturn(this.persons);
 		List<PersonDto> personsToCompare = this.service.getFamilyMembers(this.personDtos, lastName);
 
 		assertEquals(personDtos, personsToCompare);
@@ -317,7 +315,6 @@ class PersonServiceTest {
 
 	@Test
 	public void convertToPersonDtoShouldReturnAPersonDto () throws ResourceNotFoundException {
-		Mockito.when(this.repository.getAllPersons()).thenReturn(this.persons);
 		PersonDto personToCompare = this.service.convertToPersonDto(this.person);
 
 		Assertions.assertEquals(this.personDto, personToCompare);
@@ -335,7 +332,6 @@ class PersonServiceTest {
 
 	@Test
 	public void convertToPersonDtoListShouldReturnAListOfDto() throws ResourceNotFoundException {
-		Mockito.when(this.repository.getAllPersons()).thenReturn(this.persons);
 		List<PersonDto> personsToCompare = this.service.convertToDtoList(this.persons);
 
 		Assertions.assertEquals(this.personDtos, personsToCompare);
@@ -391,7 +387,7 @@ class PersonServiceTest {
 
 	@Test
 	public void addPersonShouldThrowResourceAlreadyExistsExceptionIfAlreadyExists() {
-		String message = "person already exists.";
+		String message = "Person already exists.";
 		Person person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
 		PersonDto personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
 		List<Person> personList = List.of(person);
