@@ -1,8 +1,8 @@
 package com.safetynetalerts.service;
 
-import com.safetynetalerts.controller.exception.BadResourceException;
-import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
-import com.safetynetalerts.controller.exception.ResourceNotFoundException;
+import com.safetynetalerts.exception.BadResourceException;
+import com.safetynetalerts.exception.ResourceAlreadyExistsException;
+import com.safetynetalerts.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.models.FireStation;
@@ -51,19 +51,19 @@ public class FireStationServiceImpl {
 	/**
 	 *
 	 * @Author Axel
-	 * @param pPerson
+	 * @param person
 	 * @param pMedicalRecord
 	 * @return personMedicalRecordDto
 	 * @throws IOException
 	 * use the person in parameter and his medical record to create an object personMedicalRecordDto.
 	 */
 	
-	public PersonMedicalRecordDto convertToPersonMedicalRecord(Person pPerson, MedicalRecord pMedicalRecord) throws IOException, ResourceNotFoundException, BadResourceException {
+	public PersonMedicalRecordDto convertToPersonMedicalRecord(Person person, MedicalRecord pMedicalRecord) throws IOException, ResourceNotFoundException, BadResourceException {
 		PersonMedicalRecordDto personMedicalRecordDto = new PersonMedicalRecordDto();
-		personMedicalRecordDto.setFirstName(pPerson.firstName);
-		personMedicalRecordDto.setLastName(pPerson.lastName);
-		personMedicalRecordDto.setAge(this.medicalRecordService.getAgeOfPerson(pPerson.firstName, pPerson.lastName));
-		personMedicalRecordDto.setPhone(pPerson.phone);
+		personMedicalRecordDto.setFirstName(person.getFirstName());
+		personMedicalRecordDto.setLastName(person.getLastName());
+		personMedicalRecordDto.setAge(this.medicalRecordService.getAgeOfPerson(person.getFirstName(), person.getLastName()));
+		personMedicalRecordDto.setPhone(person.getPhone());
 		personMedicalRecordDto.setMedications(pMedicalRecord.getMedications());
 		personMedicalRecordDto.setAllergies(pMedicalRecord.getAllergies());
 		return personMedicalRecordDto;

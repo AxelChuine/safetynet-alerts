@@ -1,4 +1,4 @@
-package com.safetynetalerts.controller.exception;
+package com.safetynetalerts.exception;
 
 
 import lombok.Data;

@@ -1,12 +1,13 @@
 package com.safetynetalerts.controller;
 
-import com.safetynetalerts.controller.exception.BadResourceException;
-import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
-import com.safetynetalerts.controller.exception.ResourceNotFoundException;
+import com.safetynetalerts.exception.BadResourceException;
+import com.safetynetalerts.exception.ResourceAlreadyExistsException;
+import com.safetynetalerts.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.dto.PersonInfo;
 import com.safetynetalerts.service.PersonMedicalRecordsServiceImpl;
 import com.safetynetalerts.service.PersonServiceImpl;
+import com.safetynetalerts.utils.mapper.MapperPerson;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,16 +28,19 @@ public class PersonController {
 
 	private final PersonMedicalRecordsServiceImpl personMedicalRecordsService;
 
+	private final MapperPerson mapper;
+
 	private final Logger logger = LoggerFactory.getLogger(PersonController.class);
 
-    public PersonController(PersonServiceImpl personService, PersonMedicalRecordsServiceImpl personMedicalRecordsService) {
+    public PersonController(PersonServiceImpl personService, PersonMedicalRecordsServiceImpl personMedicalRecordsService, MapperPerson mapper) {
         this.personService = personService;
         this.personMedicalRecordsService = personMedicalRecordsService;
+        this.mapper = mapper;
     }
 
 
     @GetMapping("/all")
-	public ResponseEntity<List<PersonDto>> getAllPersons() throws IOException {
+	public ResponseEntity<List<PersonDto>> getAllPersons() throws IOException, BadResourceException {
 		logger.info("launch retrieval of every persons");
 		return new ResponseEntity<>(this.personService.getAllPersons(), HttpStatus.OK);
 	}
@@ -44,21 +48,21 @@ public class PersonController {
 	/**
 	 * this allows the user to create a new person
 	 *
-	 * @param pPerson
+	 * @param personDto
 	 * @return
 	 * @throws IOException
 	 */
 	@PostMapping
-	public ResponseEntity<PersonDto> createPerson(@RequestBody PersonDto pPerson) throws ResourceAlreadyExistsException {
+	public ResponseEntity<PersonDto> createPerson(@RequestBody PersonDto personDto) {
 		logger.info("launch of creation of a person");
 		try {
-			return new ResponseEntity<>(this.personService.addPerson(pPerson), HttpStatus.CREATED);
+			return new ResponseEntity<>(this.personService.savePerson(personDto), HttpStatus.CREATED);
 		} catch (ResourceAlreadyExistsException e) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
-		} catch (ResourceNotFoundException e) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-	}
+		} catch (BadResourceException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
 	@PutMapping
 	public ResponseEntity<PersonDto> updatePerson(@RequestBody PersonDto personDto) throws BadResourceException, ResourceNotFoundException, ResourceAlreadyExistsException {

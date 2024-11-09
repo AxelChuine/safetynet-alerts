@@ -1,7 +1,7 @@
 package com.safetynetalerts.services;
 
-import com.safetynetalerts.controller.exception.BadResourceException;
-import com.safetynetalerts.controller.exception.ResourceNotFoundException;
+import com.safetynetalerts.exception.BadResourceException;
+import com.safetynetalerts.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
@@ -38,11 +38,11 @@ public class PersonMedicalRecordServiceTest {
     @Mock
     private FireStationServiceImpl fireStationService;
 
-    private String firstName = "John";
+    private final String firstName = "John";
 
-    private String lastName = "Smith";
+    private final String lastName = "Smith";
 
-    private String birthDate = "01/01/2010";
+    private final String birthDate = "01/01/2010";
 
     private List<String> allergies;
 
@@ -58,33 +58,31 @@ public class PersonMedicalRecordServiceTest {
 
     private MedicalRecordDto medicalRecordDto;
 
-    private List<Person> persons;
-
     private List<PersonDto> personDtoList = new ArrayList<>();
-
-    private List<MedicalRecord> medicalRecordList;
 
     private List<MedicalRecordDto> medicalRecordDtoList;
 
-    String stationNumber = "17";
+    private final String stationNumber = "17";
 
-    Set<String> addresses;
+    private Set<String> addresses;
 
-    FireStationDto fireStationDto;
+    private final String phone = "15465132";
 
-    String email = "test@test.com";
+    private final String email = "test@test.com";
 
     @BeforeEach
     public void setUp() {
-        this.person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).email(email).address(address).build();
-        this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).email(email).address(address).build();
-        this.persons = List.of(person);
+        String city = "Culver";
+        String zip = "123456";
+        this.person = new Person(firstName, lastName, address, city, zip, phone, email);
+        this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).email(email).address(address).phone(phone).build();
+        List<Person> persons = List.of(person);
         this.personDtoList = List.of(personDto);
-        this.medicalRecord = new MedicalRecord();
+        this.medicalRecord = new MedicalRecord.MedicalRecordBuilder().build();
         this.medicalRecordDto = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
-        this.medicalRecordList = List.of(medicalRecord);
+        List<MedicalRecord> medicalRecordList = List.of(medicalRecord);
         this.medicalRecordDtoList = List.of(medicalRecordDto);
-        this.fireStationDto = new FireStationDto(addresses, stationNumber);
+        FireStationDto fireStationDto = new FireStationDto(addresses, stationNumber);
     }
 
     @Test
@@ -94,6 +92,7 @@ public class PersonMedicalRecordServiceTest {
         personByFireDto.setFirstName(firstName);
         personByFireDto.setLastName(lastName);
         personByFireDto.setAge(age);
+        personByFireDto.setCellNumber(phone);
         FireDto fireDto = new FireDto(this.stationNumber, List.of(personByFireDto));
         List<Person> persons = List.of(person);
 
@@ -106,12 +105,22 @@ public class PersonMedicalRecordServiceTest {
     }
 
     @Test
+    public void toPersonByFireDtoShouldReturnAPersonByFireDto() throws BadResourceException, ResourceNotFoundException {
+        PersonByFireDto personByFireDto = new PersonByFireDto(this.person.getFirstName(), this.person.getLastName(), this.person.getPhone(), 0, this.medicalRecord.getMedications(), this.medicalRecord.getAllergies());
+
+        PersonByFireDto personByFireToCompare = this.service.toPersonByFireDto(this.personDto, this.medicalRecordDto);
+
+        Assertions.assertEquals(personByFireDto, personByFireToCompare);
+    }
+
+    @Test
     public void convertListOfPersonsAndMedicalRecordsToPersonsByFireDtosShouldReturnAListOfPersonByFireDtoObject () throws ResourceNotFoundException, IOException, BadResourceException {
         Integer age = 1;
         PersonByFireDto personByFireDto = new PersonByFireDto();
         personByFireDto.setFirstName(firstName);
         personByFireDto.setLastName(lastName);
         personByFireDto.setAge(age);
+        personByFireDto.setCellNumber(phone);
         List<PersonByFireDto> personByFireDtoList = List.of(personByFireDto);
         List<PersonDto> personDtoList = List.of(personDto);
         List<MedicalRecordDto> medicalRecordDtoList = List.of(medicalRecordDto);

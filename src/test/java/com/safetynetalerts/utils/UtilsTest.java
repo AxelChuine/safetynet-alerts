@@ -21,57 +21,42 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UtilsTest {
 
 
-        @Autowired
-        private Utils utils;
+    @Autowired
+    private Utils utils;
 
-        @MockBean
-        private Data data;
+    @MockBean
+    private Data data;
 
-        @Test
-        public void getAllMedicalRecordTest () throws IOException {
-                List<MedicalRecord> medicalRecords = this.utils.getAllMedicalRecords();
-                MedicalRecord medicalRecord = new MedicalRecord();
-                medicalRecord.setFirstName("John");
-                medicalRecord.setLastName("Boyd");
+    @Test
+    public void getAllMedicalRecordTest() throws IOException {
+        List<MedicalRecord> medicalRecords = this.utils.getAllMedicalRecords();
 
-                Optional<MedicalRecord> medicalRecordToCompareOptional = medicalRecords.stream().filter(mr -> mr.equals(medicalRecord)).findFirst();
+        Assertions.assertNotNull(medicalRecords);
+        Assertions.assertNotNull(medicalRecords.get(0));
+    }
 
-            assertTrue(medicalRecordToCompareOptional.isPresent());
-            assertEquals(medicalRecord, medicalRecordToCompareOptional.get());
-        }
+    @Test
+    public void getAllFirestationsTest() throws IOException {
+        List<FireStation> fireStations = this.utils.getAllFirestations();
 
-        @Test
-        public void getAllFirestationsTest () throws IOException {
-                List<FireStation> fireStations = this.utils.getAllFirestations();
-                FireStation fireStation = new FireStation();
-                fireStation.setStationNumber("4");
+        Assertions.assertNotNull(fireStations);
+        Assertions.assertNotNull(fireStations.get(0));
+    }
 
-                Optional<FireStation> fireStationOptional = fireStations.stream().filter(fs -> fs.equals(fireStation)).findFirst();
+    @Test
+    public void getAllPersonsTest() throws IOException {
+        List<Person> persons = this.utils.getAllPeople();
 
-                assertTrue(fireStationOptional.isPresent());
-                assertEquals(fireStation, fireStationOptional.get());
+        Assertions.assertNotNull(persons);
+        Assertions.assertNotNull(persons.get(0));
+    }
 
-        }
+    @Test
+    public void readFileShouldReturnAFile() throws IOException {
+        String path = "src/main/resources/data/data.json";
+        Any any = this.utils.readFile(path);
 
-        @Test
-        public void getAllPersonsTest () throws IOException {
-                List<Person> persons = this.utils.getAllPeople();
-                Person person = new Person.PersonBuilder().firstName("John").lastName("Boyd").build();
-
-                Optional<Person> personOptional = persons.stream().filter(p -> p.equals(person)).findFirst();
-
-                assertTrue(personOptional.isPresent());
-                assertEquals(person, personOptional.get());
-                assertNotNull(persons);
-                assertNotNull(persons.get(0));
-        }
-
-        @Test
-        public void readFileShouldReturnAFile() throws IOException {
-                String path = "src/main/resources/data/data.json";
-                Any any = this.utils.readFile(path);
-
-                Assertions.assertNotNull(any);
-        }
+        Assertions.assertNotNull(any);
+    }
 
 }

@@ -1,8 +1,8 @@
 package com.safetynetalerts.controller;
 
-import com.safetynetalerts.controller.exception.BadResourceException;
-import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
-import com.safetynetalerts.controller.exception.ResourceNotFoundException;
+import com.safetynetalerts.exception.BadResourceException;
+import com.safetynetalerts.exception.ResourceAlreadyExistsException;
+import com.safetynetalerts.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.service.MedicalRecordServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +16,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-@RestController("medical-record")
+@RestController
 @Slf4j
+@RequestMapping("medical-record")
 public class MedicalRecordController {
 
     private final MedicalRecordServiceImpl service;
@@ -29,16 +30,16 @@ public class MedicalRecordController {
     }
 
 
-    @PostMapping("/medical-record")
+    @PostMapping
     public ResponseEntity<MedicalRecordDto> createMedicalRecord(@RequestBody MedicalRecordDto pMedicalRecord) throws ResourceNotFoundException, ResourceAlreadyExistsException {
         logger.info("launch creation medical record");
         return new ResponseEntity<>(this.service.createMedicalRecord(pMedicalRecord), HttpStatus.CREATED);
     }
 
-    @GetMapping("/medical-records")
+    @GetMapping
     public ResponseEntity<List<MedicalRecordDto>> getAllMedicalRecords() throws IOException {
         logger.info("launch retrieval of all medical records");
-        return ResponseEntity.ok(this.service.getAllMedicalRecords());
+        return new ResponseEntity<>(this.service.getAllMedicalRecords(), HttpStatus.OK);
     }
 
     @GetMapping("/by-full-name")
@@ -47,20 +48,23 @@ public class MedicalRecordController {
         return new ResponseEntity<>(this.service.getMedicalRecordByFullName(firstName, lastName), HttpStatus.OK);
     }
 
-    @PutMapping("/medical-record")
+    @PutMapping
     public ResponseEntity<MedicalRecordDto> updateMedicalRecord (@RequestBody MedicalRecordDto medicalRecordDto) throws ResourceNotFoundException, IOException, BadResourceException {
         logger.info("launch of update of a medical record");
         return new ResponseEntity<>(this.service.updateMedicalRecord(medicalRecordDto), HttpStatus.ACCEPTED);
     }
 
 
-    @DeleteMapping("/medical-record")
-    public ResponseEntity deleteMedicalRecord(@RequestParam("first-name") String firstName, @RequestParam("last-name") String lastName) throws IOException, ResourceNotFoundException, BadResourceException {
+    @DeleteMapping
+    public ResponseEntity deleteMedicalRecord(@RequestParam("first-name") String firstName, @RequestParam("last-name") String lastName) {
         logger.info("launch of deletion of a medical record");
-        this.service.deleteMedicalRecordByFullName(firstName, lastName);
-        if (Objects.isNull(this.service.getMedicalRecordByFullName(firstName, lastName))) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try {
+            this.service.deleteMedicalRecordByFullName(firstName, lastName);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (BadResourceException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
         }
-        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

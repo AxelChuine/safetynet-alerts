@@ -1,6 +1,6 @@
 package com.safetynetalerts.services;
-import com.safetynetalerts.controller.exception.BadResourceException;
-import com.safetynetalerts.controller.exception.ResourceNotFoundException;
+import com.safetynetalerts.exception.BadResourceException;
+import com.safetynetalerts.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
@@ -67,7 +67,9 @@ public class PersonFirestationServiceTest {
 
     @BeforeEach
     public void setUp() {
-        person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).build();
+        person = new Person();
+        person.setFirstName(firstName);
+        person.setLastName(lastName);
         persons.add(person);
         this.fireStation = new FireStation(addresses, stationNumber);
         medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
@@ -78,7 +80,7 @@ public class PersonFirestationServiceTest {
 
 
     @Test
-    public void getHeadCountByFirestationTest () throws IOException {
+    public void getHeadCountByFirestationTest () throws IOException, BadResourceException {
         // mocking the firestationService side
         StationNumberDto stationNumberDto = new StationNumberDto();
         String address = "94 rue jean moulin";
@@ -107,9 +109,9 @@ public class PersonFirestationServiceTest {
 
         //mocking a list of medical record
         List<MedicalRecord> medicalRecords = new ArrayList<>();
-        MedicalRecord m1 = new MedicalRecord();
-        MedicalRecord m2 = new MedicalRecord();
-        MedicalRecord m3 = new MedicalRecord();
+        MedicalRecord m1 = new MedicalRecord.MedicalRecordBuilder().build();
+        MedicalRecord m2 = new MedicalRecord.MedicalRecordBuilder().build();
+        MedicalRecord m3 = new MedicalRecord.MedicalRecordBuilder().build();
         medicalRecords.add(m1);
         medicalRecords.add(m2);
         medicalRecords.add(m3);
@@ -126,7 +128,7 @@ public class PersonFirestationServiceTest {
     }
 
     @Test
-    public void getCellNumbersTest() throws IOException {
+    public void getCellNumbersTest() throws IOException, BadResourceException {
         PhoneAlertDto cellNumbers = new PhoneAlertDto();
         String phone = "04";
         cellNumbers.getCellNumbers().add(phone);

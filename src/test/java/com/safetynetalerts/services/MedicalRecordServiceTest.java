@@ -1,8 +1,8 @@
 package com.safetynetalerts.services;
 
-import com.safetynetalerts.controller.exception.BadResourceException;
-import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
-import com.safetynetalerts.controller.exception.ResourceNotFoundException;
+import com.safetynetalerts.exception.BadResourceException;
+import com.safetynetalerts.exception.ResourceAlreadyExistsException;
+import com.safetynetalerts.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.MedicalRecord;
@@ -91,7 +91,7 @@ public class MedicalRecordServiceTest {
 
 	@Test
 	void getAgeOfPersonTest() throws IOException, ResourceNotFoundException, BadResourceException {
-		MedicalRecord medicalRecord = new MedicalRecord();
+		MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().build();
 		medicalRecord.setFirstName("John");
 		medicalRecord.setLastName("Dubois");
 		medicalRecord.setBirthDate("01/01/2000");
@@ -105,9 +105,9 @@ public class MedicalRecordServiceTest {
 
 	@Test
 	void getAllMedicalRecordsTest() throws IOException {
-		MedicalRecord medicalRecord = new MedicalRecord();
-		MedicalRecord medicalRecord2 = new MedicalRecord();
-		MedicalRecord medicalRecord3 = new MedicalRecord();
+		MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().build();
+		MedicalRecord medicalRecord2 = new MedicalRecord.MedicalRecordBuilder().build();
+		MedicalRecord medicalRecord3 = new MedicalRecord.MedicalRecordBuilder().build();
 		List<MedicalRecord> medicalRecords = new ArrayList<>();
 		medicalRecords.add(medicalRecord);
 		medicalRecords.add(medicalRecord2);
@@ -127,7 +127,7 @@ public class MedicalRecordServiceTest {
 
 	@Test
 	public void getMedicalRecordByUnderageTest() throws IOException {
-		MedicalRecord m = new MedicalRecord();
+		MedicalRecord m = new MedicalRecord.MedicalRecordBuilder().build();
 		m.setFirstName("Jean");
 		m.setLastName("Dubois");
 		m.setBirthDate("05/05/2023");
@@ -180,7 +180,7 @@ public class MedicalRecordServiceTest {
 		boolean isUnderaged = true;
 		String firstName = "Jean";
 		String lastName = "Dubois";
-		MedicalRecord medicalRecord = new MedicalRecord();
+		MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().build();
 		medicalRecord.setLastName(lastName);
 		medicalRecord.setFirstName(firstName);
 		medicalRecord.setBirthDate("08/12/2020");
@@ -337,5 +337,25 @@ public class MedicalRecordServiceTest {
 		List<MedicalRecordDto> medicalRecordToCompare = this.service.toDtoList(this.medicalRecords);
 
 		Assertions.assertEquals(this.medicalRecordDtos, medicalRecordToCompare);
+	}
+
+	@Test
+	public void deleteMedicalRecordShouldThrowResourceNotFoundException() throws ResourceNotFoundException {
+		String message = "the medical not found";
+
+		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.deleteMedicalRecordByFullName(this.firstName, this.lastName), message);
+
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.NOT_FOUND);
+		Assertions.assertEquals(message, exception.getMessage());
+	}
+
+	@Test
+	public void deleteMedicalRecordShouldThrowBadResourceException() throws BadResourceException {
+		String message = "The medical record is not provided";
+
+		BadResourceException exception = Assertions.assertThrows(BadResourceException.class, () -> this.service.deleteMedicalRecordByFullName(null, null), message);
+
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.BAD_REQUEST);
+		Assertions.assertEquals(message, exception.getMessage());
 	}
 }

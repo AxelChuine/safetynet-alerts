@@ -2,6 +2,8 @@ package com.safetynetalerts.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynetalerts.dto.MedicalRecordDto;
+import com.safetynetalerts.exception.BadResourceException;
+import com.safetynetalerts.exception.ResourceNotFoundException;
 import com.safetynetalerts.service.MedicalRecordServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,14 +67,14 @@ public class MedicalRecordControllerTest {
     @Test
     public void getAllMedicalRecordsShouldReturnHttpStatusOk () throws Exception {
         Mockito.when(this.service.getAllMedicalRecords()).thenReturn(this.medicalRecords);
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/medical-records"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/medical-record"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void getMedicalRecordByFullNameShouldReturnHttpStatusOk () throws Exception {
         Mockito.when(this.service.getMedicalRecordByFullName(firstName, lastName)).thenReturn(this.medicalRecordDto);
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/by-full-name")
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/medical-record/by-full-name")
                 .param("first-name", firstName)
                 .param("last-name", lastName))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -91,12 +93,25 @@ public class MedicalRecordControllerTest {
 
     @Test
     public void deleteMedicalRecordShouldReturnHttpStatusOk () throws Exception {
-        StringBuilder json = new StringBuilder(new ObjectMapper().writeValueAsString(medicalRecordDto));
-
-        Mockito.when(this.service.getMedicalRecordByFullName(firstName, lastName)).thenReturn(this.medicalRecordDto);
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/medical-record")
                 .param("first-name", firstName)
                 .param("last-name", lastName))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void deleteMedicalRecordShouldThrowHttpStatusBadRequest() throws Exception {
+        Mockito.doThrow(new BadResourceException()).when(this.service).deleteMedicalRecordByFullName(null, null);
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/medical-record"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void deleteMedicalRecordShouldThrowHttpStatusNotFound() throws Exception {
+        Mockito.doThrow(new ResourceNotFoundException()).when(this.service).deleteMedicalRecordByFullName(firstName, lastName);
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/medical-record")
+                .param("first-name", firstName)
+                .param("last-name", lastName))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }

@@ -55,13 +55,16 @@ public class Utils {
 		Any any = this.readFile(path);
 
 		Any personAny = any.get("persons");
-		personAny.forEach(a -> persons.add(new Person.PersonBuilder().firstName(a.get("firstName").toString())
-				.address(a.get("address").toString()).city(a.get("city").toString())
-				.lastName(a.get("lastName").toString()).phone(a.get("phone").toString()).zip(a.get("zip").toString())
-				.email(a.get("email").toString()).build()));
+		personAny.forEach(a -> persons.add(new Person(a.get("firstName").toString(),
+				a.get("address").toString(),
+				a.get("city").toString(),
+				a.get("lastName").toString(),
+				a.get("phone").toString(),
+				a.get("zip").toString(),
+				a.get("email").toString())));
 
 		persons.forEach(
-				p -> p.firstName.concat(p.lastName).concat(p.address).concat(p.city).concat(p.phone).concat(p.zip));
+				p -> p.getFirstName().concat(p.getLastName()).concat(p.getAddress()).concat(p.getCity()).concat(p.getPhone()).concat(p.getZip()));
 		return persons;
 	}
 

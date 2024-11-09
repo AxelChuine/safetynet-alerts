@@ -1,13 +1,14 @@
 package com.safetynetalerts.services;
 
-import com.safetynetalerts.controller.exception.BadResourceException;
-import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
-import com.safetynetalerts.controller.exception.ResourceNotFoundException;
+import com.safetynetalerts.exception.BadResourceException;
+import com.safetynetalerts.exception.ResourceAlreadyExistsException;
+import com.safetynetalerts.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.repository.PersonRepositoryImpl;
 import com.safetynetalerts.service.MedicalRecordServiceImpl;
 import com.safetynetalerts.service.PersonServiceImpl;
+import com.safetynetalerts.utils.mapper.MapperPerson;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
@@ -38,39 +38,51 @@ class PersonServiceTest {
 	@Mock
 	private PersonRepositoryImpl repository;
 
-	private List<Person> persons;
+	@Mock
+	private MapperPerson mapper;
 
-	private List<PersonDto> personDtos;
+	private List<Person> personList;
 
-	private String firstName = "Jean";
+	private List<PersonDto> personDtoList;
 
-	private String lastName = "Dubois";
+	private final String firstName = "Jean";
 
-	private String city = "Culver";
+	private final String lastName = "Dubois";
 
-	private String zip = "45877";
+    private final String zip = "45877";
+
+	private final String email = "test@gmail.com";
+
+	private final String city = "Culver";
+
+	private final String phone  = "23145431321";
 
 	private PersonDto personDto;
 
 	private Person person;
 
-	private String birthDate = "01/01/2009";
-
-	private String address = "18 rue Jean moulin";
+    private final String address = "18 rue Jean moulin";
 
 	MedicalRecordDto medicalRecordDto;
 
-	private List<MedicalRecordDto> medicalRecordDtos;
+	private List<MedicalRecordDto> medicalRecordDtoList;
 
 
 	@BeforeEach
 	public void setUp() {
-		person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).email("test@gmail.com").city(city).build();
-		persons = List.of(this.person);
-		this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).email("test@gmail.com").city(city).build();
-		personDtos = List.of(this.personDto);
-		this.medicalRecordDto = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
-		this.medicalRecordDtos = new ArrayList<>(List.of(this.medicalRecordDto));
+		this.person = new Person();
+		person.setFirstName(firstName);
+		person.setLastName(lastName);
+		person.setAddress(address);
+		person.setEmail(email);
+		person.setPhone(phone);
+		person.setCity(city);
+        this.personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).email(email).phone(phone).city(city).build();
+		this.personList = List.of(this.person);
+		this.personDtoList = List.of(this.personDto);
+        String birthDate = "01/01/2009";
+        this.medicalRecordDto = new MedicalRecordDto.MedicalRecordDtoBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
+		this.medicalRecordDtoList = new ArrayList<>(List.of(this.medicalRecordDto));
 	}
 
 
@@ -78,28 +90,20 @@ class PersonServiceTest {
 	@Test
 	void getAllPersonsByCityTest() throws Exception {
 		String vCity = "Culver";
-		List<Person> persons = List.of(new Person.PersonBuilder().city(vCity).build(), new Person.PersonBuilder().city(vCity).build());
 
-		when(this.repository.getAllPersons()).thenReturn(persons);
+		when(this.repository.getAllPersons()).thenReturn(this.personList);
 		List<Person> personsToCompare = this.service.getAllPersonsByCity(vCity);
 
-		assertEquals(persons, personsToCompare);
+		assertEquals(this.personList, personsToCompare);
 	}
 
 	@Test
 	void getAllEmailAddressesByCityShouldReturnAListOfEmailAddress() throws Exception {
-		String vCity = "Culver";
-		String email1 = "test@gmail.com";
-		String email2 = "test2@gmail.com";
-		List<Person> personList = List.of(new Person.PersonBuilder().city(vCity).email(email1).build(), new Person.PersonBuilder().city(vCity).email(email2).build());
-		List<String> emailAddresses = new ArrayList<>();
-		emailAddresses.add(email1);
-		emailAddresses.add(email2);
-
+		List<String> emailAdresses = List.of(this.email);
 		when(this.repository.getAllPersons()).thenReturn(personList);
-		List<String> emailAddressesToCompare = this.service.getAllEmailAddressesByCity(vCity);
+		List<String> emailAddressesToCompare = this.service.getAllEmailAddressesByCity(city);
 
-		assertEquals(emailAddresses, emailAddressesToCompare);
+		assertEquals(emailAdresses, emailAddressesToCompare);
 	}
 
 	@Test
@@ -124,20 +128,19 @@ class PersonServiceTest {
 
 
 	@Test
-	void getAllPersonsTest() throws IOException {
-		List<Person> people = List.of(new Person.PersonBuilder().build(), new Person.PersonBuilder().build());
-		List<PersonDto> persons = List.of(new PersonDto.PersonDtoBuilder().build(), new PersonDto.PersonDtoBuilder().build());
-
-		when(this.repository.getAllPersons()).thenReturn(people);
+	void getAllPersonsTest() throws IOException, BadResourceException {
+		when(this.repository.getAllPersons()).thenReturn(this.personList);
+		Mockito.when(this.mapper.toPersonDtoList(this.personList)).thenReturn(this.personDtoList);
 		List<PersonDto> peopleToCompare = this.service.getAllPersons();
 
-		assertEquals(persons, peopleToCompare);
+		assertEquals(this.personDtoList, peopleToCompare);
 	}
 
 
 	@Test
 	public void getPersonByFullNameShouldReturnAPersonDto() throws Exception {
-		when(this.repository.getAllPersons()).thenReturn(this.persons);
+		when(this.repository.getAllPersons()).thenReturn(this.personList);
+		Mockito.when(this.mapper.toPersonDtoList(this.personList)).thenReturn(this.personDtoList);
 		PersonDto person = this.service.getPersonByFullName(firstName, lastName);
 
 		Assertions.assertEquals(this.personDto, person);
@@ -167,7 +170,8 @@ class PersonServiceTest {
 	public void deletePersonTest () throws IOException, ResourceNotFoundException {
 		// ARRANGE
 		List<Person> expectedPersons = new ArrayList<>();
-		Person person = new Person.PersonBuilder().firstName("Jean").lastName("Dubois").address("12 rue de la marine").city("Lille").zip("62000").phone("05-66-99-88").email("test@gmail.com").build();
+		String phone = "23145431321";
+		Person person = new Person(firstName, lastName, address, city, zip, phone, this.email);
 		expectedPersons.add(person);
 
 		// ACT
@@ -194,10 +198,11 @@ class PersonServiceTest {
 
 	@Test
 	public void getPersonByAddressShouldReturnAListOfPersonDto() throws ResourceNotFoundException, BadResourceException {
-		when(this.repository.getAllPersons()).thenReturn(this.persons);
+		when(this.repository.getAllPersons()).thenReturn(this.personList);
+		Mockito.when(this.mapper.toPersonDtoList(this.personList)).thenReturn(this.personDtoList);
 		List<PersonDto> persons = this.service.getPersonsByAddress(this.address);
 
-		assertEquals(this.personDtos, persons);
+		assertEquals(this.personDtoList, persons);
 	}
 
 	@Test
@@ -207,7 +212,7 @@ class PersonServiceTest {
 		BadResourceException exception = Assertions.assertThrows(BadResourceException.class, () -> this.service.getPersonsByAddress(null), message);
 
 		Assertions.assertEquals(exception.getStatus(), HttpStatus.BAD_REQUEST);
-		Assertions.assertEquals(exception.getMessage(), exception.getMessage());
+		Assertions.assertEquals(message, exception.getMessage());
 	}
 
 	@Test
@@ -223,57 +228,58 @@ class PersonServiceTest {
 
 	@Test
 	public void convertToSimplePersonDtoTest() {
-		SimplePersonDto person = new SimplePersonDto("John", "Boyd", "13 rue Jean Moulin", "04-91-45-87-36");
-		Person personToChange = new Person.PersonBuilder().firstName("John").lastName("Boyd").address("13 rue Jean Moulin").city("Strasbourg").zip("67000").phone("04-91-45-87-36").email("test@gmail.com").build();
-		com.safetynetalerts.dto.SimplePersonDto personToCompare = this.service.convertToSimplePersonDto(personToChange);
-		assertEquals(person.getFirstName(), personToCompare.getFirstName());
+		SimplePersonDto person = new SimplePersonDto(firstName, lastName, address, phone);
+		Person personToChange = new Person(firstName, lastName, address, city, zip, phone, this.email);
+		SimplePersonDto personToCompare = this.service.convertToSimplePersonDto(personToChange);
+		assertEquals(person, personToCompare);
+		assertEquals(person.hashCode(), personToCompare.hashCode());
+		assertEquals(person.toString(), personToCompare.toString());
 	}
 
 	@Test
 	public void getFamilyMembersTest() {
-		List<PersonDto> personsToCompare = this.service.getFamilyMembers(this.personDtos, lastName);
+		List<PersonDto> personsToCompare = this.service.getFamilyMembers(this.personDtoList, lastName);
 
-		assertEquals(personDtos, personsToCompare);
+		assertEquals(personDtoList, personsToCompare);
 	}
 
 	@Test
 	public void convertToDtoListShouldReturnAListOfPersonDto () {
 		List<Person> persons = new ArrayList<>();
-		Person p1 = new Person.PersonBuilder().build();
-		Person p2 = new Person.PersonBuilder().build();
-		Person p3 = new Person.PersonBuilder().build();
+		Person p1 = new Person();
+		Person p2 = new Person();
+		Person p3 = new Person();
 		persons.add(p1);
 		persons.add(p2);
 		persons.add(p3);
 		List<SimplePersonDto> personsDto = new ArrayList<>();
-		List<SimplePersonDto> personsToCompare = new ArrayList<>();
+		List<SimplePersonDto> personsToCompare;
 		for (Person person : persons) {
 			personsDto.add(this.service.convertToSimplePersonDto(person));
 		}
 
 		personsToCompare = this.service.convertToSimplePersonDtoList(persons);
 		assertEquals(personsDto, personsToCompare);
+		assertEquals(personsDto.hashCode(), personsToCompare.hashCode());
+		assertEquals(personsDto.toString(), personsToCompare.toString());
 	}
 
 	@Test
 	public void getChildByAddressShouldReturnAListOfChildAlertDto () throws IOException, ResourceNotFoundException, BadResourceException {
-		List<PersonDto> personsByAddress = new ArrayList<>();
-		PersonDto person = new PersonDto.PersonDtoBuilder().firstName(this.firstName).lastName(this.lastName).address(address).build();
-		PersonDto adult = new PersonDto.PersonDtoBuilder().firstName("Marc").lastName(this.lastName).address(address).build();
-		personsByAddress.add(person);
-		personsByAddress.add(adult);
-		ChildAlertDto childAlertDto = new ChildAlertDto(this.firstName, this.lastName, 0, personsByAddress);
-		List<ChildAlertDto> childAlertDtos = new ArrayList<>();
-		childAlertDtos.add(childAlertDto);
+		ChildAlertDto childAlertDto = new ChildAlertDto(firstName, lastName, 0, this.personDtoList);
+		List<ChildAlertDto> childAlertDtoList = new ArrayList<>();
+		childAlertDtoList.add(childAlertDto);
 
 
-		when(this.medicalRecordService.isUnderaged(person.firstName, person.lastName)).thenReturn(true);
-		when(this.repository.getAllPersons()).thenReturn(this.persons);
+		Mockito.when(this.repository.getAllPersons()).thenReturn(this.personList);
+		Mockito.when(this.mapper.toPersonDtoList(this.personList)).thenReturn(this.personDtoList);
+		when(this.medicalRecordService.isUnderaged(person.getFirstName(), person.getLastName())).thenReturn(true);
+		when(this.repository.getAllPersons()).thenReturn(this.personList);
 		List<ChildAlertDto> childAlertDtosToCompare = this.service.getChildByAddress(address);
 
-		assertEquals(childAlertDtos.get(0).getAge(), childAlertDtosToCompare.get(0).getAge());
-		assertEquals(childAlertDtos.get(0).getFirstName(), childAlertDtosToCompare.get(0).getFirstName());
-		assertEquals(childAlertDtos.get(0).getLastName(), childAlertDtosToCompare.get(0).getLastName());
+		assertEquals(childAlertDtoList, childAlertDtosToCompare);
+		assertEquals(childAlertDtoList.hashCode(), childAlertDtosToCompare.hashCode());
+		assertEquals(childAlertDtoList.toString(), childAlertDtosToCompare.toString());
 	}
 
 	@Test
@@ -288,10 +294,9 @@ class PersonServiceTest {
 
 	@Test
 	public void getChildByAddressShouldThrowResourceNotFoundException () throws IOException {
-		String message = "No child at this address found";
+		String message = "The people you are looking for don't exist.";
 
-		when(this.repository.getAllPersons()).thenReturn(this.persons);
-		when(this.medicalRecordService.isUnderaged(person.firstName, person.lastName)).thenReturn(false);
+		when(this.repository.getAllPersons()).thenReturn(this.personList);
 		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.getChildByAddress(address), message);
 
 		Assertions.assertEquals(exception.getMessage(), message);
@@ -305,95 +310,103 @@ class PersonServiceTest {
 		PersonInfo specificPersonInfo = new PersonInfo("Jean", "Dubois", 15, "test@gmail.com", null, null);
 		List<PersonInfo> personInfo = new ArrayList<>(List.of(specificPersonInfo));
 
-		Mockito.when(this.repository.getAllPersons()).thenReturn(this.persons);
-		Mockito.when(this.medicalRecordService.getAllMedicalRecordByListOfPersons(this.personDtos)).thenReturn(this.medicalRecordDtos);
+		Mockito.when(this.repository.getAllPersons()).thenReturn(this.personList);
+		Mockito.when(this.mapper.toPersonDtoList(this.personList)).thenReturn(this.personDtoList);
+		Mockito.when(this.medicalRecordService.getAllMedicalRecordByListOfPersons(this.personDtoList)).thenReturn(this.medicalRecordDtoList);
 		Mockito.when(this.medicalRecordService.getAgeOfPerson(firstName, lastName)).thenReturn(15);
 		List<PersonInfo> personInfoToCompare = this.service.getPersonInfo(lastName);
 
 		Assertions.assertEquals(personInfo, personInfoToCompare);
-	}
-
-	@Test
-	public void convertToPersonDtoShouldReturnAPersonDto () throws ResourceNotFoundException {
-		PersonDto personToCompare = this.service.convertToPersonDto(this.person);
-
-		Assertions.assertEquals(this.personDto, personToCompare);
-	}
-
-	@Test
-	public void convertToPersonDtoShouldThrowResourceNotFoundException () throws ResourceNotFoundException {
-		String message = "person not found exception";
-
-		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.convertToPersonDto(null), message);
-
-		Assertions.assertEquals(exception.getMessage(), message);
-		Assertions.assertEquals(exception.getStatus(), HttpStatus.NOT_FOUND);
-	}
-
-	@Test
-	public void convertToPersonDtoListShouldReturnAListOfDto() throws ResourceNotFoundException {
-		List<PersonDto> personsToCompare = this.service.convertToDtoList(this.persons);
-
-		Assertions.assertEquals(this.personDtos, personsToCompare);
-	}
-
-	@Test
-	public void convertPersonDtoToPersonShouldReturnAPerson() throws ResourceNotFoundException {
-		Person personToCompare = this.service.convertToPerson(this.personDto);
-
-		Assertions.assertEquals(this.person, personToCompare);
-	}
-
-	@Test
-	public void toModelShouldThrowResourceNotFoundException() throws ResourceNotFoundException {
-		String message = "person not found exception";
-
-		ResourceNotFoundException exception = Assertions.assertThrows(ResourceNotFoundException.class, () -> this.service.convertToPerson(null), message);
-
-		Assertions.assertEquals(exception.getMessage(), message);
-		Assertions.assertEquals(exception.getStatus(), HttpStatus.NOT_FOUND);
+		Assertions.assertEquals(personInfo.hashCode(), personInfoToCompare.hashCode());
+		Assertions.assertEquals(personInfo.toString(), personInfoToCompare.toString());
 	}
 
 	@Test
 	public void updatePersonShouldReturnAPerson() throws BadResourceException, ResourceNotFoundException, ResourceAlreadyExistsException {
-		Person updatedPerson = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
+		String address = "154 rue de la paix";
+		String phone = "23145431321";
+		Person updatedPerson = new Person(firstName, lastName, address, city, zip, phone, this.email);
 		PersonDto updatedPersonDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
 
-		Mockito.when(this.repository.getAllPersons()).thenReturn(this.persons);
+		Mockito.when(this.repository.getAllPersons()).thenReturn(this.personList);
+		Mockito.when(this.mapper.toPersonDtoList(this.personList)).thenReturn(this.personDtoList);
+		Mockito.when(this.mapper.toPerson(this.personDto)).thenReturn(this.person);
+		Mockito.when(this.mapper.toPerson(updatedPersonDto)).thenReturn(updatedPerson);
 		Mockito.when(this.repository.savePerson(this.person, updatedPerson)).thenReturn(updatedPerson);
+		Mockito.when(this.mapper.toPersonDto(updatedPerson)).thenReturn(updatedPersonDto);
 		PersonDto personDtoToCompare = this.service.updatePerson(updatedPersonDto);
 
 		Assertions.assertEquals(updatedPersonDto, personDtoToCompare);
+		Assertions.assertEquals(updatedPersonDto.hashCode(), personDtoToCompare.hashCode());
+		Assertions.assertEquals(updatedPersonDto.toString(), personDtoToCompare.toString());
 	}
 
 	@Test
-	public void getPersonByLastNameShouldReturnAListOfPersonHavingTheSameLastName () {
-		Mockito.when(this.repository.getAllPersons()).thenReturn(this.persons);
+	public void getPersonByLastNameShouldReturnAListOfPersonHavingTheSameLastName () throws BadResourceException {
+		Mockito.when(this.repository.getAllPersons()).thenReturn(this.personList);
+		Mockito.when(this.mapper.toPersonDtoList(this.personList)).thenReturn(this.personDtoList);
 		List<PersonDto> personDtoListToCompare = this.service.getPersonByLastName(this.lastName);
 
-		Assertions.assertEquals(this.personDtos, personDtoListToCompare);
+		Assertions.assertEquals(this.personDtoList, personDtoListToCompare);
 	}
 
 	@Test
-	public void addPersonShouldReturnAPersonDto() throws ResourceAlreadyExistsException, ResourceNotFoundException {
-		Person newPerson = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
-		PersonDto newPersonDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
+	public void addPersonShouldReturnAPersonDto() throws ResourceAlreadyExistsException, ResourceNotFoundException, BadResourceException {
+		String phone = "23145431321";
+		Person newPerson = new Person(firstName, lastName, address, city, zip, phone, this.email);
+		PersonDto newPersonDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).address(city).zip(zip).email(email).build();
 
-		Mockito.when(this.repository.savePerson(this.person, newPerson)).thenReturn(this.person);
+		Mockito.when(this.mapper.toPerson(newPersonDto)).thenReturn(newPerson);
+		Mockito.when(this.repository.getAllPersons()).thenReturn(this.personList);
+		Mockito.when(this.mapper.toPerson(newPersonDto)).thenReturn(newPerson);
+		Mockito.when(this.repository.savePerson(newPerson, newPerson)).thenReturn(newPerson);
 		PersonDto personToCompare = this.service.addPerson(newPersonDto);
 
 		Assertions.assertEquals(newPersonDto, personToCompare);
+		Assertions.assertEquals(newPersonDto.hashCode(), personToCompare.hashCode());
+		Assertions.assertEquals(newPersonDto.toString(), personToCompare.toString());
 	}
 
 	@Test
-	public void addPersonShouldThrowResourceAlreadyExistsExceptionIfAlreadyExists() {
+	public void addPersonShouldThrowResourceAlreadyExistsExceptionIfAlreadyExists() throws BadResourceException {
 		String message = "Person already exists.";
-		Person person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
-		PersonDto personDto = new PersonDto.PersonDtoBuilder().firstName(firstName).lastName(lastName).address(address).zip(zip).build();
-		List<Person> personList = List.of(person);
 
 		Mockito.when(this.repository.getAllPersons()).thenReturn(personList);
+		Mockito.when(this.mapper.toPersonDtoList(this.personList)).thenReturn(this.personDtoList);
 		ResourceAlreadyExistsException exception = Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> this.service.addPerson(personDto), message);
+
+		Assertions.assertEquals(exception.getMessage(), message);
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.CONFLICT);
+	}
+
+	@Test
+	public void savePersonShouldReturnAPersonDto() throws BadResourceException, ResourceAlreadyExistsException {
+		Mockito.when(this.mapper.toPerson(this.personDto)).thenReturn(this.person);
+		Mockito.when(this.repository.savePerson(this.person)).thenReturn(this.person);
+		Mockito.when(this.mapper.toPersonDto(this.person)).thenReturn(this.personDto);
+
+		PersonDto personDtoToCompare = this.service.savePerson(this.personDto);
+
+		Assertions.assertEquals(this.personDto, personDtoToCompare);
+	}
+
+	@Test
+	public void savePersonShouldThrowBadResourceException () {
+		String message = "No person provided";
+
+		BadResourceException exception = Assertions.assertThrows(BadResourceException.class, () -> this.service.savePerson(null), message);
+
+		Assertions.assertEquals(exception.getMessage(), message);
+		Assertions.assertEquals(exception.getStatus(), HttpStatus.BAD_REQUEST);
+	}
+
+	@Test
+	public void savePersonShouldThrowResourceAlreadyExists() throws BadResourceException {
+		String message = "This person already exists";
+
+		Mockito.when(this.repository.getAllPersons()).thenReturn(personList);
+		Mockito.when(this.mapper.toPersonDtoList(this.personList)).thenReturn(this.personDtoList);
+		ResourceAlreadyExistsException exception = Assertions.assertThrows(ResourceAlreadyExistsException.class, () -> this.service.savePerson(personDto), message);
 
 		Assertions.assertEquals(exception.getMessage(), message);
 		Assertions.assertEquals(exception.getStatus(), HttpStatus.CONFLICT);

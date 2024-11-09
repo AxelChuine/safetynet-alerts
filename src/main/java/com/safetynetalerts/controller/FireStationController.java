@@ -1,10 +1,9 @@
 package com.safetynetalerts.controller;
 
-import com.safetynetalerts.controller.exception.BadResourceException;
-import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
-import com.safetynetalerts.controller.exception.ResourceNotFoundException;
+import com.safetynetalerts.exception.BadResourceException;
+import com.safetynetalerts.exception.ResourceAlreadyExistsException;
+import com.safetynetalerts.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireStationDto;
-import com.safetynetalerts.dto.PhoneAlertDto;
 import com.safetynetalerts.dto.StationNumberDto;
 import com.safetynetalerts.service.FireStationServiceImpl;
 import com.safetynetalerts.service.PersonFirestationServiceImpl;
@@ -41,7 +40,7 @@ public class FireStationController {
 
 
     @GetMapping
-	public ResponseEntity<StationNumberDto> getHeadCountByFirestation(@RequestParam("stationNumber") String stationNumber) throws IOException {
+	public ResponseEntity<StationNumberDto> getHeadCountByFirestation(@RequestParam("stationNumber") String stationNumber) throws IOException, BadResourceException {
 		logger.info("get head count by firestation");
 		StationNumberDto persons = this.personFirestationService.getHeadCountByFirestation(stationNumber);
 		if (Objects.isNull(persons)) {

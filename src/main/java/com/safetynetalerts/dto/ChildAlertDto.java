@@ -1,20 +1,14 @@
 package com.safetynetalerts.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-@Getter
-@Setter
+@NoArgsConstructor
+@EqualsAndHashCode
 public class ChildAlertDto {
-	/**
-	 * @return a list of ChildWithFamilyDto
-	 */
 	private String firstName;
 
 	private String lastName;
@@ -22,5 +16,4 @@ public class ChildAlertDto {
 	private Integer age;
 
 	private List<PersonDto> family;
-
 }

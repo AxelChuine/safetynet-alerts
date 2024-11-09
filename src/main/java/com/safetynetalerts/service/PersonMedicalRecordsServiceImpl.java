@@ -1,7 +1,7 @@
 package com.safetynetalerts.service;
 
-import com.safetynetalerts.controller.exception.BadResourceException;
-import com.safetynetalerts.controller.exception.ResourceNotFoundException;
+import com.safetynetalerts.exception.BadResourceException;
+import com.safetynetalerts.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
 import org.springframework.stereotype.Service;
 
@@ -59,18 +59,12 @@ public class PersonMedicalRecordsServiceImpl {
     }
 
     
-    public List<PersonByFireDto> convertToPersonByFireDtoList(List<PersonDto> pPersons, List<MedicalRecordDto> pMedicalRecords) throws IOException, ResourceNotFoundException, BadResourceException {
-        List<MedicalRecordDto> medicalRecordDtos = pMedicalRecords;
+    public List<PersonByFireDto> convertToPersonByFireDtoList(List<PersonDto> pPersons, List<MedicalRecordDto> medicalRecordDtoList) throws IOException, ResourceNotFoundException, BadResourceException {
         List<PersonByFireDto> personByFireDtos = new ArrayList<>();
-        for (MedicalRecordDto medicalRecordDto : medicalRecordDtos) {
+        for (MedicalRecordDto medicalRecordDto : medicalRecordDtoList) {
             for (PersonDto personDto : pPersons) {
                 if (Objects.equals(personDto.firstName, medicalRecordDto.getFirstName()) && Objects.equals(personDto.lastName, medicalRecordDto.getLastName())) {
-                    PersonByFireDto personByFireDto = new PersonByFireDto(personDto.firstName,
-                            personDto.lastName,
-                            personDto.getPhone(),
-                            this.medicalRecordService.getAgeOfPerson(medicalRecordDto.getFirstName(), medicalRecordDto.getLastName()),
-                            medicalRecordDto.getMedications(),
-                            medicalRecordDto.getAllergies());
+                    PersonByFireDto personByFireDto = this.toPersonByFireDto(personDto, medicalRecordDto);
                     personByFireDtos.add(personByFireDto);
                 }
             }
@@ -79,5 +73,14 @@ public class PersonMedicalRecordsServiceImpl {
             throw new ResourceNotFoundException("No person found");
         }
         return personByFireDtos;
+    }
+
+    public PersonByFireDto toPersonByFireDto(PersonDto personDto, MedicalRecordDto medicalRecordDto) throws BadResourceException, ResourceNotFoundException {
+        return new PersonByFireDto(personDto.firstName,
+                personDto.lastName,
+                personDto.phone,
+                this.medicalRecordService.getAgeOfPerson(medicalRecordDto.getFirstName(), medicalRecordDto.getLastName()),
+                medicalRecordDto.getMedications(),
+                medicalRecordDto.getAllergies());
     }
 }

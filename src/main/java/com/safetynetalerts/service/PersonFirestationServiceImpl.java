@@ -1,10 +1,9 @@
 package com.safetynetalerts.service;
 
-import com.safetynetalerts.controller.exception.BadResourceException;
-import com.safetynetalerts.controller.exception.ResourceNotFoundException;
+import com.safetynetalerts.exception.BadResourceException;
+import com.safetynetalerts.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.*;
 import com.safetynetalerts.models.FireStation;
-import com.safetynetalerts.repository.FireStationRepository;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,17 +20,14 @@ public class PersonFirestationServiceImpl {
 
     private final PersonServiceImpl personService;
 
-    private final FireStationRepository fireStationRepository;
-
-    public PersonFirestationServiceImpl(FireStationServiceImpl fireStationService, MedicalRecordServiceImpl medicalRecordService, PersonServiceImpl personService, FireStationRepository fireStationRepository) {
+    public PersonFirestationServiceImpl(FireStationServiceImpl fireStationService, MedicalRecordServiceImpl medicalRecordService, PersonServiceImpl personService) {
         this.fireStationService = fireStationService;
         this.medicalRecordService = medicalRecordService;
         this.personService = personService;
-        this.fireStationRepository = fireStationRepository;
     }
 
 
-    public List<PersonDto> getAllPersonsByFireStation(String stationNumber) throws IOException {
+    public List<PersonDto> getAllPersonsByFireStation(String stationNumber) throws IOException, BadResourceException {
         List<PersonDto> persons = this.personService.getAllPersons();
         List<PersonDto> personsByFirestation = new ArrayList<>();
         FireStation firestation = fireStationService.getFireStationsByStationNumber(stationNumber);
@@ -46,7 +42,7 @@ public class PersonFirestationServiceImpl {
     }
 
     
-    public PhoneAlertDto getCellNumbers(String stationNumber) throws IOException {
+    public PhoneAlertDto getCellNumbers(String stationNumber) throws IOException, BadResourceException {
         PhoneAlertDto cellNumbers = new PhoneAlertDto();
         List<PersonDto> persons = this.getAllPersonsByFireStation(stationNumber);
         for (PersonDto p : persons) {
@@ -56,7 +52,7 @@ public class PersonFirestationServiceImpl {
     }
 
     
-    public StationNumberDto getHeadCountByFirestation(String pStationNumber) throws IOException {
+    public StationNumberDto getHeadCountByFirestation(String pStationNumber) throws IOException, BadResourceException {
         List<PersonDto> persons = this.getAllPersonsByFireStation(pStationNumber);
         Map<String, Integer> mapPersons = this.medicalRecordService.countAllPersons(persons);
         return new StationNumberDto(persons, mapPersons.get("mineurs"), mapPersons.get("majeurs"));

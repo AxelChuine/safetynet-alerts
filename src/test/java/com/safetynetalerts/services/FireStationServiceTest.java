@@ -1,8 +1,8 @@
 package com.safetynetalerts.services;
 
-import com.safetynetalerts.controller.exception.BadResourceException;
-import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
-import com.safetynetalerts.controller.exception.ResourceNotFoundException;
+import com.safetynetalerts.exception.BadResourceException;
+import com.safetynetalerts.exception.ResourceAlreadyExistsException;
+import com.safetynetalerts.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.FireStationDto;
 import com.safetynetalerts.dto.PersonMedicalRecordDto;
 import com.safetynetalerts.models.FireStation;
@@ -260,7 +260,11 @@ public class FireStationServiceTest {
 		String firstName = "Jean";
 		String lastName = "Smith";
 		String birthDate = "05/05/2000";
-		Person person = new Person.PersonBuilder().firstName(firstName).lastName(lastName).phone("04").build();
+		String phone = "04";
+		Person person = new Person();
+		person.setFirstName(firstName);
+		person.setLastName(lastName);
+		person.setPhone(phone);
 		MedicalRecord medicalRecord = new MedicalRecord.MedicalRecordBuilder().firstName(firstName).lastName(lastName).birthDate(birthDate).build();
 		PersonMedicalRecordDto personMedicalRecordDto = new PersonMedicalRecordDto(firstName, lastName, "04", 24, null, null);
 

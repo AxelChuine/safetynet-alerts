@@ -1,6 +1,7 @@
 package com.safetynetalerts.controller;
 
 import com.safetynetalerts.dto.PhoneAlertDto;
+import com.safetynetalerts.exception.BadResourceException;
 import com.safetynetalerts.service.PersonFirestationServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public class PhoneAlertController {
     }
 
     @GetMapping
-    public ResponseEntity<PhoneAlertDto> getCellNumbers(@RequestParam("station-number") String stationNumber) throws IOException {
+    public ResponseEntity<PhoneAlertDto> getCellNumbers(@RequestParam("station-number") String stationNumber) throws IOException, BadResourceException {
         logger.info("get cell numbers by station number");
         return new ResponseEntity<>(this.personFirestationService.getCellNumbers(stationNumber), HttpStatus.OK);
     }

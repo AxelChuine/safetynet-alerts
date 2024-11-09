@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @EqualsAndHashCode
 public class MedicalRecord {
 	private String firstName;
@@ -65,20 +64,5 @@ public class MedicalRecord {
 		this.birthDate = pBirthDate;
 		this.allergies = pAllergies;
 		this.medications = pMedications;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		MedicalRecord medicalRecord = (MedicalRecord) obj;
-		return this.lastName.equals(medicalRecord.lastName) && this.firstName.equals(medicalRecord.firstName);
 	}
 }

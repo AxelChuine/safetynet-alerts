@@ -1,15 +1,14 @@
 package com.safetynetalerts.service;
 
-import com.safetynetalerts.controller.exception.BadResourceException;
-import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
-import com.safetynetalerts.controller.exception.ResourceNotFoundException;
+import com.safetynetalerts.exception.BadResourceException;
+import com.safetynetalerts.exception.ResourceAlreadyExistsException;
+import com.safetynetalerts.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.MedicalRecordDto;
 import com.safetynetalerts.dto.PersonDto;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.repository.MedicalRecordRepository;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
@@ -165,7 +164,14 @@ public class MedicalRecordServiceImpl {
 
 	
 	public void deleteMedicalRecordByFullName(String firstName, String lastName) throws ResourceNotFoundException, BadResourceException {
-		this.repository.deleteMedicalRecord(convertDtoToModel(this.getMedicalRecordByFullName(firstName, lastName)));
+		if (Objects.isNull(firstName) || Objects.isNull(lastName)) {
+			throw new BadResourceException("The medical record is not provided");
+		}
+		MedicalRecordDto medicalRecordDto = this.getMedicalRecordByFullName(firstName, lastName);
+		if (Objects.isNull(medicalRecordDto)) {
+			throw new ResourceNotFoundException("the medical not found");
+		}
+		this.repository.deleteMedicalRecord(convertDtoToModel(medicalRecordDto));
 	}
 
 	

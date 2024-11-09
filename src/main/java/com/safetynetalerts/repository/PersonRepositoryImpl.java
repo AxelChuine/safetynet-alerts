@@ -1,6 +1,7 @@
 package com.safetynetalerts.repository;
 
-import com.safetynetalerts.controller.exception.ResourceAlreadyExistsException;
+import com.safetynetalerts.exception.BadResourceException;
+import com.safetynetalerts.exception.ResourceAlreadyExistsException;
 import com.safetynetalerts.models.Person;
 import com.safetynetalerts.utils.Data;
 import org.springframework.stereotype.Repository;
@@ -26,7 +27,11 @@ public class PersonRepositoryImpl {
         return this.data.savePerson(person, newPerson);
     }
 
+    public Person savePerson(Person person) throws BadResourceException {
+        return this.data.savePerson(person);
+    }
+
     public List<Person> save(List<Person> persons) {
-        return this.data.save(persons);
+        return this.data.saveListOfPerPersons(persons);
     }
 }

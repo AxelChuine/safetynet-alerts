@@ -1,5 +1,6 @@
 package com.safetynetalerts.utils;
 
+import com.safetynetalerts.exception.BadResourceException;
 import com.safetynetalerts.models.FireStation;
 import com.safetynetalerts.models.MedicalRecord;
 import com.safetynetalerts.models.Person;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -98,7 +100,17 @@ public class Data {
 		return newMedicalRecord;
 	}
 
-	public List<Person> save(List<Person> persons) {
+	public List<Person> saveListOfPerPersons(List<Person> persons) {
 		return this.persons = persons;
+	}
+
+	public Person savePerson(Person person) throws BadResourceException {
+		if (Objects.isNull(person)) {
+			throw new BadResourceException("No person provided");
+		}
+		List<Person> newPersons = new ArrayList<>(this.persons);
+		newPersons.add(person);
+		this.persons = newPersons;
+		return person;
 	}
 }

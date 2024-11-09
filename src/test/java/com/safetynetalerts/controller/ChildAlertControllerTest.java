@@ -1,7 +1,7 @@
 package com.safetynetalerts.controller;
 
-import com.safetynetalerts.controller.exception.BadResourceException;
-import com.safetynetalerts.controller.exception.ResourceNotFoundException;
+import com.safetynetalerts.exception.BadResourceException;
+import com.safetynetalerts.exception.ResourceNotFoundException;
 import com.safetynetalerts.dto.ChildAlertDto;
 import com.safetynetalerts.service.PersonServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ public class ChildAlertControllerTest {
     @MockBean
     private PersonServiceImpl service;
 
-    private String address = "18 rue du moulin";
+    private final String address = "18 rue du moulin";
 
     @Test
     public void childAlertShouldReturnHttpStatusOk() throws Exception {
@@ -38,7 +38,6 @@ public class ChildAlertControllerTest {
 
     @Test
     public void childAlertShouldReturnHttpStatusNotFound() throws Exception {
-        ChildAlertDto childAlertDto = new ChildAlertDto();
         Mockito.when(this.service.getChildByAddress(address)).thenThrow(new ResourceNotFoundException("No people found for address " + address));
         this.mockMvc.perform(MockMvcRequestBuilders.get("/child-alert")
                         .param("address", address))
