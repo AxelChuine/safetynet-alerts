@@ -78,7 +78,7 @@ public class PersonController {
 	}
   
   	@GetMapping
-    public ResponseEntity<List<PersonDto>> getPersonByFullName(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) throws Exception {
+    public ResponseEntity<List<PersonDto>> getPersonByFullName(@RequestParam("first-name") String firstName, @RequestParam("last-name") String lastName) throws Exception {
 		logger.info("get a person by his full name");
 		List<PersonDto> personDtos = new ArrayList<>(List.of(this.personService.getPersonByFullName(firstName, lastName)));
 		return new ResponseEntity<>(personDtos, HttpStatus.OK);

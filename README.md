@@ -5,5 +5,3 @@
 
 ## java version: 17.0.2
 ## maven 3.9.9
-
-## C'est un projet archivé.

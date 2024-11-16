@@ -129,8 +129,8 @@ public class PersonControllerTest {
     public void findPersonByFullNameShouldReturnHttpStatusOk() throws Exception {
         Mockito.when(this.service.getPersonByFullName(this.firstName, this.lastName)).thenReturn(this.personDto);
         this.mockMvc.perform(MockMvcRequestBuilders.get("/person")
-                .param("firstName", this.firstName)
-                .param("lastName", this.lastName))
+                .param("first-name", this.firstName)
+                .param("last-name", this.lastName))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 

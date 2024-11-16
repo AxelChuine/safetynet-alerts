@@ -56,9 +56,9 @@ public class Utils {
 
 		Any personAny = any.get("persons");
 		personAny.forEach(a -> persons.add(new Person(a.get("firstName").toString(),
+				a.get("lastName").toString(),
 				a.get("address").toString(),
 				a.get("city").toString(),
-				a.get("lastName").toString(),
 				a.get("phone").toString(),
 				a.get("zip").toString(),
 				a.get("email").toString())));
