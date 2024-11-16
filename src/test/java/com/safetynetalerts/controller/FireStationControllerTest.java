@@ -106,7 +106,7 @@ public class FireStationControllerTest {
        StationNumberDto stationNumberDto = new StationNumberDto();
        Mockito.when(this.personFirestationService.getHeadCountByFirestation("4")).thenReturn(stationNumberDto);
         this.mockMvc.perform(MockMvcRequestBuilders.get("/firestation")
-                .param("stationNumber", "4"))
+                .param("station-number", "4"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -135,7 +135,7 @@ public class FireStationControllerTest {
     public void getHeadCountByFirestationShouldReturnHttpStatusNotFound() throws Exception {
        Mockito.when(this.personFirestationService.getHeadCountByFirestation("4")).thenReturn(null);
        this.mockMvc.perform(MockMvcRequestBuilders.get("/firestation")
-               .param("stationNumber", "4"))
+               .param("station-number", "4"))
                .andExpect(MockMvcResultMatchers.status().isNotFound());
 
     }

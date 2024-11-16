@@ -40,7 +40,7 @@ public class FireStationController {
 
 
     @GetMapping
-	public ResponseEntity<StationNumberDto> getHeadCountByFirestation(@RequestParam("stationNumber") String stationNumber) throws IOException, BadResourceException {
+	public ResponseEntity<StationNumberDto> getHeadCountByFirestation(@RequestParam("station-number") String stationNumber) throws IOException, BadResourceException {
 		logger.info("get head count by firestation");
 		StationNumberDto persons = this.personFirestationService.getHeadCountByFirestation(stationNumber);
 		if (Objects.isNull(persons)) {
