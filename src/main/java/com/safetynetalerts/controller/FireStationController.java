@@ -56,9 +56,15 @@ public class FireStationController {
 	}
 
 	@PostMapping
-	public ResponseEntity<FireStationDto> createFirestation (@RequestBody FireStationDto pFirestation) throws ResourceNotFoundException, ResourceAlreadyExistsException, IOException {
+	public ResponseEntity createFirestation (@RequestBody FireStationDto pFirestation) throws IOException {
 		logger.info("create firestation");
-		return new ResponseEntity<>(this.service.createFirestation(pFirestation), HttpStatus.CREATED);
+		try {
+			return new ResponseEntity<>(this.service.createFirestation(pFirestation), HttpStatus.CREATED);
+		} catch (ResourceAlreadyExistsException e) {
+			return new ResponseEntity<>(e.getMessage(), e.getStatus());
+		} catch (ResourceNotFoundException e) {
+			return new ResponseEntity<>(e.getMessage(), e.getStatus());
+		}
 	}
 
 	@PutMapping

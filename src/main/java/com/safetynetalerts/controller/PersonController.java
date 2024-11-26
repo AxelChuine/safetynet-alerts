@@ -53,14 +53,14 @@ public class PersonController {
 	 * @throws IOException
 	 */
 	@PostMapping
-	public ResponseEntity<PersonDto> createPerson(@RequestBody PersonDto personDto) {
+	public ResponseEntity createPerson(@RequestBody PersonDto personDto) {
 		logger.info("launch of creation of a person");
 		try {
 			return new ResponseEntity<>(this.personService.savePerson(personDto), HttpStatus.CREATED);
 		} catch (ResourceAlreadyExistsException e) {
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
+			return new ResponseEntity<>(e.getMessage(), e.getStatus());
 		} catch (BadResourceException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
         }
     }
 
